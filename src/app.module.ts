@@ -5,13 +5,15 @@ import { DatabaseModule } from './core/database/database.module';
 import { MorganInterceptor, MorganModule } from 'nest-morgan';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UsersModule } from './modules/users/users.module';
+import { envShema } from './config/env-shema';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env.development.local',
       isGlobal: true,
-      load: [AppConfigEnvironment]
+      load: [AppConfigEnvironment],
+      validationSchema: envShema
     }),
     DatabaseModule,
     MorganModule,
