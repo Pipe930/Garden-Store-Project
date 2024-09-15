@@ -1,6 +1,8 @@
 export const AppConfigEnvironment = () => ({
 
     port: parseInt(process.env.PORT, 10) || 3000,
+    keyJwt: process.env.SECRET_JWT,
+    apiKeyResend: process.env.RESEND_API_KEY,
     database: {
 
         dialect: process.env.DATABASE_DIALECT as any,

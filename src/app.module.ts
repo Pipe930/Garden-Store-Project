@@ -6,6 +6,7 @@ import { MorganInterceptor, MorganModule } from 'nest-morgan';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UsersModule } from './modules/users/users.module';
 import { envShema } from './config/env-shema';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { envShema } from './config/env-shema';
     }),
     DatabaseModule,
     MorganModule,
-    UsersModule
+    UsersModule,
+    AuthModule
   ],
   providers: [
     {
