@@ -5,6 +5,8 @@ export const envShema = Joi.object({
     PORT: Joi.number().required().default(3000),
     SECRET_JWT: Joi.string().required(),
     RESEND_API_KEY: Joi.string().required(),
+    KEY_CRYPTO: Joi.string().required(),
+    DOMAIN_URL: Joi.string().required(),
     DATABASE_DIALECT: Joi.string().required(),
     DATABASE_HOST: Joi.string().required(),
     DATABASE_PORT: Joi.number().required().default(5432),

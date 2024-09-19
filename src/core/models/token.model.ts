@@ -1,5 +1,4 @@
-import { Column, DataType, Table, Model, ForeignKey, Sequelize } from "sequelize-typescript";
-import { User } from "./user.model";
+import { Column, DataType, Table, Model, Sequelize } from "sequelize-typescript";
 
 @Table({
     tableName: "tokenActivation",
@@ -8,15 +7,16 @@ import { User } from "./user.model";
 })
 export class TokenActivation extends Model {
 
-    @ForeignKey(() => User)
     @Column({
         primaryKey: true,
-        type: DataType.INTEGER
+        type: DataType.INTEGER,
+        autoIncrement: true,
+
     })
-    declare id_token_user: number;
+    declare idToken: number;
 
     @Column({
-        type: DataType.UUID,
+        type: DataType.STRING(300),
         allowNull: false,
         unique: true
     })
@@ -34,4 +34,10 @@ export class TokenActivation extends Model {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
     })
     declare time: Date;
+
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false
+    })
+    declare idUser: number;
 }

@@ -1,6 +1,5 @@
 import { Column, DataType, Is, Table, Model, BeforeCreate, HasOne } from "sequelize-typescript";
 import { hashSync } from "bcrypt";
-import { TokenActivation } from "./token.model";
 
 @Table({
     tableName: "users",
@@ -14,21 +13,22 @@ export class User extends Model {
         type: DataType.INTEGER,
         autoIncrement: true
     })
-    declare id_user: number;
+    declare idUser: number;
 
     @Column({
         type: DataType.STRING(20),
         allowNull: true,
-        defaultValue: "(sin nombre)"
+        defaultValue: "(sin nombre)",
+        
     })
-    declare first_name: string;
+    declare firstName: string;
 
     @Column({
         type: DataType.STRING(20),
         allowNull: true,
-        defaultValue: "(sin apellido)"
+        defaultValue: "(sin apellido)"  
     })
-    declare last_name: string;
+    declare lastName: string;
 
     @Column({
         type: DataType.STRING,
@@ -76,11 +76,8 @@ export class User extends Model {
     })
     declare last_login: Date;
 
-    @HasOne(() => TokenActivation)
-    declare token: TokenActivation;
-
     @BeforeCreate
-    static hashPassword(instance: User):void{
+    private static hashPassword(instance: User):void{
 
         instance.password = hashSync(instance.password, 10);
     }

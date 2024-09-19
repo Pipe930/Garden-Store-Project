@@ -1,5 +1,4 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -16,7 +15,6 @@ export class AuthGuard implements CanActivate {
   ): Promise<boolean> {
     
     const request = context.switchToHttp().getRequest();
-
     const token = this.extractTokenFromHeader(request);
 
     if(!token) throw new UnauthorizedException("Token no provisto en la peticion");

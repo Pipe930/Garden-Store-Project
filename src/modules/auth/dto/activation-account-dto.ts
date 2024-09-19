@@ -1,10 +1,9 @@
 import { Transform } from "class-transformer";
-import { IsNotEmpty, IsString, IsUUID, MaxLength, MinLength } from "class-validator";
-
+import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
 
 export class ActivationAccountDto {
 
-    @IsUUID()
+    @IsString()
     @IsNotEmpty()
     declare token: string;
 
