@@ -1,7 +1,6 @@
 import { BadRequestException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginUserDto } from './dto/login-user.dto';
-import { compare, genSalt, hash } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { TokenActivation } from 'src/core/models/token.model';
@@ -9,11 +8,11 @@ import { Op } from 'sequelize';
 import { User } from 'src/core/models/user.model';
 import { ActivationAccountDto } from './dto/activation-account-dto';
 import { SendForgotPasswordDto } from './dto/forgot-password-send.dto';
-import { OtherFunctionsService } from 'src/core/services/other-functions.service';
 import { ConfirmForgotPasswordDto } from './dto/forgot-password-confirm.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
-import { v4 } from 'uuid';
-import { ConfigService } from '@nestjs/config';
+import { PasswordService } from 'src/core/services/password.service';
+import { SendEmailService } from 'src/core/services/send-email.service';
+import { TokenService } from 'src/core/services/token.service';
 
 @Injectable()
 export class AuthService {
@@ -21,45 +20,50 @@ export class AuthService {
     constructor(
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
-        private readonly otherFunctionService: OtherFunctionsService,
-        private readonly configService: ConfigService
+        private readonly passwordService: PasswordService,
+        private readonly sendEmailService: SendEmailService,
+        private readonly tokenService: TokenService
     ){}
 
     async register(registerUserDto: RegisterUserDto){
 
+        const { first_name, last_name, email, phone, password, re_password } = registerUserDto;
+
         const user = await User.findOne({
         where: {
             [Op.or]: [
-            { email: registerUserDto.email },
-            { phone: registerUserDto.phone }
+            { email },
+            { phone }
             ]
         }
         });
     
         if(user) throw new BadRequestException("El correo o telefono ingresado ya existe");
     
-        if(registerUserDto.password !== registerUserDto.re_password) throw new BadRequestException("Las contraseñas no coinciden");
+        if(password !== re_password) throw new BadRequestException("Las contraseñas no coinciden");
+
+        const passwordHash = await this.passwordService.passwordEncrypted(password)
     
         try {
     
             const newUser = await User.create({
-                firstName: registerUserDto.first_name,
-                lastName: registerUserDto.last_name,
-                email: registerUserDto.email,
-                phone: registerUserDto.phone,
-                password: registerUserDto.password
+                firstName: first_name,
+                lastName: last_name,
+                email,
+                phone,
+                password: passwordHash
             });
 
-            const tokenEncrypted = await this.otherFunctionService.encryptedString();
+            const tokenEncrypted = await this.tokenService.encryptedString();
         
             const newToken = await TokenActivation.create({
         
                 token: tokenEncrypted,
-                uuid: this.otherFunctionService.getUuidToken(),
+                uuid: this.tokenService.getUuidToken(),
                 idUser: newUser.idUser
             });
         
-            await this.otherFunctionService.sendEmail(newToken, newUser.email, "activationAcctount");
+            await this.sendEmailService.sendEmail(newToken, newUser.email, "activationAcctount");
         
             return {
                 message: "Usuario creado con exito",
@@ -73,11 +77,13 @@ export class AuthService {
 
     async login(loginUserDto: LoginUserDto) {
 
-        const user = await this.usersService.findEmailUser(loginUserDto.email);
+        const { email, password } = loginUserDto;
+
+        const user = await this.usersService.findEmailUser(email);
 
         if(!user) throw new UnauthorizedException("El correo ingresado no existe");
 
-        const passwordValid = await compare(loginUserDto.password, user.password);
+        const passwordValid = await this.passwordService.checkPassword(password, user.password);
 
         if(!passwordValid) throw new UnauthorizedException("La contraseña ingresada es incorrecta");
         if(!user.active) throw new UnauthorizedException("La cuenta no esta activada");
@@ -85,7 +91,7 @@ export class AuthService {
         user.last_login = new Date();
         await user.save();
 
-        const payload = { email: user.email, idUser: user.idUser }
+        const payload = { email: user.email, idUser: user.idUser, active: user.active }
         const token = this.jwtService.sign(payload);
 
         return {
@@ -136,23 +142,25 @@ export class AuthService {
 
     async sendForgotPassword(sendForgotPasswordDto: SendForgotPasswordDto): Promise<ResponseData>{
 
+        const { email } = sendForgotPasswordDto;
+
         const user = await User.findOne({
             where: {
-                email: sendForgotPasswordDto.email
+                email
             }
         });
 
         if(!user) throw new NotFoundException("El email ingresado no se encuentra registrado");
 
-        const tokenEncrypted = await this.otherFunctionService.encryptedString();
+        const tokenEncrypted = await this.tokenService.encryptedString();
 
         const newToken = await TokenActivation.create({
             token: tokenEncrypted,
-            uuid: this.otherFunctionService.getUuidToken(),
+            uuid: this.tokenService.getUuidToken(),
             idUser: user.idUser
         });
 
-        await this.otherFunctionService.sendEmail(newToken, sendForgotPasswordDto.email, "resetPassword");
+        await this.sendEmailService.sendEmail(newToken, email, "resetPassword");
 
         return {
             statusCode: HttpStatus.OK,
@@ -161,23 +169,23 @@ export class AuthService {
     }
 
     async confirmForgotPassword(comfirmForgotPasswordDto: ConfirmForgotPasswordDto): Promise<ResponseData>{
-        
+
+        const { token, uuid, password, rePassword } = comfirmForgotPasswordDto;
 
         const tokenActivation = await TokenActivation.findOne({
 
             where: {
                 [Op.and]: [
-                    { token: comfirmForgotPasswordDto.token },
-                    { uuid: comfirmForgotPasswordDto.uuid }
+                    { token },
+                    { uuid }
                 ]
             }
         });
 
         if(!tokenActivation) throw new BadRequestException("El token no es valido");
-        if(comfirmForgotPasswordDto.password !== comfirmForgotPasswordDto.rePassword) throw new BadRequestException("Las contraseñas no coinciden");
+        if(password !== rePassword) throw new BadRequestException("Las contraseñas no coinciden");
 
-        const genSaltNumber = await genSalt(10);
-        const passwordEncrypt = await hash(comfirmForgotPasswordDto.password, genSaltNumber);
+        const passwordEncrypt = await this.passwordService.passwordEncrypted(password);
 
         await User.update({
             password: passwordEncrypt

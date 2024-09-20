@@ -12,6 +12,7 @@ export const AppConfigEnvironment = () => ({
         port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
         username: process.env.DATABASE_USER,
         database: process.env.DATABASE_NAME,
-        password: process.env.DATABASE_PASSWORD
+        password: process.env.DATABASE_PASSWORD,
+        logging: false
     }
 });

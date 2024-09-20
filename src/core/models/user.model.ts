@@ -1,5 +1,4 @@
-import { Column, DataType, Is, Table, Model, BeforeCreate, HasOne } from "sequelize-typescript";
-import { hashSync } from "bcrypt";
+import { Column, DataType, Is, Table, Model } from "sequelize-typescript";
 
 @Table({
     tableName: "users",
@@ -75,10 +74,4 @@ export class User extends Model {
         }
     })
     declare last_login: Date;
-
-    @BeforeCreate
-    private static hashPassword(instance: User):void{
-
-        instance.password = hashSync(instance.password, 10);
-    }
 }

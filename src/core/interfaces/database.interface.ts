@@ -18,4 +18,5 @@ export interface DatabaseConfig {
     username: string;
     database: string;
     password: string;
+    logging?: boolean;
 }

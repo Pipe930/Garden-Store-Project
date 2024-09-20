@@ -4,7 +4,9 @@ import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { OtherFunctionsService } from 'src/core/services/other-functions.service';
+import { PasswordService } from 'src/core/services/password.service';
+import { SendEmailService } from 'src/core/services/send-email.service';
+import { TokenService } from 'src/core/services/token.service';
 
 @Module({
   imports: [
@@ -24,7 +26,9 @@ import { OtherFunctionsService } from 'src/core/services/other-functions.service
   controllers: [AuthController],
   providers: [
     AuthService,
-    OtherFunctionsService
+    PasswordService,
+    SendEmailService,
+    TokenService
   ]
 })
 export class AuthModule {}

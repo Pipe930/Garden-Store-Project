@@ -1,23 +1,20 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { readFileSync } from 'fs';
-import { TokenActivation } from '../models/token.model';
 import { join } from 'path';
 import { Resend } from 'resend';
-import { ConfigService } from '@nestjs/config';
-import { createCipheriv, randomBytes, scrypt } from 'crypto';
-import { promisify } from 'util';
-import { v4 } from 'uuid';
+import { TokenActivation } from '../models/token.model';
 
 @Injectable()
-export class OtherFunctionsService {
-    
+export class SendEmailService {
+
     private resend: Resend;
 
     constructor(private readonly configService: ConfigService){
         this.resend = new Resend(configService.get("apiKeyResend"));
     }
 
-    public loadTemplate(templatePath: string, replacements: { [key: string]: string }): string {
+    private loadTemplate(templatePath: string, replacements: { [key: string]: string }): string {
 
         const template = readFileSync(templatePath, 'utf8');
         return Object.keys(replacements).reduce(
@@ -25,28 +22,8 @@ export class OtherFunctionsService {
             template
         );
     }
-    
-    public getUuidToken(): string {
-    
-        const listLetters = ['m', 'n', 'q', 'g', 'l', 'k'];
-        let token = '';
-        
-        for (let i = 0; i < 2; i++) {
 
-            const randomIndex = Math.floor(Math.random() * listLetters.length);
-            let letter = listLetters[randomIndex];
-        
-            if (Math.random() > 0.5) {
-            letter = letter.toUpperCase();
-            }
-        
-            token += letter;
-        }
-        
-        return token;
-    }
-    
-    public async sendEmail(tokenActivation: TokenActivation, email: string, type: string){
+    public async sendEmail(tokenActivation: TokenActivation, email: string, type: string): Promise<void>{
 
         let templatePath: string;
         let htmlContent: string;
@@ -87,19 +64,5 @@ export class OtherFunctionsService {
     
             throw new BadRequestException('No se pudo enviar el correo de activación');
         }
-    }
-
-    public async encryptedString():Promise<string>{
-
-        const iv = randomBytes(16);
-        const key = (await promisify(scrypt)(this.configService.get("keyCrypto"), 'salt', 32)) as Buffer;
-        const cipher = createCipheriv('aes-256-cbc', key, iv);
-
-        const encryptedText = Buffer.concat([
-            cipher.update(v4()),
-            cipher.final(),
-        ]);
-        
-        return encryptedText.toString('hex');
     }
 }
