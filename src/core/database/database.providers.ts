@@ -1,8 +1,8 @@
 import { Sequelize } from 'sequelize-typescript';
 import { DatabaseConfig } from '../interfaces/database.interface';
 import { ConfigService } from '@nestjs/config';
-import { User } from '../models/user.model';
-import { TokenActivation } from '../models/token.model';
+import { Logger } from '@nestjs/common';
+import { ArrayModels } from './models.import';
 
 export const databaseProviders = [
     {
@@ -10,10 +10,9 @@ export const databaseProviders = [
         useFactory: async (configService: ConfigService) => {
 
             const sequelize = new Sequelize(configService.get<DatabaseConfig>("database"));
-            sequelize.addModels([
-                User,
-                TokenActivation
-            ]);
+            Logger.log("Conexion Database Successfully");
+            sequelize.addModels(ArrayModels);
+            Logger.log("Models Create Database Successfully");
             await sequelize.sync();
             return sequelize;
         },

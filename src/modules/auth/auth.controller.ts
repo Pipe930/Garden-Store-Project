@@ -6,6 +6,8 @@ import { ActivationAccountDto } from './dto/activation-account-dto';
 import { SendForgotPasswordDto } from './dto/forgot-password-send.dto';
 import { ConfirmForgotPasswordDto } from './dto/forgot-password-confirm.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -43,5 +45,16 @@ export class AuthController {
     @Post('forgot-password/confirm')
     forgotPasswordConfirm(@Body() comfirmForgotPassword: ConfirmForgotPasswordDto){
         return this.authService.confirmForgotPassword(comfirmForgotPassword);
+    }
+
+    @Post('refresh-token')
+    refreshToken(@Body() refreshToken: RefreshTokenDto){
+        return this.authService.refreshToken(refreshToken);
+    }
+
+    @Post('change-password')
+    @UseGuards(AuthGuard)
+    changePassword(@Body() changePasswordDto: ChangePasswordDto, @Req() req){
+        return this.authService.changePassword(changePasswordDto, req.user.idUser);
     }
 }

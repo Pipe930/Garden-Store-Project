@@ -5,12 +5,12 @@ export class ActivationAccountDto {
 
     @IsString()
     @IsNotEmpty()
-    declare token: string;
+    readonly token: string;
 
     @IsString()
     @MinLength(2)
     @MaxLength(2)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
-    declare uuid: string;
+    readonly uuid: string;
 }

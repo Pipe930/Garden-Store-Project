@@ -1,4 +1,6 @@
-import { Column, DataType, Is, Table, Model } from "sequelize-typescript";
+import { Column, DataType, Is, Table, Model, BelongsToMany, HasOne } from "sequelize-typescript";
+import { Role, RoleUser } from "../../access-control/models/rol.model";
+import { RefreshToken } from "./token.model";
 
 @Table({
     tableName: "users",
@@ -74,4 +76,10 @@ export class User extends Model {
         }
     })
     declare last_login: Date;
+
+    @BelongsToMany(() => Role, () => RoleUser)
+    declare rolesUser: Role[];
+
+    @HasOne(() => RefreshToken)
+    declare refreshToken: RefreshToken;
 }

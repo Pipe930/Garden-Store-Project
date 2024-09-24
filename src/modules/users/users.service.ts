@@ -1,8 +1,9 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from '../../core/models/user.model';
+import { User } from './models/user.model';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
+import { Role } from '../access-control/models/rol.model';
 
 @Injectable()
 export class UsersService {
@@ -31,7 +32,11 @@ export class UsersService {
 
       where: {
         email
-      }
+      },
+      include: [{
+        model: Role,
+        through: { attributes: [] }
+      }]
     })
 
     return user;
@@ -65,7 +70,7 @@ export class UsersService {
     if(updateUser[0] === 0) throw new NotFoundException("Usuario no encontrado");
 
     return {
-      statusCode: HttpStatus.RESET_CONTENT,
+      statusCode: HttpStatus.OK,
       message: "Usuario actualizado con exito"
     };
   }

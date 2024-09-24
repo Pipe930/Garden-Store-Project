@@ -8,12 +8,12 @@ export class LoginUserDto {
     @IsEmail()
     @MaxLength(255)
     @IsNotEmpty()
-    declare email: string;
+    readonly email: string;
 
     @IsString()
     @MaxLength(255)
     @MinLength(8)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
-    declare password: string;
+    readonly password: string;
 }

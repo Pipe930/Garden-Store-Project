@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { Resend } from 'resend';
-import { TokenActivation } from '../models/token.model';
+import { TokenActivation } from '../../modules/users/models/token.model';
 
 @Injectable()
 export class SendEmailService {
@@ -51,14 +51,15 @@ export class SendEmailService {
     
         try {
 
-            const { data, error } = await this.resend.emails.send({
-                from: "Acme <onboarding@resend.dev>",
-                to: [email],
-                subject: "Activacion de Cuenta",
-                html: htmlContent,
-            });
+            console.log(htmlContent);
+            // const { data, error } = await this.resend.emails.send({
+            //     from: "Acme <onboarding@resend.dev>",
+            //     to: [email],
+            //     subject: "Activacion de Cuenta",
+            //     html: htmlContent,
+            // });
         
-            if(error) throw new BadRequestException("El correo no se envio correctamente");
+            // if(error) throw new BadRequestException("El correo no se envio correctamente");
     
         } catch (error) {
     

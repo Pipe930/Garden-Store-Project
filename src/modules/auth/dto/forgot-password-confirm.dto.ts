@@ -5,26 +5,26 @@ export class ConfirmForgotPasswordDto {
 
     @IsString()
     @IsNotEmpty()
-    declare token: string;
+    readonly token: string;
 
     @IsString()
     @MinLength(2)
     @MaxLength(2)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
-    declare uuid: string;
+    readonly uuid: string;
 
     @IsString()
     @MinLength(8)
     @MaxLength(255)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
-    declare password: string;
+    readonly password: string;
 
     @IsString()
     @MinLength(8)
     @MaxLength(255)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
-    declare rePassword: string;
+    readonly rePassword: string;
 }

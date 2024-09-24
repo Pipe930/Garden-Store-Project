@@ -1,13 +1,15 @@
 import { Transform } from "class-transformer";
-import { IsEmail, IsNotEmpty, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 
 export class CreateUserDto {
 
     @IsString()
+    @IsOptional()
     declare first_name?: string;
 
     @IsString()
+    @IsOptional()
     declare last_name?: string;
 
     @IsString()

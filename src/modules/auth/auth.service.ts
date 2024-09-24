@@ -1,11 +1,10 @@
 import { BadRequestException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginUserDto } from './dto/login-user.dto';
-import { JwtService } from '@nestjs/jwt';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
-import { TokenActivation } from 'src/core/models/token.model';
+import { RefreshToken, TokenActivation } from 'src/modules/users/models/token.model';
 import { Op } from 'sequelize';
-import { User } from 'src/core/models/user.model';
+import { User } from '../users/models/user.model';
 import { ActivationAccountDto } from './dto/activation-account-dto';
 import { SendForgotPasswordDto } from './dto/forgot-password-send.dto';
 import { ConfirmForgotPasswordDto } from './dto/forgot-password-confirm.dto';
@@ -13,13 +12,15 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { PasswordService } from 'src/core/services/password.service';
 import { SendEmailService } from 'src/core/services/send-email.service';
 import { TokenService } from 'src/core/services/token.service';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { Role, RoleUser } from '../access-control/models/rol.model';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthService {
 
     constructor(
         private readonly usersService: UsersService,
-        private readonly jwtService: JwtService,
         private readonly passwordService: PasswordService,
         private readonly sendEmailService: SendEmailService,
         private readonly tokenService: TokenService
@@ -32,17 +33,20 @@ export class AuthService {
         const user = await User.findOne({
         where: {
             [Op.or]: [
-            { email },
-            { phone }
+                { email },
+                { phone }
             ]
         }
         });
     
         if(user) throw new BadRequestException("El correo o telefono ingresado ya existe");
-    
         if(password !== re_password) throw new BadRequestException("Las contraseñas no coinciden");
 
-        const passwordHash = await this.passwordService.passwordEncrypted(password)
+        const role = await Role.findOne({
+            where: {
+                name: "cliente"
+            }
+        })
     
         try {
     
@@ -51,14 +55,16 @@ export class AuthService {
                 lastName: last_name,
                 email,
                 phone,
-                password: passwordHash
+                password: this.passwordService.passwordEncrypted(password)
             });
 
-            const tokenEncrypted = await this.tokenService.encryptedString();
-        
+            await RoleUser.create({
+                idUser: newUser.idUser,
+                idRole: role.idRole
+            });
+
             const newToken = await TokenActivation.create({
-        
-                token: tokenEncrypted,
+                token: await this.tokenService.encryptedString(),
                 uuid: this.tokenService.getUuidToken(),
                 idUser: newUser.idUser
             });
@@ -70,7 +76,9 @@ export class AuthService {
                 statusCode: HttpStatus.CREATED,
                 data: newUser
             };
+
         } catch (error) {
+            
             throw new BadRequestException("No se creo el usuario correctamente");
         }
     }
@@ -78,43 +86,31 @@ export class AuthService {
     async login(loginUserDto: LoginUserDto) {
 
         const { email, password } = loginUserDto;
-
         const user = await this.usersService.findEmailUser(email);
 
-        if(!user) throw new UnauthorizedException("El correo ingresado no existe");
-
-        const passwordValid = await this.passwordService.checkPassword(password, user.password);
-
-        if(!passwordValid) throw new UnauthorizedException("La contraseña ingresada es incorrecta");
+        if(!user || !this.passwordService.checkPassword(password, user.password)) throw new UnauthorizedException("Las credeciales no son validas");
         if(!user.active) throw new UnauthorizedException("La cuenta no esta activada");
 
         user.last_login = new Date();
         await user.save();
 
-        const payload = { email: user.email, idUser: user.idUser, active: user.active }
-        const token = this.jwtService.sign(payload);
-
         return {
 
             message: "Autenticacion realizada con exito",
             statusCode: HttpStatus.OK,
-            data: {
-                email: user.email,
-                first_name: user.firstName,
-                last_name: user.lastName,
-                token
-            }
+            data: await this.tokenService.generateTokenJWT(user)
         };
     }
 
     async activationAccount(activationAccount: ActivationAccountDto): Promise<ResponseData>{
 
-        const tokenActivate = await TokenActivation.findOne({
+        const { uuid, token } = activationAccount;
 
+        const tokenActivate = await TokenActivation.findOne({
             where: {
                 [Op.or]: [
-                    { uuid: activationAccount.uuid },
-                    { token: activationAccount.token }
+                    { uuid },
+                    { token }
                 ]
             }
         });
@@ -152,10 +148,8 @@ export class AuthService {
 
         if(!user) throw new NotFoundException("El email ingresado no se encuentra registrado");
 
-        const tokenEncrypted = await this.tokenService.encryptedString();
-
         const newToken = await TokenActivation.create({
-            token: tokenEncrypted,
+            token: await this.tokenService.encryptedString(),
             uuid: this.tokenService.getUuidToken(),
             idUser: user.idUser
         });
@@ -185,10 +179,8 @@ export class AuthService {
         if(!tokenActivation) throw new BadRequestException("El token no es valido");
         if(password !== rePassword) throw new BadRequestException("Las contraseñas no coinciden");
 
-        const passwordEncrypt = await this.passwordService.passwordEncrypted(password);
-
         await User.update({
-            password: passwordEncrypt
+            password: this.passwordService.passwordEncrypted(password)
         }, {
             where: {
                 idUser: tokenActivation.idUser
@@ -199,5 +191,45 @@ export class AuthService {
             statusCode: HttpStatus.OK,
             message: "La contraseña se restablecio con exito"
         };
+    }
+
+    async refreshToken(refreshTokenDto: RefreshTokenDto): Promise<ResponseData>{
+
+        const { refreshToken } = refreshTokenDto;
+
+        const token = await RefreshToken.findOne({
+            where: {
+                token: refreshToken
+            }
+        });
+
+        if(!token) throw new UnauthorizedException("El token no es valido");
+
+        const user = await User.findByPk(token.idRefreshToken);
+
+        return {
+            statusCode: HttpStatus.OK,
+            message: "Refresh token",
+            data: await this.tokenService.generateTokenJWT(user)
+        }
+    }
+
+    async changePassword(changePasswordDto: ChangePasswordDto, id: number): Promise<ResponseData>{
+
+        const { oldPassword, newPassword, newRePassword } = changePasswordDto;
+
+        const user = await User.findByPk(id);
+
+        if(!user) throw new NotFoundException("Usuario no encontrado");
+        if(!this.passwordService.checkPassword(oldPassword, user.password)) throw new UnauthorizedException("La contraseña actual no es valida");
+        if(newPassword !== newRePassword) throw new BadRequestException("Las contraseñas no coinciden");
+
+        user.password = this.passwordService.passwordEncrypted(newPassword);
+        await user.save();
+
+        return {
+            message: "Contraseña cambiada con exito",
+            statusCode: HttpStatus.OK
+        }
     }
 }

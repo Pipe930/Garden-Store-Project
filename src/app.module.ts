@@ -7,6 +7,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UsersModule } from './modules/users/users.module';
 import { envShema } from './config/env-shema';
 import { AuthModule } from './modules/auth/auth.module';
+import { AccessControlModule } from './modules/access-control/access-control.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { AuthModule } from './modules/auth/auth.module';
     DatabaseModule,
     MorganModule,
     UsersModule,
-    AuthModule
+    AuthModule,
+    AccessControlModule
   ],
   providers: [
     {
