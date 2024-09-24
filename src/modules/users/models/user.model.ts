@@ -5,7 +5,9 @@ import { RefreshToken } from "./token.model";
 @Table({
     tableName: "users",
     modelName: "User",
-    timestamps: true
+    timestamps: true,
+    paranoid: true,
+    deletedAt: true
 })
 export class User extends Model {
 

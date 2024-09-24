@@ -6,31 +6,31 @@ export class CreateUserDto {
 
     @IsString()
     @IsOptional()
-    declare first_name?: string;
+    readonly first_name?: string;
 
     @IsString()
     @IsOptional()
-    declare last_name?: string;
+    readonly last_name?: string;
 
     @IsString()
     @IsEmail()
     @MaxLength(255)
     @IsNotEmpty()
-    declare email: string;
+    readonly email: string;
 
     @IsString()
     @MaxLength(255)
     @MinLength(8)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
-    declare password: string;
+    readonly password: string;
 
     @IsString()
     @MaxLength(255)
     @MinLength(8)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
-    declare re_password: string;
+    readonly rePassword: string;
 
     @IsString()
     @MaxLength(12)
@@ -38,5 +38,5 @@ export class CreateUserDto {
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
     @Matches(/^\+56\d{9}$/, { message: "El numero de telefono no es valido" })
-    declare phone: string;
+    readonly phone: string;
 }

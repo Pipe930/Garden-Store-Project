@@ -57,17 +57,16 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<ResponseData> {
 
-    const updateUser = await User.update({
+    const { first_name, last_name } = updateUserDto;
 
-      first_name: updateUserDto.first_name,
-      last_name: updateUserDto.last_name
-    }, {
-      where: {
-        id_user: id
-      }
-    });
+    const user = (await this.findOne(id)).data as User;
 
-    if(updateUser[0] === 0) throw new NotFoundException("Usuario no encontrado");
+    if(!user) throw new NotFoundException("Usuario no encontrado");
+
+    user.firstName = first_name;
+    user.lastName = last_name;
+
+    await user.save();
 
     return {
       statusCode: HttpStatus.OK,
