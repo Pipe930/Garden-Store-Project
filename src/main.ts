@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { CORS } from './constants';
 import { ValidationPipe } from '@nestjs/common';
+import { json } from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,8 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
     transform: true
   }))
+
+  app.use(json({ limit: '5mb' }));
 
   const configService = app.get(ConfigService);
   await app.listen(parseInt(configService.get("port")));

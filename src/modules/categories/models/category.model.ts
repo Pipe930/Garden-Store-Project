@@ -1,4 +1,5 @@
-import { BeforeCreate, BeforeUpdate, Column, CreatedAt, DataType, DeletedAt, Model, Table } from "sequelize-typescript";
+import { BeforeCreate, BeforeUpdate, Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { Product } from "src/modules/products/models/product.model";
 
 @Table({
     tableName: "categories",
@@ -35,6 +36,9 @@ export class Category extends Model {
         allowNull: true,
     })
     declare description: string;
+
+    @HasMany(() => Product)
+    declare products: Product[];
 
     @BeforeUpdate
     @BeforeCreate

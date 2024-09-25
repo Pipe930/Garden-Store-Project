@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppConfigEnvironment } from './config/config.environment';
 import { DatabaseModule } from './core/database/database.module';
 import { MorganInterceptor, MorganModule } from 'nest-morgan';
@@ -10,7 +10,8 @@ import { AccessControlModule } from './modules/access-control/access-control.mod
 import { CategoriesModule } from './modules/categories/categories.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-
+import { ProductsModule } from './modules/products/products.module';
+import { JsonMiddleware } from './core/middlewares/json.middleware';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,7 +36,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     UsersModule,
     AuthModule,
     AccessControlModule,
-    CategoriesModule
+    CategoriesModule,
+    ProductsModule
   ],
   providers: [
     {
@@ -44,4 +46,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }
   ]
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(JsonMiddleware).forRoutes(
+    {
+      path: '*',
+      method: RequestMethod.POST
+    }, 
+    {
+      path: '*',
+      method: RequestMethod.PUT
+    }
+  );
+  }
+}
