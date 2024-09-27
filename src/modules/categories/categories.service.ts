@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './models/category.model';
@@ -8,16 +8,15 @@ import { Op } from 'sequelize';
 @Injectable()
 export class CategoriesService {
 
-
   async create(createCategoryDto: CreateCategoryDto): Promise<ResponseData> {
 
-    const { name, slug, description } = createCategoryDto;
+    const { name, description } = createCategoryDto;
 
-    const category = await Category.findOne({ where: { name: { [Op.iLike]: name } } });
+    const category = await Category.findOne<Category>({ where: { name: { [Op.iLike]: name } } });
 
     if(category) throw new NotFoundException("El nombre de la categoria ya existe");
 
-    const newCategory = await Category.create({ name, slug, description });
+    const newCategory = await Category.create<Category>({ name, slug: "", description });
 
     return {
       statusCode: HttpStatus.CREATED,
@@ -28,9 +27,9 @@ export class CategoriesService {
 
   async findAll(): Promise<ResponseData> {
 
-    const categories = await Category.findAll();
+    const categories = await Category.findAll<Category>();
 
-    if(categories.length === 0) throw new NotFoundException("No tenemos categorias registradas");
+    if(categories.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT }
 
     return {
       statusCode: HttpStatus.OK,
@@ -40,7 +39,7 @@ export class CategoriesService {
 
   async findOne(id: number): Promise<ResponseData> {
 
-    const category = await Category.findByPk(id);
+    const category = await Category.findByPk<Category>(id);
 
     if(!category) throw new NotFoundException("La categoria no existe");
 
@@ -55,7 +54,7 @@ export class CategoriesService {
 
     const { name, description } = updateCategoryDto;
 
-    const category = (await this.findOne(id)).data as Category;
+    const category = await Category.findByPk<Category>(id);
 
     if(!category) throw new NotFoundException("La categoria no existe");
 
@@ -73,7 +72,7 @@ export class CategoriesService {
 
   async remove(id: number): Promise<ResponseData> {
   
-    const category = (await this.findOne(id)).data as Category;
+    const category = await Category.findByPk<Category>(id);
 
     if(!category) throw new NotFoundException("La categoria no existe");
 

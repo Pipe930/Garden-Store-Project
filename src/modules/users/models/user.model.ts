@@ -14,7 +14,8 @@ export class User extends Model {
     @Column({
         primaryKey:true,
         type: DataType.INTEGER,
-        autoIncrement: true
+        autoIncrement: true,
+        field: "id_user"
     })
     declare idUser: number;
 
@@ -22,14 +23,15 @@ export class User extends Model {
         type: DataType.STRING(20),
         allowNull: true,
         defaultValue: "(sin nombre)",
-        
+        field: "first_name"
     })
     declare firstName: string;
 
     @Column({
         type: DataType.STRING(20),
         allowNull: true,
-        defaultValue: "(sin apellido)"  
+        defaultValue: "(sin apellido)",
+        field: "last_name"
     })
     declare lastName: string;
 
@@ -75,9 +77,10 @@ export class User extends Model {
         allowNull: true,
         validate: {
             isDate: true
-        }
+        },
+        field: "last_login"
     })
-    declare last_login: Date;
+    declare lastLogin: Date;
 
     @BelongsToMany(() => Role, () => RoleUser)
     declare rolesUser: Role[];

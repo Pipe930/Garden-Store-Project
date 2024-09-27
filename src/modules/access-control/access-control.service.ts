@@ -8,7 +8,7 @@ export class AccessControlService {
 
     async findAllRoles(): Promise<ResponseData>{
 
-        const roles = await Role.findAll();
+        const roles = await Role.findAll<Role>();
 
         if(roles.length === 0) throw new NotFoundException("No tenemos roles registrados");
 
@@ -22,7 +22,7 @@ export class AccessControlService {
 
         const { name, description } = createRoleDto;
 
-        const roleExists = await Role.findOne({
+        const roleExists = await Role.findOne<Role>({
             where: {
                 name: name.toLowerCase()
             }
@@ -30,7 +30,7 @@ export class AccessControlService {
 
         if(roleExists) throw new BadRequestException("El nombre del rol ya existe");
 
-        const roleCreated = await Role.create({
+        const roleCreated = await Role.create<Role>({
             name: name.toLowerCase(),
             description
         });
@@ -45,16 +45,14 @@ export class AccessControlService {
     async updateRole(idRole: number, createRoleDto: CreateRoleDto): Promise<ResponseData>{
         const { name, description } = createRoleDto;
 
-        const role = await Role.update({
-            name: name.toLowerCase(),
-            description
-        }, {
-            where: {
-                idRole
-            }
-        });
+        const role = await Role.findByPk<Role>(idRole);
 
-        if(role[0] === 0) throw new NotFoundException("El rol no existe");
+        if(!role) throw new NotFoundException("El rol no existe");
+
+        role.name = name.toLowerCase();
+        role.description = description;
+
+        await role.save();
 
         return {
             statusCode: HttpStatus.OK,

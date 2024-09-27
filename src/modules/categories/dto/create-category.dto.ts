@@ -6,11 +6,7 @@ export class CreateCategoryDto {
     @IsNotEmpty()
     @MaxLength(100)
     declare name: string;
-
-    @IsString()
-    @IsEmpty()
-    declare slug: string;
-
+    
     @IsString()
     @IsOptional()
     declare description: string;

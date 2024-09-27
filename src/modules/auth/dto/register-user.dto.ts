@@ -6,11 +6,11 @@ export class RegisterUserDto {
 
     @IsString()
     @IsOptional()
-    readonly first_name?: string;
+    readonly firstName?: string;
 
     @IsString()
     @IsOptional()
-    readonly last_name?: string;
+    readonly lastName?: string;
 
     @IsString()
     @IsEmail()
@@ -30,7 +30,7 @@ export class RegisterUserDto {
     @MinLength(8)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
-    readonly re_password: string;
+    readonly rePassword: string;
 
     @IsString()
     @MaxLength(12)

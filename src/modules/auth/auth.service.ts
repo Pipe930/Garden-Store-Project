@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
@@ -15,6 +15,7 @@ import { TokenService } from 'src/core/services/token.service';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { Role, RoleUser } from '../access-control/models/rol.model';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { Cart } from '../cart/models/cart.model';
 
 @Injectable()
 export class AuthService {
@@ -28,9 +29,9 @@ export class AuthService {
 
     async register(registerUserDto: RegisterUserDto){
 
-        const { first_name, last_name, email, phone, password, re_password } = registerUserDto;
+        const { firstName, lastName, email, phone, password, rePassword } = registerUserDto;
 
-        const user = await User.findOne({
+        const user = await User.findOne<User>({
         where: {
             [Op.or]: [
                 { email },
@@ -40,9 +41,9 @@ export class AuthService {
         });
     
         if(user) throw new BadRequestException("El correo o telefono ingresado ya existe");
-        if(password !== re_password) throw new BadRequestException("Las contraseñas no coinciden");
+        if(password !== rePassword) throw new BadRequestException("Las contraseñas no coinciden");
 
-        const role = await Role.findOne({
+        const role = await Role.findOne<Role>({
             where: {
                 name: "cliente"
             }
@@ -50,20 +51,24 @@ export class AuthService {
     
         try {
     
-            const newUser = await User.create({
-                firstName: first_name,
-                lastName: last_name,
+            const newUser = await User.create<User>({
+                firstName,
+                lastName,
                 email,
                 phone,
                 password: this.passwordService.passwordEncrypted(password)
             });
+
+            await Cart.create({
+                idCartUser: newUser.idUser
+            })
 
             await RoleUser.create({
                 idUser: newUser.idUser,
                 idRole: role.idRole
             });
 
-            const newToken = await TokenActivation.create({
+            const newToken = await TokenActivation.create<TokenActivation>({
                 token: await this.tokenService.encryptedString(),
                 uuid: this.tokenService.getUuidToken(),
                 idUser: newUser.idUser
@@ -78,7 +83,8 @@ export class AuthService {
             };
 
         } catch (error) {
-            
+
+            console.log(error);
             throw new BadRequestException("No se creo el usuario correctamente");
         }
     }
@@ -91,7 +97,7 @@ export class AuthService {
         if(!user || !this.passwordService.checkPassword(password, user.password)) throw new UnauthorizedException("Las credeciales no son validas");
         if(!user.active) throw new UnauthorizedException("La cuenta no esta activada");
 
-        user.last_login = new Date();
+        user.lastLogin = new Date();
         await user.save();
 
         return {
@@ -106,7 +112,7 @@ export class AuthService {
 
         const { uuid, token } = activationAccount;
 
-        const tokenActivate = await TokenActivation.findOne({
+        const tokenActivate = await TokenActivation.findOne<TokenActivation>({
             where: {
                 [Op.or]: [
                     { uuid },
@@ -124,7 +130,7 @@ export class AuthService {
         if(!tokenActivate) throw new BadRequestException("Las credenciales no son validas");
         if(minutesDiff >= 30) throw new BadRequestException("El token a expirado");
 
-        const user = await User.findByPk(tokenActivate.idUser);
+        const user = await User.findByPk<User>(tokenActivate.idUser);
 
         user.active = true;
         await user.save();
@@ -148,7 +154,7 @@ export class AuthService {
 
         if(!user) throw new NotFoundException("El email ingresado no se encuentra registrado");
 
-        const newToken = await TokenActivation.create({
+        const newToken = await TokenActivation.create<TokenActivation>({
             token: await this.tokenService.encryptedString(),
             uuid: this.tokenService.getUuidToken(),
             idUser: user.idUser
@@ -166,7 +172,7 @@ export class AuthService {
 
         const { token, uuid, password, rePassword } = comfirmForgotPasswordDto;
 
-        const tokenActivation = await TokenActivation.findOne({
+        const tokenActivation = await TokenActivation.findOne<TokenActivation>({
 
             where: {
                 [Op.and]: [
@@ -197,7 +203,7 @@ export class AuthService {
 
         const { refreshToken } = refreshTokenDto;
 
-        const token = await RefreshToken.findOne({
+        const token = await RefreshToken.findOne<RefreshToken>({
             where: {
                 token: refreshToken
             }
@@ -205,7 +211,16 @@ export class AuthService {
 
         if(!token) throw new UnauthorizedException("El token no es valido");
 
-        const user = await User.findByPk(token.idRefreshToken);
+        const user = await User.findOne<User>({
+            where: {
+                idUser: token.idRefreshToken
+            },
+            include: [
+                {
+                    model: Role
+                }
+            ]
+        });
 
         return {
             statusCode: HttpStatus.OK,
@@ -218,7 +233,7 @@ export class AuthService {
 
         const { oldPassword, newPassword, newRePassword } = changePasswordDto;
 
-        const user = await User.findByPk(id);
+        const user = await User.findByPk<User>(id);
 
         if(!user) throw new NotFoundException("Usuario no encontrado");
         if(!this.passwordService.checkPassword(oldPassword, user.password)) throw new UnauthorizedException("La contraseña actual no es valida");

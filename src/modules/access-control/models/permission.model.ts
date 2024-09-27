@@ -11,7 +11,8 @@ export class Permission extends Model {
     @Column({
         primaryKey:true,
         type: DataType.INTEGER,
-        autoIncrement: true
+        autoIncrement: true,
+        field: "id_permission"
     })
     declare idPermission: number;
 
@@ -43,7 +44,8 @@ export class RolePermission extends Model {
     @Column({
         primaryKey:true,
         type: DataType.INTEGER,
-        autoIncrement: true
+        autoIncrement: true,
+        field: "id_role_permission"
     })
     declare idRolePermission: number;
 
@@ -56,14 +58,16 @@ export class RolePermission extends Model {
     @ForeignKey(() => Role)
     @Column({
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        field: "id_role"
     })
     declare idRole: number;
 
     @ForeignKey(() => Permission)
     @Column({
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        field: "id_permission"
     })
     declare idPermission: number;
 }

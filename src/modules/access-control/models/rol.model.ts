@@ -13,7 +13,8 @@ export class Role extends Model {
     @Column({
         primaryKey:true,
         type: DataType.INTEGER,
-        autoIncrement: true
+        autoIncrement: true,
+        field: "id_role"
     })
     declare idRole: number;
 
@@ -48,28 +49,32 @@ export class RoleUser extends Model{
     @Column({
         primaryKey:true,
         type: DataType.INTEGER,
-        autoIncrement: true
+        autoIncrement: true,
+        field: "id_role_user"
     })
     declare idRoleUser: number;
 
     @Column({
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        field: "date_asigned"
     })
     declare dateAsigned: Date;
 
     @ForeignKey(() => User)
     @Column({
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        field: "id_user"
     })
     declare idUser: number;
 
     @ForeignKey(() => Role)
     @Column({
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        field: "id_role"
     })
     declare idRole: number;
 }

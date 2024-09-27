@@ -14,6 +14,7 @@ export class Category extends Model {
         primaryKey: true,
         autoIncrement: true,
         type: DataType.INTEGER,
+        field: "id_category"
     })
     declare idCategory: number;
 

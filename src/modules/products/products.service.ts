@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './models/product.model';
@@ -9,21 +9,19 @@ import { Op } from 'sequelize';
 @Injectable()
 export class ProductsService {
 
-  constructor() {}
-
   async create(createProductDto: CreateProductDto):Promise<ResponseData> {
 
     const { title, brand, returnPolicy, price, description, idCategory } = createProductDto;
 
-    const product = await Product.findOne({ where: { title: { [Op.iLike]: title } } });
-    const category = await Category.findByPk(idCategory);
+    const product = await Product.findOne<Product>({ where: { title: { [Op.iLike]: title } } });
+    const category = await Category.findByPk<Category>(idCategory);
 
     if(product) throw new BadRequestException("Ya existe un producto con ese titulo");
     if(!category) throw new BadRequestException("La categoria ingresada no existe");
 
     try{
 
-      const newProduct = await Product.create({
+      const newProduct = await Product.create<Product>({
         title,
         brand,
         price,
@@ -46,9 +44,9 @@ export class ProductsService {
 
   async findAll(): Promise<ResponseData> {
 
-    const products = await Product.findAll();
+    const products = await Product.findAll<Product>();
 
-    if(products.length === 0) throw new NotFoundException("No hay productos registrados");
+    if(products.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT }
 
     return {
       statusCode: HttpStatus.OK,
@@ -59,7 +57,7 @@ export class ProductsService {
 
   async findOne(id: number): Promise<ResponseData> {
 
-    const product = await Product.findByPk(id);
+    const product = await Product.findByPk<Product>(id);
 
     if(!product) throw new NotFoundException("Producto no encontrado");
 
@@ -74,8 +72,8 @@ export class ProductsService {
 
     const { title, brand, returnPolicy, price, description, idCategory } = updateProductDto;
 
-    const product = await Product.findByPk(id);
-    const category = await Category.findByPk(idCategory);
+    const product = await Product.findByPk<Product>(id);
+    const category = await Category.findByPk<Category>(idCategory);
     
     if(!product) throw new NotFoundException("Producto no encontrado");
     if(!category) throw new BadRequestException("La categoria ingresada no existe");
@@ -98,7 +96,7 @@ export class ProductsService {
 
   async remove(id: number): Promise<ResponseData> {
 
-    const product = await Product.findByPk(id);
+    const product = await Product.findByPk<Product>(id);
 
     if(!product) throw new NotFoundException("Producto no encontrado");
 

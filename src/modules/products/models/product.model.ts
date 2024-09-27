@@ -1,4 +1,4 @@
-import { BelongsTo, Column, DataType, ForeignKey, Is, Table, Model, BeforeCreate, BeforeUpdate } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Is, Table, Model, BeforeCreate, BeforeUpdate, HasMany } from "sequelize-typescript";
 import { Category } from "src/modules/categories/models/category.model";
 
 export enum AvailabilityStatus {
@@ -19,6 +19,7 @@ export class Product extends Model {
         primaryKey: true,
         autoIncrement: true,
         type: DataType.INTEGER,
+        field: "id_product"
     })
     declare idProduct: number;
 
@@ -76,7 +77,8 @@ export class Product extends Model {
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        field: "price_discount"
     })
     declare priceDiscount: number;
 
@@ -103,20 +105,23 @@ export class Product extends Model {
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        field: "reviews_count"
     })
     declare reviewsCount: number;
 
     @Column({
         type: DataType.ENUM(AvailabilityStatus.InStock, AvailabilityStatus.OutOfStock, AvailabilityStatus.LowStock),
         allowNull: false,
-        defaultValue: AvailabilityStatus.OutOfStock
+        defaultValue: AvailabilityStatus.OutOfStock,
+        field: "availability_status"
     })
     declare availabilityStatus: string;
 
     @Column({
         type: DataType.STRING(60),
-        allowNull: false
+        allowNull: false,
+        field: "return_policy"
     })
     declare returnPolicy: string;
 
@@ -136,7 +141,8 @@ export class Product extends Model {
     @ForeignKey(() => Category)
     @Column({
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        field: "id_category"
     })
     declare idCategory: number;
 

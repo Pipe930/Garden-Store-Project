@@ -56,7 +56,7 @@ export class RefreshToken extends Model {
         primaryKey: true,
         type: DataType.INTEGER,
         autoIncrement: true,
-
+        field: "id_refresh_token"
     })
     declare idRefreshToken: number;
 
@@ -70,6 +70,7 @@ export class RefreshToken extends Model {
     @Column({
         type: DataType.DATE,
         allowNull: false,
+        field: "expiry_date"
     })
     declare expiryDate: Date;
 }

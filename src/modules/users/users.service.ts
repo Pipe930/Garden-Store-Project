@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './models/user.model';
@@ -14,7 +14,15 @@ export class UsersService {
 
   async findAll(): Promise<ResponseData> {
 
-    const listUsers = await User.findAll();
+    const listUsers = await User.findAll<User>({
+      attributes: ["idUser", "firstName", "lastName", "email", "createdAt", "updatedAt", "lastLogin", "active"],
+      include: [
+        {
+          model: Role,
+          attributes: ["idRole", "name"]
+        }
+      ]
+    });
 
     if(listUsers.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT }
 
@@ -28,14 +36,13 @@ export class UsersService {
 
   async findEmailUser(email: string): Promise<User>{
 
-    const user = await User.findOne({
+    const user = await User.findOne<User>({
 
       where: {
         email
       },
       include: [{
-        model: Role,
-        through: { attributes: [] }
+        model: Role
       }]
     })
 
@@ -44,7 +51,7 @@ export class UsersService {
 
   async findOne(id: number): Promise<ResponseData> {
 
-    const user = await User.findByPk(id);
+    const user = await User.findByPk<User>(id);
 
     if(!user) throw new NotFoundException("Usuario no encontrado");
 
@@ -59,7 +66,12 @@ export class UsersService {
 
     const { first_name, last_name } = updateUserDto;
 
-    const user = (await this.findOne(id)).data as User;
+    const user = await User.findOne<User>({
+      where: {
+        idUser: id
+      },
+      attributes: ["idUser", "firstName", "lastName", "email", "createdAt", "updatedAt", "lastLogin", "active"]
+    });
 
     if(!user) throw new NotFoundException("Usuario no encontrado");
 

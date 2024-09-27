@@ -7,9 +7,7 @@ import { SendEmailService } from 'src/core/services/send-email.service';
 import { TokenService } from 'src/core/services/token.service';
 
 @Module({
-  imports: [
-    UsersModule
-  ],
+  imports: [UsersModule],
   controllers: [AuthController],
   providers: [
     AuthService,

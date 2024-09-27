@@ -12,6 +12,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductsModule } from './modules/products/products.module';
 import { JsonMiddleware } from './core/middlewares/json.middleware';
+import { CartModule } from './modules/cart/cart.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,12 +26,10 @@ import { JsonMiddleware } from './core/middlewares/json.middleware';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('keyJwt'),
+        signOptions: {  expiresIn: '60m' }
       }),
       inject: [ConfigService],
-    }),
-    JwtModule.register({
-      global: true,
-      signOptions: {  expiresIn: '60m' }
+      global: true
     }),
     DatabaseModule,
     MorganModule,
@@ -37,7 +37,8 @@ import { JsonMiddleware } from './core/middlewares/json.middleware';
     AuthModule,
     AccessControlModule,
     CategoriesModule,
-    ProductsModule
+    ProductsModule,
+    CartModule
   ],
   providers: [
     {
