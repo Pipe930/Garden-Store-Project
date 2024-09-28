@@ -6,6 +6,8 @@ import { Category } from "src/modules/categories/models/category.model";
 import { Product } from "src/modules/products/models/product.model";
 import { Cart } from "src/modules/cart/models/cart.model";
 import { Item } from "src/modules/cart/models/item.model";
+import { Commune, Province, Region } from "src/modules/address/models/locates.model";
+import { Address, AddressUser } from "src/modules/address/models/address.model";
 
 export const ArrayModels: Array<any> = [
     User,
@@ -18,5 +20,10 @@ export const ArrayModels: Array<any> = [
     Category,
     Product,
     Cart,
-    Item
+    Item,
+    Region,
+    Province,
+    Commune,
+    Address,
+    AddressUser
 ]

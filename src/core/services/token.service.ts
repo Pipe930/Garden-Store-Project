@@ -1,12 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { createCipheriv, randomBytes, scrypt } from 'crypto';
+import { createCipheriv, randomBytes, scrypt, randomUUID } from 'crypto';
 import { RefreshToken } from 'src/modules/users/models/token.model';
 import { User } from 'src/modules/users/models/user.model';
 import { promisify } from 'util';
-import { v4 } from 'uuid';
-
 @Injectable()
 export class TokenService {
 
@@ -42,7 +40,7 @@ export class TokenService {
         const cipher = createCipheriv('aes-256-cbc', key, iv);
 
         const encryptedText = Buffer.concat([
-            cipher.update(v4()),
+            cipher.update(randomUUID()),
             cipher.final(),
         ]);
         

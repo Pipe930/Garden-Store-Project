@@ -1,6 +1,7 @@
-import { Column, DataType, Is, Table, Model, BelongsToMany, HasOne } from "sequelize-typescript";
+import { Column, DataType, Is, Table, Model, BelongsToMany, HasOne, HasMany } from "sequelize-typescript";
 import { Role, RoleUser } from "../../access-control/models/rol.model";
 import { RefreshToken } from "./token.model";
+import { Address, AddressUser } from "src/modules/address/models/address.model";
 
 @Table({
     tableName: "users",
@@ -87,4 +88,7 @@ export class User extends Model {
 
     @HasOne(() => RefreshToken)
     declare refreshToken: RefreshToken;
+
+    @HasMany(() => AddressUser)
+    declare addresses: Address[];
 }

@@ -13,6 +13,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductsModule } from './modules/products/products.module';
 import { JsonMiddleware } from './core/middlewares/json.middleware';
 import { CartModule } from './modules/cart/cart.module';
+import { AddressModule } from './modules/address/address.module';
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { CartModule } from './modules/cart/cart.module';
     AccessControlModule,
     CategoriesModule,
     ProductsModule,
-    CartModule
+    CartModule,
+    AddressModule
   ],
   providers: [
     {
