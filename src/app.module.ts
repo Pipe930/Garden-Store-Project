@@ -14,6 +14,7 @@ import { ProductsModule } from './modules/products/products.module';
 import { JsonMiddleware } from './core/middlewares/json.middleware';
 import { CartModule } from './modules/cart/cart.module';
 import { AddressModule } from './modules/address/address.module';
+import { SalesModule } from './modules/sales/sales.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { AddressModule } from './modules/address/address.module';
     CategoriesModule,
     ProductsModule,
     CartModule,
-    AddressModule
+    AddressModule,
+    SalesModule
   ],
   providers: [
     {

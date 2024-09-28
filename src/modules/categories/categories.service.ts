@@ -16,13 +16,18 @@ export class CategoriesService {
 
     if(category) throw new NotFoundException("El nombre de la categoria ya existe");
 
-    const newCategory = await Category.create<Category>({ name, slug: "", description });
+    try {    
+      const newCategory = await Category.create<Category>({ name, slug: "", description });
+      return {
+        statusCode: HttpStatus.CREATED,
+        message: "Categoria creada correctamente",
+        data: newCategory
+      };
+    } catch (error) {
+      throw new NotFoundException("No se creo la categoria correctamente");
+      
+    }
 
-    return {
-      statusCode: HttpStatus.CREATED,
-      message: "Categoria creada correctamente",
-      data: newCategory
-    };
   }
 
   async findAll(): Promise<ResponseData> {
@@ -58,10 +63,15 @@ export class CategoriesService {
 
     if(!category) throw new NotFoundException("La categoria no existe");
 
-    category.name = name;
-    category.description = description;
-
-    await category.save();
+    try {
+      
+      category.name = name;
+      category.description = description;
+  
+      await category.save();
+    } catch (error) {
+      throw new NotFoundException("No se actualizo la categoria correctamente");
+    }
 
     return {
       statusCode: HttpStatus.OK,

@@ -78,14 +78,18 @@ export class ProductsService {
     if(!product) throw new NotFoundException("Producto no encontrado");
     if(!category) throw new BadRequestException("La categoria ingresada no existe");
 
-    product.title = title;
-    product.brand = brand;
-    product.price = price;
-    product.returnPolicy = returnPolicy;
-    product.description = description;
-    product.idCategory = idCategory;
-
-    await product.save();
+    try {
+      product.title = title;
+      product.brand = brand;
+      product.price = price;
+      product.returnPolicy = returnPolicy;
+      product.description = description;
+      product.idCategory = idCategory;
+  
+      await product.save();
+    } catch (error) {
+      throw new BadRequestException("No se guardo el producto correctamente");  
+    }
 
     return {
       statusCode: HttpStatus.OK,
