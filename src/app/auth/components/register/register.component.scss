@@ -1,0 +1,45 @@
+@import '../../../../themes/variables.scss';
+
+.container__container-fluid{
+
+  width: 30rem;
+  margin: 4rem 0;
+  padding: 2.4rem;
+  background-color: $color-light;
+  box-shadow: 3px 3px 10px -5px $color-dark-500;
+
+  .container-fuid__title{
+
+    text-align: center;
+    color: $color-dark;
+    margin-bottom: 0.8rem;
+    font-size: 1.8rem;
+  }
+
+  .container-fuid__form{
+
+    .form__input{
+      border: 1px solid $color-dark-400;
+    }
+
+    .form__input.is-invalid{
+      border-color: $color-danger;
+    }
+
+    .form__btn-register{
+      margin-top: 20px;
+      padding: 8px 0;
+    }
+    .form__link{
+      margin-top: 1.4rem;
+      text-align: center;
+      text-decoration: underline;
+      transition: all .3s ease-in-out;
+
+      &:hover{
+
+        color: $color-success-600;
+      }
+    }
+  }
+}

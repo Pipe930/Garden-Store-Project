@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="container__container-fluid">
+    <h2 class="container-fuid__title">Iniciar Sesión <i class='bx bx-log-in'></i></h2>
+    <form class="container-fuid__form" novalidate [formGroup]="formLogin" (ngSubmit)="login()">
+
+      <div class="mb-3">
+        <label for="emailInput" class="form-label">Correo</label>
+        <input type="email" class="form-control form__input" id="emailInput" formControlName="email" placeholder="correo@ejemplo.com" [ngClass]="{
+          'is-invalid': email.invalid && (email.dirty || email.touched)
+        }">
+
+        @if(email.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(email.getError("email")){
+          <span class="invalid-feedback">Tiene que ingresar un correo valido</span>
+        }
+        @if(email.getError("maxlength")){
+          <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+        }
+      </div>
+      <div class="mb-3">
+        <label for="passwordInput" class="form-label">Contraseña</label>
+        <input type="password" class="form-control form__input" id="passwordInput" formControlName="password" [ngClass]="{
+          'is-invalid': password.invalid && (password.dirty || password.touched)
+        }">
+
+        @if(password.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(password.getError("minlength")){
+          <span class="invalid-feedback">Tiene que tener un minimo de 8 caracteres</span>
+        }
+        @if(password.getError("maxlength")){
+          <span class="invalid-feedback">Tiene que tener un maximo de 50 caracteres</span>
+        }
+      </div>
+      <div class="form__buttons">
+        <a href="" [routerLink]="['/auth/forgot-password']" class="form__link">Olvide mi contraseña</a>
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-success form__btn">Iniciar Sesion</button>
+        </div>
+        <p class="form__parraf form__parraf--margin-bottom">¿No tienes cuenta?, <a href="" [routerLink]="['/auth/register']" class="form__link form__link--center">Registrate Aqui</a></p>
+      </div>
+    </form>
+  </div>
+</div>

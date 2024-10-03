@@ -1,0 +1,92 @@
+<div class="container__container-fluid">
+  <h2 class="container-fuid__title">Registrarse <i class='bx bx-registered'></i></h2>
+  <form class="container-fuid__form needs-validation" novalidate [formGroup]="formRegister" (ngSubmit)="register()">
+
+    <div class="mb-3">
+      <label for="firstName" class="form-label">Nombre</label>
+      <input type="text" class="form-control form__input" id="firstName" formControlName="firstName" [ngClass]="{
+        'is-invalid': firstName.invalid
+      }">
+      @if (firstName.getError("maxlength")) {
+        <span class="invalid-feedback">Tiene que ser maximo 20 caracteres</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="lastName" class="form-label">Apellido</label>
+      <input type="text" class="form-control form__input" id="lastName" formControlName="lastName"[ngClass]="{
+        'is-invalid': lastName.invalid
+      }">
+      @if (lastName.getError("maxlength")) {
+        <span class="invalid-feedback">Tiene que ser maximo 20 caracteres</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Correo</label>
+      <input type="email" class="form-control form__input" id="email" formControlName="email" [ngClass]="{
+        'is-invalid': email.invalid && (email.dirty || email.touched)
+      }">
+      @if (email.getError("email")) {
+        <span class="invalid-feedback">Tiene que ingresar un correo valido</span>
+      }
+      @if (email.getError("required")) {
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if (email.getError("maxlength")) {
+        <span class="invalid-feedback">Tiene que ser maximo de 255 caracteres</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="phone" class="form-label">Telefono</label>
+      <input type="text" class="form-control form__input" id="phone" formControlName="phone" [ngClass]="{
+        'is-invalid': phone.invalid && (phone.dirty || phone.touched)
+      }">
+      @if (phone.getError("required")) {
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if (phone.getError("minlength")) {
+        <span class="invalid-feedback">Tiene que ser minimo de 12 caracteres</span>
+      }
+      @if (phone.getError("maxlength")) {
+        <span class="invalid-feedback">Tiene que ser maximo de 12 caracteres</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="inputPassword" class="form-label">Contraseña</label>
+      <input type="password" id="inputPassword" class="form-control form__input" aria-describedby="passwordHelpBlock" formControlName="password" [ngClass]="{
+        'is-invalid': password.invalid && (password.dirty || password.touched)
+      }">
+      @if (password.getError("required")) {
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if (password.getError("minlength")) {
+        <span class="invalid-feedback">Tiene que ser minimo de 8 caracteres</span>
+      }
+      @if (password.getError("maxlength")) {
+        <span class="invalid-feedback">Tiene que ser maximo de 50 caracteres</span>
+      }
+      <div id="passwordHelpBlock" class="form-text">
+        Su contraseña debe tener entre 8 y 20 caracteres, contener letras y números para que sea más segura.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="rePassword" class="form-label">Confirmar Contraseña</label>
+      <input type="password" class="form-control form__input" id="rePassword" formControlName="rePassword" [ngClass]="{
+        'is-invalid': rePassword.invalid && (rePassword.dirty || rePassword.touched)
+      }">
+      @if (rePassword.getError("required")) {
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if (rePassword.getError("minlength")) {
+        <span class="invalid-feedback">Tiene que ser minimo de 8 caracteres</span>
+      }
+      @if (rePassword.getError("maxlength")) {
+        <span class="invalid-feedback">Tiene que ser maximo de 50 caracteres</span>
+      }
+    </div>
+    <div class="d-grid gap-2">
+
+      <button type="submit" class="btn btn-success form__btn-register">Registrarse</button>
+    </div>
+    <a href="" [routerLink]="['/auth/login']" class="form__link">Ya tengo una cuenta</a>
+  </form>
+</div>

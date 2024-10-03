@@ -1,0 +1,60 @@
+@import '../../../../themes/variables.scss';
+
+.container__container-fluid{
+
+  width: 30rem;
+  padding: 2.4rem;
+  background-color: $color-light;
+  box-shadow: 5px 5px 10px -5px $color-dark;
+
+  @media screen and (max-width: 530px) {
+    width: 100%;
+  }
+
+  .container-fuid__title{
+
+    text-align: center;
+    color: $color-dark;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+  }
+
+  .container-fuid__form{
+
+    .form__input{
+      border: 1px solid $color-dark-400;
+    }
+
+    .form__input.is-invalid{
+      border-color: $color-danger;
+    }
+
+    .form__buttons{
+
+      .form__link{
+        margin: 1.4rem 0;
+        color: $color-dark;
+        transition: all .3s ease-in-out;
+        text-decoration: underline;
+        display: inline-block;
+
+        &:hover{
+
+          color: $color-success-600;
+        }
+      }
+
+      .form__parraf{
+        text-align: center;
+      }
+
+      .form__parraf--margin-bottom{
+        margin-bottom: 0;
+      }
+
+      .form__btn{
+        padding: 8px 0;
+      }
+    }
+  }
+}
