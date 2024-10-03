@@ -33,7 +33,7 @@ export class SendEmailService {
             templatePath = join(__dirname, '..', '..', 'templates', 'activateAccount.html');
 
             htmlContent = this.loadTemplate(templatePath, {
-                activation_link: `${this.configService.get('domainUrl')}activation/${tokenActivation.uuid}/${tokenActivation.token}`,
+                activation_link: `${this.configService.get('domainUrl')}/auth/activation/${tokenActivation.uuid}/${tokenActivation.token}`,
                 privacy_policy_link: '',
                 terms_link: ''
             });
@@ -43,7 +43,7 @@ export class SendEmailService {
             templatePath = join(__dirname, '..', '..', 'templates', 'resetPassword.html');
 
             htmlContent = this.loadTemplate(templatePath, {
-                reset_password_link: `${this.configService.get('domainUrl')}forgot-password/confirm/${tokenActivation.uuid}/${tokenActivation.token}`,
+                reset_password_link: `${this.configService.get('domainUrl')}/auth/forgot-password/confirm/${tokenActivation.uuid}/${tokenActivation.token}`,
                 privacy_policy_link: '',
                 terms_link: ''
             });
@@ -51,15 +51,14 @@ export class SendEmailService {
     
         try {
 
-            console.log(htmlContent);
-            // const { data, error } = await this.resend.emails.send({
-            //     from: "Acme <onboarding@resend.dev>",
-            //     to: [email],
-            //     subject: "Activacion de Cuenta",
-            //     html: htmlContent,
-            // });
+            const { data, error } = await this.resend.emails.send({
+                from: "Acme <onboarding@resend.dev>",
+                to: [email],
+                subject: "Activacion de Cuenta",
+                html: htmlContent,
+            });
         
-            // if(error) throw new BadRequestException("El correo no se envio correctamente");
+            if(error) throw new BadRequestException("El correo no se envio correctamente");
     
         } catch (error) {
     

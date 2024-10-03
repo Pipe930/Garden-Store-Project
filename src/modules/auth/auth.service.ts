@@ -114,7 +114,7 @@ export class AuthService {
 
         const tokenActivate = await TokenActivation.findOne<TokenActivation>({
             where: {
-                [Op.or]: [
+                [Op.and]: [
                     { uuid },
                     { token }
                 ]
@@ -124,11 +124,9 @@ export class AuthService {
         if(!tokenActivate) throw new NotFoundException("Token de activacion no encontrado");
 
         const timeNow = new Date().getTime();
-        const timeDiff = timeNow - tokenActivate.time.getTime();
-        const minutesDiff = timeDiff / (1000 * 60);
+        const timeDiff = (timeNow - tokenActivate.time.getTime()) / (1000 * 60);
 
-        if(!tokenActivate) throw new BadRequestException("Las credenciales no son validas");
-        if(minutesDiff >= 30) throw new BadRequestException("El token a expirado");
+        if(timeDiff >= 30) throw new BadRequestException("El token a expirado");
 
         const user = await User.findByPk<User>(tokenActivate.idUser);
 
@@ -170,7 +168,7 @@ export class AuthService {
 
     async confirmForgotPassword(comfirmForgotPasswordDto: ConfirmForgotPasswordDto): Promise<ResponseData>{
 
-        const { token, uuid, password, rePassword } = comfirmForgotPasswordDto;
+        const { token, uuid, newPassword, newRePassword } = comfirmForgotPasswordDto;
 
         const tokenActivation = await TokenActivation.findOne<TokenActivation>({
 
@@ -183,10 +181,10 @@ export class AuthService {
         });
 
         if(!tokenActivation) throw new BadRequestException("El token no es valido");
-        if(password !== rePassword) throw new BadRequestException("Las contraseñas no coinciden");
+        if(newPassword !== newRePassword) throw new BadRequestException("Las contraseñas no coinciden");
 
         await User.update({
-            password: this.passwordService.passwordEncrypted(password)
+            password: this.passwordService.passwordEncrypted(newPassword)
         }, {
             where: {
                 idUser: tokenActivation.idUser

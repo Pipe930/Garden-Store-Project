@@ -50,7 +50,7 @@ export class TokenService {
     public async generateTokenJWT(user: User): Promise<any> {
 
         try {
-            const payload = { idUser: user.idUser, active: user.active, role: user.rolesUser.filter((role) => role.name === "cliente")[0].name };
+            const payload = { idUser: user.idUser, active: user.active, role: user.rolesUser.filter(roles => roles.name === "cliente")[0].name };
             const accessToken = this.jwtService.sign(payload);
             const refreshToken = this.jwtService.sign(payload, { expiresIn: "1d" });
     
@@ -64,7 +64,6 @@ export class TokenService {
 
             throw new BadRequestException("Error al generar el token");
         }
-
         
     }
 

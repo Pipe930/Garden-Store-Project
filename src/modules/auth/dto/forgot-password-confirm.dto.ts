@@ -19,12 +19,12 @@ export class ConfirmForgotPasswordDto {
     @MaxLength(255)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
-    readonly password: string;
+    readonly newPassword: string;
 
     @IsString()
     @MinLength(8)
     @MaxLength(255)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
-    readonly rePassword: string;
+    readonly newRePassword: string;
 }
