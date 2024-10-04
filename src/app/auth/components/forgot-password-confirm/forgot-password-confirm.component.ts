@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import Swal from 'sweetalert2';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-forgot-password-confirm',
@@ -21,6 +22,7 @@ export class ForgotPasswordConfirmComponent implements OnInit {
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _authService = inject(AuthService);
   private readonly _builder = inject(FormBuilder);
+  private readonly _alertService = inject(AlertService);
 
   public formForgotPasswordConfirm: FormGroup = this._builder.group({
     newPassword: this._builder.control("", [Validators.required, Validators.minLength(8), Validators.maxLength(50)]),
@@ -49,23 +51,13 @@ export class ForgotPasswordConfirmComponent implements OnInit {
       token: this.token,
       ...this.formForgotPasswordConfirm.value
     }).subscribe(
-      (result) => {
+      () => {
 
+        this._alertService.success("Recuperación de contraseña", "Contraseña cambiada con exito");
         this._router.navigate(["auth/login"]);
-        Swal.fire({
-          icon: "success",
-          title: "Recuperación de contraseña",
-          text: "Contraseña cambiada con exito"
-        })
       },
-      (error) => {
-
-        Swal.fire({
-
-          icon: "error",
-          title: "Recuperación de contraseña",
-          text: "Ocurrio un error al cambiar la contraseña"
-        })
+      () => {
+        this._alertService.error("Recuperación de contraseña", "Ocurrio un error al cambiar la contraseña");
       }
     )
   }

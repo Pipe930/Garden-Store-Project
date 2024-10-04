@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import Swal from 'sweetalert2';
 import { NgClass } from '@angular/common';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent {
   private readonly _router = inject(Router);
   private readonly _builder = inject(FormBuilder);
   private readonly _authService = inject(AuthService);
+  private readonly _alertService = inject(AlertService);
 
   public formLogin: FormGroup = this._builder.group({
     email: this._builder.control("", [Validators.required, Validators.email, Validators.maxLength(255)]),
@@ -33,22 +35,17 @@ export class LoginComponent {
 
     this._authService.login(this.formLogin.value).subscribe(result => {
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Se inicio sesion correctamente',
-        text: "Bienvenido "
-      })
+      this._alertService.success("Inicio de sesion exitoso", "Bienvenido");
       // this._router.navigate(['/home']);
     }, error => {
 
       if(error.error.statusCode === 401){
 
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: error.error.message
-        })
+        this._alertService.error("Error en el inicio de sesion", error.error.message);
+        return;
       }
+
+      this._alertService.error("Error en el inicio de sesion", "No se pudo iniciar sesion correctamente");
     })
   }
 

@@ -26,6 +26,13 @@
       border-color: $color-danger;
     }
 
+    .form__errors{
+
+      font-size: 14px;
+      margin-top: 2rem;
+      color: $color-danger;
+    }
+
     .form__btn-register{
       margin-top: 20px;
       padding: 8px 0;

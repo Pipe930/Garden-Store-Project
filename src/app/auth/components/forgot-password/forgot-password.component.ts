@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import Swal from 'sweetalert2';
 import { NgClass } from '@angular/common';
+import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,6 +18,7 @@ export class ForgotPasswordComponent {
   private readonly _router = inject(Router);
   private readonly _builder = inject(FormBuilder);
   private readonly _authService = inject(AuthService);
+  private readonly _alertService = inject(AlertService);
 
   public formForgotPassword: FormGroup = this._builder.group({
     email: this._builder.control("", [Validators.required, Validators.email, Validators.maxLength(255)])
@@ -33,32 +35,20 @@ export class ForgotPasswordComponent {
     this._authService.forgotPassword(this.formForgotPassword.value).subscribe(
       (result) => {
 
+        this._alertService.success("Recuperación de contraseña", "Se ha enviado un correo para recuperar tu contraseña");
         this._router.navigate(["auth/login"]);
-        Swal.fire({
-          icon: "success",
-          title: "Recuperación de contraseña",
-          text: "Se ha enviado un correo para recuperar tu contraseña"
-        })
       },
       (error) => {
 
         if(error.error.statusCode === 400){
 
-          Swal.fire({
-            icon: "error",
-            title: "Error en la recuperación de contraseña",
-            text: error.error.message
-          })
+          this._alertService.error("Error en la recuperación de contraseña", error.error.message);
           return;
         }
 
         if(error.error.statusCode === 404){
 
-          Swal.fire({
-            icon: "error",
-            title: "Error en la recuperación de contraseña",
-            text: "El correo ingresado no se encuentra registrado en nuestro sistema"
-          })
+          this._alertService.error("Error en la recuperación de contraseña", "El correo ingresado no se encuentra registrado en nuestro sistema");
           return;
         }
       }

@@ -4,6 +4,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { AuthComponent } from './auth.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ForgotPasswordConfirmComponent } from './components/forgot-password-confirm/forgot-password-confirm.component';
+import { ActivateComponent } from './components/activate/activate.component';
 
 export const routesAuth: Routes = [
 
@@ -26,6 +27,10 @@ export const routesAuth: Routes = [
       {
         path: "forgot-password/confirm/:uuid/:token",
         component: ForgotPasswordConfirmComponent
+      },
+      {
+        path: "activate/account/:uuid/:token",
+        component: ActivateComponent
       }
     ]
   },

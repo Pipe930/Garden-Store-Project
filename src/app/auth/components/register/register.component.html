@@ -37,23 +37,26 @@
     </div>
     <div class="mb-3">
       <label for="phone" class="form-label">Telefono</label>
-      <input type="text" class="form-control form__input" id="phone" formControlName="phone" [ngClass]="{
-        'is-invalid': phone.invalid && (phone.dirty || phone.touched)
-      }">
-      @if (phone.getError("required")) {
-        <span class="invalid-feedback">Este campo es requerido</span>
-      }
-      @if (phone.getError("minlength")) {
-        <span class="invalid-feedback">Tiene que ser minimo de 12 caracteres</span>
-      }
-      @if (phone.getError("maxlength")) {
-        <span class="invalid-feedback">Tiene que ser maximo de 12 caracteres</span>
-      }
+      <div class="input-group">
+        <span class="input-group-text form__input" id="basic-addon3">+569</span>
+        <input type="text" class="form-control form__input" id="phone" aria-describedby="basic-addon3 basic-addon4" formControlName="phone" [ngClass]="{
+          'is-invalid': phone.invalid && (phone.dirty || phone.touched)
+        }">
+        @if (phone.getError("required")) {
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if (phone.getError("minlength")) {
+          <span class="invalid-feedback">Tiene que ser minimo de 8 caracteres</span>
+        }
+        @if (phone.getError("maxlength")) {
+          <span class="invalid-feedback">Tiene que ser maximo de 8 caracteres</span>
+        }
+      </div>
     </div>
     <div class="mb-3">
       <label for="inputPassword" class="form-label">Contraseña</label>
       <input type="password" id="inputPassword" class="form-control form__input" aria-describedby="passwordHelpBlock" formControlName="password" [ngClass]="{
-        'is-invalid': password.invalid && (password.dirty || password.touched)
+        'is-invalid': password.invalid && (password.dirty || password.touched) || formRegister.hasError('passordsDontMatch')
       }">
       @if (password.getError("required")) {
         <span class="invalid-feedback">Este campo es requerido</span>
@@ -71,7 +74,7 @@
     <div class="mb-3">
       <label for="rePassword" class="form-label">Confirmar Contraseña</label>
       <input type="password" class="form-control form__input" id="rePassword" formControlName="rePassword" [ngClass]="{
-        'is-invalid': rePassword.invalid && (rePassword.dirty || rePassword.touched)
+        'is-invalid': rePassword.invalid && (rePassword.dirty || rePassword.touched) || formRegister.hasError('passordsDontMatch')
       }">
       @if (rePassword.getError("required")) {
         <span class="invalid-feedback">Este campo es requerido</span>
@@ -81,6 +84,9 @@
       }
       @if (rePassword.getError("maxlength")) {
         <span class="invalid-feedback">Tiene que ser maximo de 50 caracteres</span>
+      }
+      @if(formRegister.hasError('passordsDontMatch')) {
+        <span class="form__errors">Las contraseñas no coinciden</span>
       }
     </div>
     <div class="d-grid gap-2">

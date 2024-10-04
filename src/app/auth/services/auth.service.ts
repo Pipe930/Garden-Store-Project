@@ -5,6 +5,7 @@ import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { FormLogin, LoginResponse } from '../interfaces/login';
 import { ForgotPasswordResponse, FormForgotPassword, FormForgotPasswordConfirm } from '../interfaces/forgot-password';
+import { ActivateAccountInterface, ResponseActivateAccount } from '../interfaces/activate';
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +40,9 @@ export class AuthService {
 
   public forgotPasswordConfirm(formForgotPasswordConfirm: FormForgotPasswordConfirm): Observable<ForgotPasswordResponse>{
     return this._http.post<ForgotPasswordResponse>(`${this.urlApi}/forgot-password/confirm`, formForgotPasswordConfirm);
+  }
+
+  public activateAccount(body: ActivateAccountInterface):Observable<ResponseActivateAccount>{
+    return this._http.post<ResponseActivateAccount>(`${this.urlApi}/activate/account`, body);
   }
 }
