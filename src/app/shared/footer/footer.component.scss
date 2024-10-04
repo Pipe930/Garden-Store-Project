@@ -1,0 +1,140 @@
+@import '../../../themes/variables.scss';
+
+$screen-size-phone: 750px;
+
+.footer{
+  background-color: $color-light;
+
+  .footer__container-primary{
+
+    background-color: $color-success-800;
+    padding: 1.2rem 6rem;
+    color: $color-light;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @media (max-width: $screen-size-phone) {
+      display: block;
+      padding: 1.2rem 1rem;
+    }
+
+    .container-primary__container-left{
+
+
+      .container-left__list{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0;
+
+        @media (max-width: $screen-size-phone) {
+          margin-top: 2rem;
+          flex-wrap: wrap;
+
+          .list__link{
+              margin: 1rem 0;
+          }
+        }
+
+
+        .list__item{
+
+          margin: 0 1.2rem;
+
+          .list__link{
+            transition: all .3s ease-in-out;
+            text-decoration: none;
+            color: $color-light;
+
+            &:hover{
+              color: $color-dark-300;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .footer__container-secondary{
+
+    width: 85%;
+    margin: auto;
+    padding: 4rem 0;
+    display: flex;
+    justify-content: space-between;
+
+    @media (max-width: $screen-size-phone) {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .container-secondary__info{
+
+      display: flex;
+      gap: 5rem;
+
+      @media (max-width: $screen-size-phone) {
+        margin-bottom: 4rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .container-secondary__client-service,
+      .container-secondary__garden-store{
+
+        .container-secondary__title{
+
+          margin-bottom: 1rem;
+        }
+
+        .container-secondary__link{
+
+          margin: .5rem 0;
+          transition: all .3s ease-in-out;
+          color: $color-dark;
+          text-decoration: none;
+
+          &:hover{
+            color: $color-success-800;
+          }
+        }
+      }
+    }
+
+    .container-secondary__social{
+
+      display: flex;
+      gap: 1rem;
+
+      .social__link{
+        display: inline;
+        height: 0;
+        transition: all .3s ease-in-out;
+        color: $color-dark;
+
+        &:hover{
+          color: $color-success-800;
+        }
+      }
+    }
+  }
+
+  .footer__container-tertiary{
+
+    text-align: center;
+    padding: 1rem 0;
+    color: $color-light;
+    background-color: $color-success-700;
+
+    p{
+      margin-bottom: 0;
+    }
+
+
+    @media (max-width: $screen-size-phone) {
+      margin-top: 2rem;
+      text-align: center;
+    }
+  }
+}

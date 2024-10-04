@@ -1,0 +1,74 @@
+<nav class="navbar">
+  <div class="navbar__container">
+
+    <span class="navbar__icon">
+      <a href="" [routerLink]="['home']" (click)="closeNavbar()">Garden Store</a>
+    </span>
+    <button class="navbar__btn-op-menu" (click)="openNavbar()">
+      <i class='bx bx-menu bx-md'></i>
+    </button>
+
+    <div class="navbar__container-response" #openDivNavbar>
+      <div class="navbar__container-left">
+        <ul class="navbar__list">
+          @for (object of ObjectsNavbar(); track $index) {
+
+            <li class="navbar__item">
+              <a href="" [routerLink]="[object.link]" (click)="closeNavbar()" class="navbar__link">
+                <div class="navbar__link-container">
+                  <i [class]="object.icon" class="navbar__item-icon"></i>
+                  {{object.name}}
+                </div>
+                <i class='bx bxs-right-arrow navbar__item-icon navbar__item-icon--arrow'></i>
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+      <div class="navbar__container-right">
+        <div class="navbar__container-btns">
+
+          @if(!sessionActivate()){
+            <button class="navbar__btn-login" [routerLink]="['auth/login']" [ngClass]="{
+              modeDarkBtn:showClass
+            }">Ingresar</button>
+          }
+
+          @if (sessionActivate()) {
+            <div class="navbar__container-login">
+              <button class="navbar__btn-profile" [routerLink]="['/account', username]">
+                <i class='bx bxs-user'></i>
+                Cuenta
+              </button>
+              <button class="navbar__btn-cart" [routerLink]="['/cart']">
+                <i class='bx bxs-cart'></i>
+                Carrito
+              </button>
+            </div>
+          }
+          <button class="navbar__btn-theme" (click)="showClass = !showClass" (click)="themeChange()">
+            <span class="navbar__btn-theme-text">Cambiar Tema</span>
+            <div class="navbar__btn-container-icon">
+              @if (!themeNavbar) {
+                <i class='bx bxs-sun bx-sm'></i>
+              }
+
+              @if (themeNavbar) {
+                <i class='bx bxs-moon bx-sm'></i>
+              }
+            </div>
+          </button>
+        </div>
+      </div>
+      <hr>
+      <header class="navbar__header">
+        <span class="navbar__icon">
+          <a href="" [routerLink]="['home']" (click)="closeNavbar()">Garden Store</a>
+        </span>
+        <button (click)="closeNavbar()" class="navbar__btn-cl-menu">
+          <i class='bx bx-x bx-md'></i>
+        </button>
+      </header>
+    </div>
+  </div>
+</nav>

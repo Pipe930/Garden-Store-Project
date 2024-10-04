@@ -36,7 +36,7 @@ export class LoginComponent {
     this._authService.login(this.formLogin.value).subscribe(result => {
 
       this._alertService.success("Inicio de sesion exitoso", "Bienvenido");
-      // this._router.navigate(['/home']);
+      this._router.navigate(['/']);
     }, error => {
 
       if(error.error.statusCode === 401){

@@ -1,0 +1,286 @@
+@import '../../../../themes/variables.scss';
+
+$screen-size: 1200px;
+
+.main-content{
+  width: 85%;
+  max-width: 1300px;
+  margin: auto;
+
+  .header__container-company{
+
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+
+    a{
+      width: 19rem;
+
+      .header__company{
+
+        background-size: cover;
+        background-position: center;
+        background-blend-mode: darken;
+        background-color: rgba(0, 0, 0, 0.4);
+        height: 18rem;
+        padding: 0.6rem 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        color: $color-light;
+        box-shadow: 10px 10px 10px rgba(0, 0, 0, .4);
+        transition: all .3s ease-in-out;
+
+        .company__title{
+          text-align: center;
+        }
+      }
+
+      .header__company:hover{
+        background-color: rgba(0, 0, 0, 0);
+      }
+
+      #fiskars{
+        background-image: url('../../../../assets/imgs/articulo_1.jpg');
+      }
+
+      #seller{
+
+        background-image: url('../../../../assets/imgs/servicio-de-jardineria04.jpg');
+      }
+
+      #garden{
+        background-image: url('../../../../assets/imgs/servicios-mas-comunes-en-jardineria.jpg');
+      }
+
+      #gilmour{
+        background-image: url('../../../../assets/imgs/5e42c6bd65ac9-image-asset.jpg');
+      }
+    }
+
+  }
+
+  .us-content{
+    padding: 10rem 0;
+    display: flex;
+    align-items: center;
+
+    .us-content__container-img{
+      flex-basis: 40%;
+      height: 25rem;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-image: url('../../../../assets/imgs/asesoramiento-en-jardineria-1.jpg');
+      box-shadow: 0 8px 16px $color-dark-400;
+    }
+
+    .us-content__container-content{
+      margin-left: 6rem;
+      flex-basis: 60%;
+
+      .us-content__title{
+        margin-bottom: 1rem;
+
+        .title__color{
+
+          color: $color-success-800;
+        }
+      }
+
+      .us-content__text{
+
+        text-align: justify;
+      }
+    }
+  }
+
+  .products-featured{
+
+    margin-bottom: 3rem;
+
+    .products-featured__contianer-title{
+
+      text-align: center;
+      position: relative;
+      margin-bottom: 2rem;
+
+      .products-featured__title{
+
+        color: $color-dark;
+        position: relative;
+        display: inline-block;
+        background-color: #fff;
+        z-index: 10;
+        padding: 0 1rem;
+      }
+
+      &::before{
+
+        content: "";
+        position: absolute;
+        z-index: 1;
+        bottom: 0.8rem;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: $color-dark;
+      }
+    }
+
+    .products-featured__products{
+
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+
+      .products__product{
+
+        width: 21rem;
+        box-shadow: 6px 10px 10px -8px rgba(0, 0, 0, 0.6);
+
+        .product__body{
+
+          text-align: center;
+          padding: 1rem;
+          background-color: $color-light;
+
+          .product__title{
+            color: $color-dark-700;
+          }
+
+          .product__description{
+            padding: 0.5rem;
+          }
+
+          .product__container-btn{
+
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+
+            .product__btn{
+
+              padding: 0.6rem 2rem;
+              background-color: $color-light;
+              color: $color-success-800;
+              font-weight: bold;
+              border: 3px solid $color-success-800;
+              cursor: pointer;
+              transition: all .3s ease-in-out;
+
+              &:hover{
+
+                background-color: $color-success-800;
+                color: $color-light;
+              }
+            }
+          }
+
+        }
+      }
+    }
+
+  }
+
+  .weoffer{
+
+    .weoffer__container-title{
+
+      text-align: center;
+      position: relative;
+      margin-bottom: 2rem;
+
+      .weoffer__title{
+        color: $color-dark;
+        position: relative;
+        display: inline-block;
+        background-color: #fff;
+        z-index: 10;
+        padding: 0 1rem;
+
+      }
+
+      &::after{
+
+        content: "";
+        position: absolute;
+        z-index: 1;
+        bottom: 0.8rem;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: $color-dark;
+      }
+    }
+  }
+
+  .weoffer__cards{
+
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-bottom: 4rem;
+
+    .cards__card{
+
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-image: url('../../../../assets/imgs/686d36812b42f4c44687ae0b01428816.jpg');
+      background-blend-mode: darken;
+      background-color: rgba(0, 0, 0, 0.4);
+      padding: 2rem;
+      color: $color-light;
+
+      .card__title{
+
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 1000px) {
+
+  .main-content{
+
+    .header__container-company{
+
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .us-content{
+
+      display: block;
+
+      .us-content__container-img{
+
+        display: none;
+      }
+
+      .us-content__container-content{
+
+        width: 90%;
+        margin: auto;
+
+        .us-content__title{
+
+          text-align: center;
+        }
+      }
+    }
+
+    .weoffer__cards{
+
+      flex-wrap: wrap;
+
+      .cards__card{
+
+        width: 20rem;
+      }
+    }
+  }
+}

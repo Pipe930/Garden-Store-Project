@@ -1,0 +1,50 @@
+@if(images && images.length > 0){
+
+  <div class="carousel">
+
+    <div class="carousel__container-title">
+      <h1 class="carousel__title">Bienvenido a Garden Store</h1>
+      <p class="carousel__text">Encontraras los mejores productos de jardinería</p>
+    </div>
+
+    <div class="carousel__container-img">
+
+      @for (image of images; track $index) {
+
+        <img
+        [src]="image.src"
+        alt="image carousel"
+        [ngClass]="{'image-active': selectedIndex() === $index}"
+        class="carousel__image"
+        >
+      }
+    </div>
+
+    @if (indicator()) {
+
+      <div class="carousel__btn-container">
+
+        @for (dot of images; track $index) {
+
+          <button
+          class="carousel__btn"
+          [ngClass]="{'active': selectedIndex() === $index}"
+          (click)="selectedImage($index)"
+          >
+          </button>
+        }
+      </div>
+    }
+
+    <button
+    class="carousel__btn-prev carousel__btn-prev--position"
+    (click)="prevClick()">
+      <i class='bx bxs-chevron-left bx-lg carousel__btn-icon'></i>
+    </button>
+    <button
+    class="carousel__btn-next carousel__btn-next--position"
+    (click)="nextClick()">
+      <i class='bx bx-chevron-right bx-lg carousel__btn-icon'></i>
+    </button>
+  </div>
+}

@@ -1,0 +1,152 @@
+@import '../../../themes/variables.scss';
+
+.carousel{
+
+  position: relative;
+  margin: 3rem auto;
+  text-align: center;
+  width: 85%;
+  box-shadow: 0 8px 16px $color-dark-400;
+
+
+  .carousel__container-title{
+
+    position: absolute;
+    z-index: 10;
+    inset: 0;
+    top: 14rem;
+    margin: auto;
+
+    .carousel__title,
+    .carousel__text{
+      color: white;
+
+    }
+
+  }
+
+  .carousel__container-img{
+
+    img{
+      display: none;
+    }
+
+    img.image-active{
+      display: block;
+      width: 100%;
+      height: 32rem;
+    }
+  }
+
+  .carousel__container-img::before {
+    content: "";
+    position: absolute;
+    z-index: 5;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+  }
+
+
+  .carousel__image{
+
+    animation-name: fade;
+    animation-duration: 1.5s;
+  }
+
+  @keyframes fade {
+
+    from{
+      opacity: .4;
+    }
+    to{
+      opacity: 1;
+    }
+  }
+
+  .carousel__btn-container{
+
+    position: absolute;
+    z-index: 15;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin-bottom: 1rem;
+
+    .carousel__btn{
+
+      height: 1rem;
+      width: 1rem;
+      margin: 0 1rem;
+      background-color: $color-light;
+      border-radius: 50%;
+      display: inline-block;
+      transition: opacity .6s ease;
+      opacity: .5;
+    }
+
+    .active, .carousel__btn:hover{
+      opacity: 1;
+    }
+  }
+
+  .carousel__btn-prev,
+  .carousel__btn-next{
+    position: absolute;
+    z-index: 15;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10%;
+    padding: 0;
+    color: $color-light;
+    text-align: center;
+    background: 0 0;
+
+    .carousel__btn-icon{
+
+      color: $color-light;
+      opacity: .5;
+      transition: all .2s ease-in-out;
+
+      &:hover{
+        opacity: .9;
+      }
+
+      &:active{
+        opacity: .5;
+      }
+    }
+  }
+
+  .carousel__btn-prev--position{
+    left: 0;
+  }
+
+  .carousel__btn-next--position{
+    right: 0;
+  }
+
+}
+
+@media (max-width: 700px) {
+
+  .carousel{
+
+    .carousel__container-title{
+      padding: 0 1rem;
+
+      .carousel__title{
+        font-size: 1.2rem;
+      }
+      .carousel__text{
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
