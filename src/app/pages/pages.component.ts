@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { Navbar } from '../core/interfaces/navbar';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { FooterComponent } from '../shared/footer/footer.component';
@@ -7,7 +7,7 @@ import { FooterComponent } from '../shared/footer/footer.component';
 @Component({
   selector: 'app-pages',
   standalone: true,
-  imports: [RouterModule, NavbarComponent, FooterComponent],
+  imports: [RouterOutlet, NavbarComponent, FooterComponent],
   template: `
     <app-navbar [ObjectsNavbar]="listObjectsNavbar"></app-navbar>
     <router-outlet></router-outlet>
@@ -16,8 +16,6 @@ import { FooterComponent } from '../shared/footer/footer.component';
 })
 export class PagesComponent {
 
-
-  // private readonly _sessionService = inject(SessionService);
   public theme: boolean = false;
 
   // The Icons are found on the page https://boxicons.com/
@@ -45,12 +43,6 @@ export class PagesComponent {
   ];
 
   ngOnInit(): void {
-
-    // if(sessionStorage.getItem("access") || sessionStorage.getItem("refresh")){
-    //   this._sessionService.changeTrueSession();
-    // } else {
-    //   this._sessionService.changeFalseSession();
-    // }
 
   }
 

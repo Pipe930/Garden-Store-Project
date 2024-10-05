@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterOutlet],
   template: `
     <div class="container-auth">
       <router-outlet></router-outlet>

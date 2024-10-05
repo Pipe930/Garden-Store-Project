@@ -1,0 +1,58 @@
+<main class="container-main">
+  <div class="container-main__continaer-inputs">
+    <div class="contianer-inputs__container-search">
+      <input placeholder="Buscar..." type="search" #searchNameProduct class="continaer-inputs__search">
+      <button (click)="searchProduct()" class="continaer-inputs__btn-search">
+        <i class='bx bx-search-alt-2'></i>
+      </button>
+    </div>
+    <div class="container-inputs__container-filter">
+      <select #selectIdCategory class="continaer-inputs__select">
+        <option value="0">Categoria</option>
+        @for (category of listCategories(); track $index) {
+
+          <option [value]="category.idCategory">{{category.name}}</option>
+        }
+      </select>
+      <button (click)="searchProduct()" class="continaer-inputs__btn-filter">
+        <i class='bx bxs-filter-alt'></i>
+        Filtrar
+      </button>
+    </div>
+  </div>
+
+  <div class="container-main__container-main-products">
+    <div class="container-main__container-products">
+      <h2 class="container-products__title">Productos</h2>
+      <hr>
+      <div class="container-products__products">
+        @for (product of listProducts(); track $index) {
+          <app-card [product]="product" [reload]="false"></app-card>
+        } @empty {
+
+          <div class="container-products__container-message">
+            <p>No se han encontrado productos</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <nav aria-label="Page navigation container-main__container-btn-pages">
+      <ul class="pagination container-btn-pages__list m-0">
+        <li class="page-item container-btn-pages__item">
+          <button (click)="previousPage()" class="page-link text-black">
+            Anterior
+          </button>
+        </li>
+        <li class="page-item container-btn-pages__item">
+          <p class="page-link text-black m-0">{{currentPage()}}</p>
+        </li>
+        <li class="page-item container-btn-pages__item">
+          <button (click)="nextPage()" class="page-link text-black">
+            Siguiente
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</main>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, input, output, Renderer2, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, input, output, Renderer2, Signal, signal, viewChild, ViewChild } from '@angular/core';
 import { Navbar } from '../../core/interfaces/navbar';
 import { RouterLink } from '@angular/router';
 import { SessionService } from '../../core/services/session.service';
@@ -18,14 +18,13 @@ export class NavbarComponent {
 
   public ObjectsNavbar = input.required<Array<Navbar>>();
   public eventThemeNavbar = output<boolean>();
-  @ViewChild("openDivNavbar") public containerNavbar!: ElementRef;
+  public containerNavbar: Signal<ElementRef> = viewChild.required("openDivNavbar");
 
   public themeNavbar: boolean = false;
   public modeOriginal:string = "Normal";
   public modeDark:string = "Oscuro";
   public mode:string = this.modeOriginal;
   public showClass:boolean = false;
-  public username: string = "";
   public sessionActivate = signal<boolean>(false);
 
   ngOnInit(): void {
@@ -42,14 +41,14 @@ export class NavbarComponent {
 
   public openNavbar():void{
 
-    let containerNavbar = this.containerNavbar.nativeElement;
+    let containerNavbar = this.containerNavbar().nativeElement;
     this._renderer2.addClass(containerNavbar, "visible");
 
   }
 
   public closeNavbar():void{
 
-    let containerNavbar = this.containerNavbar.nativeElement;
+    let containerNavbar = this.containerNavbar().nativeElement;
     this._renderer2.removeClass(containerNavbar, "visible");
   }
 

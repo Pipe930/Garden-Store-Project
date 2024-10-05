@@ -1,8 +1,8 @@
-<nav class="navbar">
+<nav class="navbar bg-success bg-gradient">
   <div class="navbar__container">
 
     <span class="navbar__icon">
-      <a href="" [routerLink]="['home']" (click)="closeNavbar()">Garden Store</a>
+      <a href="" [routerLink]="['/']" (click)="closeNavbar()">Garden Store</a>
     </span>
     <button class="navbar__btn-op-menu" (click)="openNavbar()">
       <i class='bx bx-menu bx-md'></i>
@@ -36,11 +36,11 @@
 
           @if (sessionActivate()) {
             <div class="navbar__container-login">
-              <button class="navbar__btn-profile" [routerLink]="['/account', username]">
+              <button class="navbar__btn-profile" [routerLink]="['/account']">
                 <i class='bx bxs-user'></i>
                 Cuenta
               </button>
-              <button class="navbar__btn-cart" [routerLink]="['/cart']">
+              <button class="navbar__btn-cart text-color" [routerLink]="['/cart']">
                 <i class='bx bxs-cart'></i>
                 Carrito
               </button>
@@ -63,7 +63,7 @@
       <hr>
       <header class="navbar__header">
         <span class="navbar__icon">
-          <a href="" [routerLink]="['home']" (click)="closeNavbar()">Garden Store</a>
+          <a href="" [routerLink]="['/']" (click)="closeNavbar()">Garden Store</a>
         </span>
         <button (click)="closeNavbar()" class="navbar__btn-cl-menu">
           <i class='bx bx-x bx-md'></i>

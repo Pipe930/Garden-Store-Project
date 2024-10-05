@@ -1,0 +1,31 @@
+<div class="card border-success product">
+  <div class="card-header product__header">
+    <h5 class="card-title">{{product().title}}</h5>
+    <p class="card-text">{{product().brand}}</p>
+    <div class="d-flex justify-content-between">
+
+      <p class="card-text"><strong>ID</strong> {{product().idProduct}}</p>
+      <p class="card-text">Unid {{product().stock}}</p>
+    </div>
+  </div>
+  <picture>
+    <img ngSrc="https://cdni.iconscout.com/illustration/premium/thumb/404-7304110-5974976.png" width="400" height="350" class="card-img-top" alt="imagen de producto" priority>
+  </picture>
+  <div class="card-body product__body">
+
+    <div class="d-flex justify-content-between align-items-center product__container-price">
+      <div class="">
+        <p class="card-text product__price">$ {{product().price | currency: 'CLP'}}</p>
+        <p class="card-text product__text">Precio Efectivo</p>
+      </div>
+      <div class="">
+        <button class="btn btn-success"><i class='bx bxs-cart-add bx-sm'></i></button>
+      </div>
+    </div>
+
+    <div class="d-grid gap-2">
+
+      <button class="btn btn-success" type="button" (click)="productDetail(product())">Ver</button>
+    </div>
+  </div>
+</div>
