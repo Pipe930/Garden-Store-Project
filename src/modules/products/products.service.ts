@@ -5,9 +5,14 @@ import { Product } from './models/product.model';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { Category } from '../categories/models/category.model';
 import { Op } from 'sequelize';
+import { HttpService } from '@nestjs/axios';
+import { FileUploadDto } from './dto/file-upload.dto';
+import { ImagesProduct } from './models/image.model';
 
 @Injectable()
 export class ProductsService {
+
+  constructor(private readonly httpService: HttpService) {}
 
   async create(createProductDto: CreateProductDto):Promise<ResponseData> {
 
@@ -68,6 +73,32 @@ export class ProductsService {
     };
   }
 
+  async findProductBySlug(slug: string): Promise<ResponseData> {
+
+    const product = await Product.findOne<Product>({ where: { slug } });
+
+    if(!product) throw new NotFoundException("Producto no encontrado");
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: "Producto encontrado",
+      data: product
+    }
+  }
+
+  async findProductByCategory(idCategory: number): Promise<ResponseData> {
+
+    const products = await Product.findAll<Product>({ where: { idCategory } });
+
+    if(products.length === 0) throw new NotFoundException("No se encontraron productos en esta categoria");
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: "Productos encontrados",
+      data: products
+    }
+  }
+
   async update(id: number, updateProductDto: UpdateProductDto): Promise<ResponseData> {
 
     const { title, brand, returnPolicy, price, description, idCategory } = updateProductDto;
@@ -110,5 +141,59 @@ export class ProductsService {
       statusCode: HttpStatus.NO_CONTENT,
       message: "El producto a sido eliminado con exito"
     };
+  }
+
+  async uploadImages(fileUpload: FileUploadDto){
+
+    const { file, filename, type, idProduct, typeFormat } = fileUpload;
+
+    const [filenameImage, extendsImage] = filename.split(".");
+    
+    const nowDate = new Date();
+    const newFileNameImage = filenameImage + "-" + new Intl.DateTimeFormat('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(nowDate).toString() + "-" + nowDate.getTime().toString() + "." + extendsImage;
+    const dataForm = new FormData();
+
+    dataForm.append(
+      'file', 
+      new Blob([Buffer.from(file, 'base64')], { type: typeFormat }), 
+      newFileNameImage
+    );
+
+    try {
+      
+      await this.httpService.axiosRef.post("http://127.0.0.1:8000/upload", dataForm, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+    } catch (error) {
+
+      if(error.code === "ECONNREFUSED") throw new BadRequestException("No se envio correctamente al proveedor de imagenes");
+    }
+
+    const product = await Product.findByPk<Product>(idProduct);
+    
+    if(!product) throw new NotFoundException("Producto no encontrado");
+
+    try {
+      
+      await ImagesProduct.create<ImagesProduct>({
+        urlImage: `/media/${newFileNameImage}`,
+        type,
+        idProduct
+      })
+    } catch (error) {
+
+      throw new BadRequestException("No se guardo la imagen correctamente");
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: "Imagen subida correctamente",
+      data: {
+        filename,
+        type
+      }
+    }
   }
 }

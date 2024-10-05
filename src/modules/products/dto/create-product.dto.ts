@@ -9,7 +9,7 @@ export class CreateProductDto {
 
     @IsNumber()
     @IsNotEmpty()
-    @Min(100)
+    @Min(500)
     readonly price: number;
 
     @IsString()

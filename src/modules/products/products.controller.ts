@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put } from '@
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { FileUploadDto } from './dto/file-upload.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -12,6 +13,11 @@ export class ProductsController {
     return this.productsService.create(createProductDto);
   }
 
+  @Post('upload')
+  uploadImage(@Body() fileUploadDto: FileUploadDto) {
+    return this.productsService.uploadImages(fileUploadDto);
+  }
+
   @Get()
   findAll() {
     return this.productsService.findAll();
@@ -20,6 +26,16 @@ export class ProductsController {
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id);
+  }
+
+  @Get('product/:slug')
+  findBySlug(@Param('slug') slug: string) {
+    return this.productsService.findProductBySlug(slug);
+  }
+
+  @Get('category/:id')
+  findByCategory(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.findProductByCategory(id);
   }
 
   @Put(':id')

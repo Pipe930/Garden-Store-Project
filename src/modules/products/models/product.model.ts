@@ -1,5 +1,6 @@
 import { BelongsTo, Column, DataType, ForeignKey, Is, Table, Model, BeforeCreate, BeforeUpdate, HasMany } from "sequelize-typescript";
 import { Category } from "src/modules/categories/models/category.model";
+import { ImagesProduct } from "./image.model";
 
 export enum AvailabilityStatus {
     InStock = "In Stock",
@@ -145,6 +146,9 @@ export class Product extends Model {
         field: "id_category"
     })
     declare idCategory: number;
+    
+    @HasMany(() => ImagesProduct)
+    declare images: ImagesProduct[];
 
     @BelongsTo(() => Category)
     declare category: Category;

@@ -73,6 +73,25 @@ export class SalesService {
     };
   }
 
+  async findUserSales(idUser: number): Promise<ResponseData> {
+
+    const sales = await Sale.findAll({
+      where: {
+        idUser
+      },
+      include: {
+        model: SaleProduct
+      }
+    });
+
+    if(sales.length === 0) throw new BadRequestException('No se encontraron ventas para el usuario');
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: sales
+    };
+  }
+
   async createTransbankTransaction(createTransbankDto: CreateTransbankDto): Promise<ResponseData> {
 
     const { buyOrder, sessionId, amount, returnUrl } = createTransbankDto;
@@ -98,28 +117,7 @@ export class SalesService {
     }
   }
 
-  async findUserSales(idUser: number): Promise<ResponseData> {
-
-    const sales = await Sale.findAll({
-      where: {
-        idUser
-      },
-      include: {
-        model: SaleProduct
-      }
-    });
-
-    if(sales.length === 0) throw new BadRequestException('No se encontraron ventas para el usuario');
-
-    return {
-      statusCode: HttpStatus.OK,
-      data: sales
-    };
-  }
-
   async commitTransbankTransaction(token: string): Promise<ResponseData> {
-
-  console.log(token);
       
     try {
       const responseTransbank = await this.httpService.axiosRef.put(`https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/${token}`, {}, {
@@ -133,7 +131,6 @@ export class SalesService {
       }
     } catch (error) {
 
-      console.log(error);
       throw new BadRequestException('No se pudo confirmar la transaccion');
     }
   }
@@ -160,21 +157,5 @@ export class SalesService {
     let percentageIva = 19 / 100;
     let netPrice = priceTotal - priceTotal * percentageIva;
     return netPrice;
-  }
-  
-  findAll() {
-    return `This action returns all sales`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} sale`;
-  }
-
-  update(id: number, updateSaleDto: UpdateSaleDto) {
-    return `This action updates a #${id} sale`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} sale`;
   }
 }
