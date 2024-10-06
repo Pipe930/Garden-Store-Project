@@ -1,3 +1,8 @@
+type imageType = {
+  urlImage: string;
+  type: string;
+}
+
 export interface Product {
 
   idProduct: number;
@@ -16,6 +21,7 @@ export interface Product {
   description: string;
   createAt: Date;
   updateAt: Date;
+  images: Array<imageType>;
   idCategory: number;
 }
 
@@ -48,5 +54,6 @@ export const productJson: Product = {
   updateAt: new Date(),
   slug: "",
   description: "",
-  idCategory: 0
+  idCategory: 0,
+  images: []
 }

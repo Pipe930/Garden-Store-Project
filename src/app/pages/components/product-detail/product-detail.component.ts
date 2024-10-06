@@ -8,6 +8,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { register } from 'swiper/element';
 import { CardComponent } from '../../../shared/card/card.component';
 import { CartService } from '../../services/cart.service';
+import { environment } from '../../../../environments/environment.development';
 register();
 
 @Component({
@@ -31,11 +32,10 @@ export class ProductDetailComponent {
 
   public swiperElement: Signal<ElementRef> = viewChild.required("swiper");
 
+  private slug = "";
+  public urlImage = signal<string>("");
   public product = signal<Product>(productJson);
   public productList = signal<Array<Product>>([]);
-
-  public slug: string = "";
-  // public urlApi: string = environment.domain;
   public quantity = signal<number>(1);
 
   ngOnInit(): void {
@@ -46,6 +46,7 @@ export class ProductDetailComponent {
 
     this._productsService.getProduct(this.slug).subscribe(result => {
       this.product.set(result.data);
+      this.loadImages(result.data);
 
       this._productsService.getProductsFilterCategory(result.data.idCategory).subscribe(result => {
         this.productList.set(result.data);
@@ -76,11 +77,11 @@ export class ProductDetailComponent {
     }
   }
 
-  public eventProductGet(productGet: any):void {
+  public eventProductGet(productGet: Product):void {
 
-    console.log(typeof productGet);
     this.quantity.set(1);
     this.product.set(productGet);
+    this.loadImages(productGet);
   }
 
   public addCart(id_product: number):void{
@@ -111,5 +112,14 @@ export class ProductDetailComponent {
       this._alertService.error("Error", "No se agrego el producto al carrito");
     })
 
+  }
+
+  private loadImages(product: Product): void{
+
+    if(product.images.length > 0){
+      this.urlImage.set(`${environment.apiImages}/${product.images.filter(image => image.type === "cover")[0].urlImage}`);
+    } else {
+      this.urlImage.set("https://cdni.iconscout.com/illustration/premium/thumb/404-7304110-5974976.png");
+    }
   }
 }
