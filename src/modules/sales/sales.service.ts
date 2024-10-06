@@ -1,7 +1,7 @@
 import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { UpdateSaleDto } from './dto/update-sale.dto';
-import { Sale, SaleProduct, SaleStatus } from './models/sale.model';
+import { Sale, SaleProduct, TypeStatus } from './models/sale.model';
 import { Cart } from '../cart/models/cart.model';
 import { Item } from '../cart/models/item.model';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
@@ -41,7 +41,7 @@ export class SalesService {
         priceTotal,
         productsQuantity,
         discountApplied,
-        status: SaleStatus.PENDING,
+        status: TypeStatus.PENDING,
         withdrawal,
         idUser
       });

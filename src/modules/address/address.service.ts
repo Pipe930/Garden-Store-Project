@@ -11,7 +11,7 @@ export class AddressService {
 
         const regions = await Region.findAll<Region>();
 
-        if (regions.length > 0) throw new NotFoundException("No tenemos regiones registradas");
+        if (regions.length === 0) throw new NotFoundException("No tenemos regiones registradas");
 
         return {
             statusCode: HttpStatus.OK,
@@ -24,7 +24,7 @@ export class AddressService {
 
         const provinces = await Province.findAll<Province>();
 
-        if (provinces.length > 0) throw new NotFoundException("No tenemos provincias registradas");
+        if (provinces.length === 0) throw new NotFoundException("No tenemos provincias registradas");
 
         return {
             statusCode: HttpStatus.OK,
@@ -37,7 +37,7 @@ export class AddressService {
 
         const communes = await Commune.findAll<Commune>();
 
-        if (communes.length > 0) throw new NotFoundException("No tenemos comunas registradas");
+        if (communes.length === 0) throw new NotFoundException("No tenemos comunas registradas");
 
         return {
             statusCode: HttpStatus.OK,
@@ -54,7 +54,7 @@ export class AddressService {
             }
         });
 
-        if (provinces.length > 0) throw new NotFoundException("No tenemos provincias en esta región");
+        if (provinces.length === 0) throw new NotFoundException("No tenemos provincias en esta región");
 
         return {
             statusCode: HttpStatus.OK,
@@ -70,7 +70,7 @@ export class AddressService {
             }
         });
 
-        if (communes.length > 0) throw new NotFoundException("No tenemos comunas en esta provincia");
+        if (communes.length === 0) throw new NotFoundException("No tenemos comunas en esta provincia");
 
         return {
             statusCode: HttpStatus.OK,
@@ -113,7 +113,19 @@ export class AddressService {
             where: {
                 idUser
             },
-            include: Address
+            include: [
+                {
+                    model: Address,
+
+                    include: [
+                        {
+                            model: Commune,
+                            attributes: ['idCommune', 'name']
+                        }
+                    ]
+                }
+            ]
+            
         });
 
         if (addressUser.length === 0) throw new NotFoundException("No tenemos direcciones registradas con este usuario");

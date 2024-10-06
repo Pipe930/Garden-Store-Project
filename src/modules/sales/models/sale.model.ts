@@ -4,14 +4,14 @@ import { Product } from "src/modules/products/models/product.model";
 import { User } from "src/modules/users/models/user.model";
 import { Shipping } from "./shipping.model";
 
-export enum SaleStatus {
+export enum TypeStatus {
 
     PENDING = 'PENDIENTE',
     PAID = 'PAGADO',
     CANCELED = 'CANCELADO'
 }
 
-export enum SaleWithdrawal {
+export enum TypeWithdrawal {
 
     IN_STORE = 'EN TIENDA',
     DELIVERY = 'A DOMICILIO'
@@ -35,7 +35,7 @@ export class Sale extends Model {
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
-        field: 'id_address'
+        field: 'price_net'
     })
     declare priceNet: number;
 
@@ -68,13 +68,13 @@ export class Sale extends Model {
     declare productsQuantity: number;
 
     @Column({
-        type: DataType.ENUM(...Object.values(SaleStatus)),
+        type: DataType.ENUM(TypeStatus.PENDING, TypeStatus.PAID, TypeStatus.CANCELED),
         allowNull: false
     })
     declare status: string;
 
     @Column({
-        type: DataType.ENUM(...Object.values(SaleWithdrawal)),
+        type: DataType.ENUM(TypeWithdrawal.IN_STORE, TypeWithdrawal.DELIVERY),
         allowNull: false
     })
     declare withdrawal: string;

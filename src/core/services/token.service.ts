@@ -12,7 +12,12 @@ export class TokenService {
         private readonly configService: ConfigService,
         private readonly jwtService: JwtService
     ){}
-    
+
+    /**
+     * 
+     * @return string $token
+     * @description Genera un token de 2 letras aleatorias
+     */
     public getUuidToken(): string {
     
         const listLetters = ['m', 'n', 'q', 'g', 'l', 'k'];
@@ -33,6 +38,11 @@ export class TokenService {
         return token;
     }
 
+    /**
+     * 
+     * @return string $token
+     * @description Genera un token encriptado con crypto
+     */
     public async encryptedString():Promise<string>{
 
         const iv = randomBytes(16);
@@ -47,6 +57,12 @@ export class TokenService {
         return encryptedText.toString('hex');
     }
 
+    /**
+     * 
+     * @param User $user
+     * @return Promise<any>
+     * @description Genera un token JWT y lo almacena en la base de datos
+     */
     public async generateTokenJWT(user: User): Promise<any> {
 
         try {
@@ -67,7 +83,14 @@ export class TokenService {
         
     }
 
-    public async storeRefreshToken(refreshToken: string, idUser: number): Promise<void> {
+    /**
+     * 
+     * @param string $refreshToken
+     * @param number $idUser
+     * @return Promise<void>
+     * @description Almacena el refreshToken en la base de datos
+     */
+    private async storeRefreshToken(refreshToken: string, idUser: number): Promise<void> {
 
         const refreshTokenExists = await RefreshToken.findByPk(idUser);
 

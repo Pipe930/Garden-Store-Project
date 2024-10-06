@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { CORS } from './constants';
 import { ValidationPipe } from '@nestjs/common';
 import { json } from 'body-parser';
+import { InsertDataService } from './core/services/insert-data.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,6 +18,10 @@ async function bootstrap() {
   }))
 
   app.use(json({ limit: '5mb' }));
+
+  const inserDataService = app.get(InsertDataService);
+
+  await inserDataService.insertDataLocates();
 
   const configService = app.get(ConfigService);
   await app.listen(parseInt(configService.get("port")));

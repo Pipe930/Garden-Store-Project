@@ -15,6 +15,8 @@ import { JsonMiddleware } from './core/middlewares/json.middleware';
 import { CartModule } from './modules/cart/cart.module';
 import { AddressModule } from './modules/address/address.module';
 import { SalesModule } from './modules/sales/sales.module';
+import { InsertDataService } from './core/services/insert-data.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -35,6 +37,7 @@ import { SalesModule } from './modules/sales/sales.module';
     }),
     DatabaseModule,
     MorganModule,
+    HttpModule,
     UsersModule,
     AuthModule,
     AccessControlModule,
@@ -48,7 +51,8 @@ import { SalesModule } from './modules/sales/sales.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: MorganInterceptor("combined"),
-    }
+    },
+    InsertDataService
   ]
 })
 export class AppModule implements NestModule {

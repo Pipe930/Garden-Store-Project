@@ -23,6 +23,15 @@ export class SendEmailService {
         );
     }
 
+    /**
+     * 
+     * @param TokenActivation $tokenActivation 
+     * @param string $email
+     * @param string $type
+     * @returns void
+     * 
+     * @description Envia un correo de activacion de cuenta o recuperar contraseña
+     */
     public async sendEmail(tokenActivation: TokenActivation, email: string, type: string): Promise<void>{
 
         let templatePath: string;
