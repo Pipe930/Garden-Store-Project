@@ -49,7 +49,15 @@ export class ProductsService {
 
   async findAll(): Promise<ResponseData> {
 
-    const products = await Product.findAll<Product>();
+    const products = await Product.findAll<Product>({
+      include:[
+
+        {
+          model: ImagesProduct,
+          attributes: ['urlImage', 'type']
+        }
+      ]
+    });
 
     if(products.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT }
 
@@ -62,7 +70,15 @@ export class ProductsService {
 
   async findOne(id: number): Promise<ResponseData> {
 
-    const product = await Product.findByPk<Product>(id);
+    const product = await Product.findOne<Product>({
+      where: { idProduct: id },
+      include: [
+        {
+          model: ImagesProduct,
+          attributes: ['urlImage', 'type']
+        }
+      ]
+    });
 
     if(!product) throw new NotFoundException("Producto no encontrado");
 
@@ -75,7 +91,16 @@ export class ProductsService {
 
   async findProductBySlug(slug: string): Promise<ResponseData> {
 
-    const product = await Product.findOne<Product>({ where: { slug } });
+    const product = await Product.findOne<Product>(
+      { where: { slug },
+      include: [
+        {
+          model: ImagesProduct,
+          attributes: ['urlImage', 'type']
+        }
+      ]
+    }
+    );
 
     if(!product) throw new NotFoundException("Producto no encontrado");
 
@@ -88,7 +113,15 @@ export class ProductsService {
 
   async findProductByCategory(idCategory: number): Promise<ResponseData> {
 
-    const products = await Product.findAll<Product>({ where: { idCategory } });
+    const products = await Product.findAll<Product>(
+      { where: { idCategory },
+      include: [
+        {
+          model: ImagesProduct,
+          attributes: ['urlImage', 'type']
+        }
+      ]
+    });
 
     if(products.length === 0) throw new NotFoundException("No se encontraron productos en esta categoria");
 
@@ -159,6 +192,12 @@ export class ProductsService {
       newFileNameImage
     );
 
+    const product = await Product.findByPk<Product>(idProduct);
+    const imageProduct = await ImagesProduct.findOne<ImagesProduct>({ where: { idProduct, type } });
+
+    if(!product) throw new NotFoundException("Producto no encontrado");
+    if(imageProduct) throw new BadRequestException("Este producto ya tiene una imagen de tipo portada");
+
     try {
       
       await this.httpService.axiosRef.post("http://127.0.0.1:8000/upload", dataForm, {
@@ -170,10 +209,6 @@ export class ProductsService {
 
       if(error.code === "ECONNREFUSED") throw new BadRequestException("No se envio correctamente al proveedor de imagenes");
     }
-
-    const product = await Product.findByPk<Product>(idProduct);
-    
-    if(!product) throw new NotFoundException("Producto no encontrado");
 
     try {
       
