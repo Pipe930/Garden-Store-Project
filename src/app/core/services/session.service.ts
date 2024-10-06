@@ -35,4 +35,8 @@ export class SessionService {
     return null;
 
   }
+
+  public clearSession():void{
+    sessionStorage.clear();
+  }
 }

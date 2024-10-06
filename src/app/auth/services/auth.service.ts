@@ -45,4 +45,15 @@ export class AuthService {
   public activateAccount(body: ActivateAccountInterface):Observable<ResponseActivateAccount>{
     return this._http.post<ResponseActivateAccount>(`${this.urlApi}/activate/account`, body);
   }
+
+  public refreshToken(){
+
+    return this._http.post<any>(`${this.urlApi}/refresh-token`, {
+      refreshToken: sessionStorage.getItem('refreshToken')
+    })
+  }
+
+  public logout():Observable<any>{
+    return this._http.get<any>(`${this.urlApi}/logout`);
+  }
 }

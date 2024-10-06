@@ -11,8 +11,8 @@ import { ResponseCategories } from '../interfaces/category';
 export class ProductsService {
 
   private readonly _http = inject(HttpClient);
-  private urlApiProducts: string = `${environment.api}/products`;
-  private urlApiCategories: string = `${environment.api}/categories`;
+  private urlApiProducts = `${environment.api}/products`;
+  private urlApiCategories = `${environment.api}/categories`;
 
   public getAllProducts():Observable<ResponseProducts>{
     return this._http.get<ResponseProducts>(this.urlApiProducts);

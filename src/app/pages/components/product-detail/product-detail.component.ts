@@ -7,6 +7,7 @@ import { AlertService } from '../../../core/services/alert.service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { register } from 'swiper/element';
 import { CardComponent } from '../../../shared/card/card.component';
+import { CartService } from '../../services/cart.service';
 register();
 
 @Component({
@@ -23,7 +24,7 @@ export class ProductDetailComponent {
 
   private readonly _productsService = inject(ProductsService);
   private readonly _activated = inject(ActivatedRoute);
-  // private readonly _cartService = inject(CartService);
+  private readonly _cartService = inject(CartService);
   private readonly _router = inject(Router);
   private readonly _sessionService = inject(SessionService);
   private readonly _alertService = inject(AlertService);
@@ -31,7 +32,6 @@ export class ProductDetailComponent {
   public swiperElement: Signal<ElementRef> = viewChild.required("swiper");
 
   public product = signal<Product>(productJson);
-
   public productList = signal<Array<Product>>([]);
 
   public slug: string = "";
@@ -99,17 +99,17 @@ export class ProductDetailComponent {
     }
 
     const jsonProduct = {
-      product: id_product,
+      idProduct: id_product,
       quantity: this.quantity()
     }
 
-    // this._cartService.addProductCart(jsonProduct).subscribe(result => {
+    this._cartService.addProductCart(jsonProduct).subscribe(result => {
 
-    //   this._alertService.toastSuccess("El producto se agrego al carrito");
-    //   this._router.navigate(["/cart"]);
-    // }, (error) => {
-    //   this._alertService.error("Error", "No se agrego el producto al carrito");
-    // })
+      this._alertService.toastSuccess("El producto se agrego al carrito");
+      this._router.navigate(["/cart"]);
+    }, (error) => {
+      this._alertService.error("Error", "No se agrego el producto al carrito");
+    })
 
   }
 }

@@ -43,8 +43,6 @@ export class RegisterComponent {
 
     this.formRegister.value.phone = `+569${this.formRegister.value.phone}`;
 
-    console.log(this.formRegister.value.phone.length);
-
     this._authService.register(this.formRegister.value).subscribe(
     (result) => {
 

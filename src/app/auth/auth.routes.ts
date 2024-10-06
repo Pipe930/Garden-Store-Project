@@ -10,7 +10,7 @@ export const routesAuth: Routes = [
 
   {
     path: "",
-    component: AuthComponent,
+    loadComponent: () => import("./auth.component").then(c => c.AuthComponent),
     children: [
       {
         path: "login",
