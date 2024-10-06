@@ -6,9 +6,9 @@ import { SessionService } from '../../../core/services/session.service';
 import { AlertService } from '../../../core/services/alert.service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { register } from 'swiper/element';
-import { CardComponent } from '../../../shared/card/card.component';
 import { CartService } from '../../services/cart.service';
 import { environment } from '../../../../environments/environment.development';
+import { CardComponent } from '../../../shared/components/card/card.component';
 register();
 
 @Component({
@@ -118,8 +118,9 @@ export class ProductDetailComponent {
 
     if(product.images.length > 0){
       this.urlImage.set(`${environment.apiImages}/${product.images.filter(image => image.type === "cover")[0].urlImage}`);
-    } else {
-      this.urlImage.set("https://cdni.iconscout.com/illustration/premium/thumb/404-7304110-5974976.png");
+      return;
     }
+
+    this.urlImage.set("https://cdni.iconscout.com/illustration/premium/thumb/404-7304110-5974976.png");
   }
 }

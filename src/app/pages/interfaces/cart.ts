@@ -16,7 +16,7 @@ interface ProductCart {
 interface ItemCart {
   product: ProductCart;
   quantity: number;
-  price: number;
+  priceUnit: number;
 }
 
 interface AddCart {
@@ -68,7 +68,7 @@ export const cartJson: Cart = {
           name: ""
         }
       },
-      price: 0,
+      priceUnit: 0,
       quantity: 0
     }
   ],

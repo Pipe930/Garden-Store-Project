@@ -5,6 +5,7 @@ import { ListProductsComponent } from './components/list-products/list-products.
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { CartComponent } from './components/cart/cart.component';
 import { authenticationGuard } from '../core/guards/authentication.guard';
+import { PurchaseComponent } from './components/purchase/purchase.component';
 
 export const routesPages: Routes = [
 
@@ -28,6 +29,11 @@ export const routesPages: Routes = [
       {
         path: "cart",
         component: CartComponent,
+        canActivate: [authenticationGuard]
+      },
+      {
+        path: "purchase",
+        component: PurchaseComponent,
         canActivate: [authenticationGuard]
       }
     ]

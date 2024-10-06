@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, signal, Signal, viewChild } from '@angular/core';
-import { CardComponent } from '../../../shared/card/card.component';
+import { CardComponent } from '../../../shared/components/card/card.component';
 import { Product } from '../../interfaces/product';
 import { Category } from '../../interfaces/category';
 import { ProductsService } from '../../services/products.service';

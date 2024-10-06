@@ -1,0 +1,353 @@
+<div class="purchase">
+
+  <section class="purchase__dispatch">
+    <header class="dispatch__header">
+      <div class="dispatch__container-progress">
+
+        <ul class="dispatch__list">
+          <li class="dispatch__item">
+            <div>
+              <p>1</p>
+            </div>
+            <div>
+              <p>Tipo de Retiro</p>
+            </div>
+          </li>
+
+          <li class="dispatch__item">
+            <div>
+              <p>2</p>
+            </div>
+            <div>
+              <p>Pago</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    @if (isSelectAddress) {
+      <div class="purchase__container-accordions">
+        <h2 class="purchase__subtitle">Seleccionar tipo de entrega</h2>
+
+        <div class="purchase__accordion-left" [ngClass]="{
+          'selected': displayDispatchShop
+        }" (click)="toggleDispatchShop()">
+
+          <label for="dispatch-shop" class="accordion-left__label">
+            <div class="accordion-left__container">
+
+              <div class="accordion-left__container-input">
+                <input type="radio" class="accordion-left__input-radio" id="dispatch-shop" name="type-dispatch">
+                Retiro en Tienda
+              </div>
+              <div class="accordion-left__text">
+
+                <p>Costo <span>$0</span></p>
+              </div>
+            </div>
+          </label>
+
+        </div>
+
+        @if(displayDispatchShop){
+          <div class="accordion-left__accordion">
+
+            <div class="accordion-left__container-left">
+              <label class="accordion-left__label">Seleccione una Sucursal</label>
+              <select class="accordion-left__select" (change)="selectBranch($event)">
+                <option value="" class="accordion-left__option">Sucursal</option>
+                @for (branch of listBranchs; track $index) {
+                  <option [value]="branch.id_branch" class="accordion-left__option">{{branch.name_branch | titlecase}}</option>
+                }
+              </select>
+            </div>
+            <div class="accordion-left__container-right">
+              <h2 class="container-right__title">¿Quien retirara el producto?</h2>
+
+              <label for="the-same-person-branch" class="container-right__label">
+                <input type="radio" name="person-select" id="the-same-person-branch" class="container-right__input-radio" (change)="selectRetirePerson($event)" value="same-person">
+                La misma persona que compra
+              </label>
+              <label for="another-person-withdraw-branch" class="container-right__label">
+                <input type="radio" name="person-select" id="another-person-withdraw-branch" class="container-right__input-radio" (change)="selectRetirePerson($event)" value="other-person">
+                Otra persona retirará
+              </label>
+            </div>
+          </div>
+        }
+        <div class="purchase__accordion-right" (click)="toggleDispatchSend()">
+
+          <label for="dispatch-send" class="accordion-right__label" [ngClass]="{
+            'selected': displayDispatchSend
+          }">
+
+            <div class="accordion-right__container">
+              <input type="radio" class="accordion-left__input-radio" id="dispatch-send" name="type-dispatch">
+              Despacho a Domicilio
+              <div class="accordion-left__text">
+
+              </div>
+            </div>
+          </label>
+        </div>
+
+        @if (displayDispatchSend) {
+          <div class="accordion-right__accordion">
+
+            <h2 class="accordion-right__subtitle">Dirección de Despacho</h2>
+
+            <div class="accordion-right__container-list">
+
+              @for (address of listAddress(); track $index) {
+                <article class="container-list__address">
+
+                  <label [htmlFor]="address.idAddress" class="address__label" (change)="selectedAddress(address)">
+                    <input type="radio" name="select-address" [id]="address.idAddress" class="address__input-radio">
+                    {{address.address.addressName | titlecase}}, {{address.address.commune.name}}
+                  </label>
+                </article>
+              }
+            </div>
+
+            <div class="accordion-right__container-btn">
+
+              <button type="button" class="accordion-right__btn-create-address btn btn-success" (click)="toggleFormAddress()">Crear Nueva Dirección</button>
+            </div>
+
+
+            @if (isFormCreateAddress) {
+              <div class="accordion-right__form-create-address">
+
+                <h3 class="accordion-right__title">Crea tu nueva dirección</h3>
+
+                <div class="accordion-right__map"></div>
+
+                <form [formGroup]="formCreateAddress" (ngSubmit)="createAddress()" class="accordion-right__form">
+
+                  <fieldset class="mb-3">
+                    <label for="nameAddress" class="form-label">Nombre de la Dirección</label>
+                    <input type="text" class="form-control" id="nameAddress" formControlName="name" [ngClass]="{
+                      'is-invalid': name.invalid && (name.dirty || name.touched)
+                    }">
+
+                    @if (name.getError('required')) {
+                      <span class="invalid-feedback">Este campo es requerido</span>
+                    }
+
+                    @if (name.getError('maxlength')) {
+                      <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                    }
+                  </fieldset>
+                  <fieldset class="mb-3">
+                    <label for="addressName" class="form-label">Calle y Numero</label>
+                    <input type="text" class="form-control" id="addressName" formControlName="addressName" [ngClass]="{
+                      'is-invalid': addressName.invalid && (addressName.dirty || addressName.touched)
+                    }">
+
+                    @if (addressName.getError('required')) {
+                      <span class="invalid-feedback">Este campo es requerido</span>
+                    }
+
+                    @if (addressName.getError('maxlength')) {
+                      <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                    }
+                  </fieldset>
+
+                  <fieldset class="mb-3">
+                    <label for="city" class="form-label">Ciudad</label>
+                    <input type="text" class="form-control" id="city" formControlName="city" [ngClass]="{
+                      'is-invalid': city.invalid && (city.dirty || city.touched)
+                    }">
+
+                    @if (city.getError('required')) {
+                      <span class="invalid-feedback">Este campo es requerido</span>
+                    }
+
+                    @if (city.getError('maxlength')) {
+                      <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                    }
+                  </fieldset>
+
+                  <fieldset class="mb-3">
+                    <label for="numDepartment" class="form-label">Numero Departamento (Opcional)</label>
+                    <input type="text" class="form-control" id="numDepartment" formControlName="numDepartment" [ngClass]="{
+                      'is-invalid': numDepartment.invalid && (numDepartment.dirty || numDepartment.touched)
+                    }">
+
+                    @if (numDepartment.getError('maxlength')) {
+                      <span class="invalid-feedback">Tiene que tener maximo 40 caracteres</span>
+                    }
+                  </fieldset>
+
+                  <fieldset class="mb-3">
+                    <label for="description" class="form-label">Piso / Oficina / Apto / Depto</label>
+                    <textarea class="form-control" id="description" rows="8" formControlName="description" placeholder="Descripción de la ubicación. Ej: departamento, torre, oficina"></textarea>
+                  </fieldset>
+
+                  <fieldset class="form__control">
+                    <label for="" class="form__text">Región</label>
+                    <select class="form-select" formControlName="region" (change)="changeRegion($event)">
+                      <option selected>Región</option>
+                      @for (region of listRegions(); track $index) {
+                        <option [value]="region.idRegion">{{region.name}}</option>
+                      }
+                    </select>
+                  </fieldset>
+                  <fieldset class="form__control">
+                    <label for="" class="form__text">Provincia</label>
+                    <select class="form-select" formControlName="province" (change)="changeProvince($event)">
+                      <option value="">Provincia</option>
+                      @for (province of listProvince(); track $index) {
+                        <option [value]="province.idProvince">{{province.name}}</option>
+                      }
+                    </select>
+                  </fieldset>
+                  <fieldset class="form__control">
+                    <label for="" class="form__text">Comuna</label>
+                    <select class="form-select" formControlName="commune">
+                      <option value="">Comuna</option>
+                      @for (commune of listCommune(); track $index) {
+
+                        <option [value]="commune.idCommune">{{commune.name}}</option>
+                      }
+                    </select>
+                  </fieldset>
+
+                  <button class="form__btn-create btn btn-success" type="submit">Guardar Dirección</button>
+                </form>
+
+              </div>
+            }
+
+            <div class="accordion-right__person-resive">
+
+              <h2 class="person-resive__subtitle">¿Quien recibirá el producto?</h2>
+
+              <div class="person-resive__container">
+
+                <label for="the-same-person" class="person-resive__label">
+                  <input type="radio" name="person-retire" id="the-same-person" class="person-resive__input" (change)="selectRetirePerson($event)" value="same-person">
+                  La misma persona que compra
+                </label>
+
+                <label for="another-person-withdraw" class="person-resive__label">
+                  <input type="radio" name="person-retire" id="another-person-withdraw" class="person-resive__input" (change)="selectRetirePerson($event)" value="other-person">
+                  Otra persona lo recibirá
+                </label>
+
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (isSelectPay) {
+      <div class="purchase__container-select-pay">
+
+        <h2 class="container-select-pay__title">Selecciona tu metodo de pago</h2>
+
+        <div class="purchase__container-inputs">
+
+          <label for="debit-card" class="container-inputs__label" [ngClass]="{
+            'container-inputs__label--selected': true
+          }">
+
+            <input type="radio" name="select-pay" id="debit-card" [value]="debitCard" (change)="selectPayment($event)" class="container-input__radio-input">
+            Transbank
+          </label>
+
+          <label for="market-payment" class="container-inputs__label">
+
+            <input type="radio" name="select-pay" id="market-payment" [value]="marketPayment" (change)="selectPayment($event)" class="container-input__radio-input">
+            Mercado Pago
+          </label>
+        </div>
+      </div>
+    }
+  </section>
+  <section class="purchase__container-cart">
+
+    <header class="container-cart__header">
+      <h2 class="container-cart__title"><i class='bx bx-cart'></i> Carro</h2>
+      <span class="container-cart__division"></span>
+      <h2 class="container-cart__title">Productos</h2>
+    </header>
+
+    <div class="container-cart__container-products">
+      <div class="container-cart__list-products">
+        @for (product of cart().items; track $index) {
+          <div class="list-products__product">
+
+            <h3>{{product.product.title}}</h3>
+
+            <p>${{product.priceUnit | currency: 'CLP'}}</p>
+            <p>{{product.quantity}}</p>
+          </div>
+        }
+      </div>
+
+
+      <div class="container-cart__container-btn-cart">
+        @if (isSelectPay) {
+          <button class="container-cart__btn-cart" (click)="returnStepPrevius()">Volver al Paso Anterior</button>
+        }
+
+        @if(isSelectAddress) {
+          <button [routerLink]="['/cart']" class="container-cart__btn-cart btn btn-outline-success">Volver al Carrito</button>
+        }
+      </div>
+    </div>
+
+    <div class="container-cart__purchase-info">
+
+      <h3 class="purchase-info__title">Datos de Compra</h3>
+
+      <div class="purchase-info__container">
+
+        <div class="purchase-info__delivery-type">
+          <h4>Tipo de Entrega</h4>
+          <span>{{voucher.type_retirement.retirement}}</span>
+        </div>
+        <div class="purchase-info__address">
+          <h4>Dirección</h4>
+          @if (voucher.address.address.addressName) {
+
+            <span class="">{{voucher.address.address.addressName}}, {{voucher.address.address.commune.name}}</span>
+          }
+        </div>
+        <div class="purchase-info__document-type">
+          <h4>Tipo de Documento</h4>
+          <span>Boleta</span>
+        </div>
+        <div class="purchase-info__deliver-date">
+          <h4>Fecha de Entrega</h4>
+          <span></span>
+        </div>
+        <div class="purchase-info__shipping-cost">
+          <h4>Costo de Envio</h4>
+          <span></span>
+        </div>
+        <div class="purchase-info__total-price">
+          <h4>Precio Total</h4>
+          <span>$ {{cart().priceTotal | currency: 'CLP'}}</span>
+        </div>
+
+        <div class="purchase-info__container-btn-purchase">
+          @if (isSelectPay) {
+            <button class="purchase-info__btn-purchase btn btn-success"(click)="createPay()">Realizar Compra</button>
+          }
+
+          @if(isSelectAddress){
+            <button class="purchase-info__btn-purchase btn btn-success" (click)="continuePay()">Continuar con la Compra</button>
+          }
+        </div>
+
+        <div class="purchase-info__text">
+          <p><i class='bx bxs-lock-alt bx-sm'></i> Compra 100% segura</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

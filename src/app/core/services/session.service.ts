@@ -27,8 +27,8 @@ export class SessionService {
     if(this.validSession()){
 
       return {
-        access: sessionStorage.getItem("access") || null,
-        refresh: sessionStorage.getItem("refresh") || null
+        access: sessionStorage.getItem("accessToken") || null,
+        refresh: sessionStorage.getItem("refreshToken") || null
       };
     }
 

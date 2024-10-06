@@ -1,7 +1,7 @@
 import { Component, ElementRef, inject, input, output, Renderer2, Signal, signal, viewChild, ViewChild } from '@angular/core';
-import { Navbar } from '../../core/interfaces/navbar';
+import { Navbar } from '../../../core/interfaces/navbar';
 import { RouterLink } from '@angular/router';
-import { SessionService } from '../../core/services/session.service';
+import { SessionService } from '../../../core/services/session.service';
 import { NgClass } from '@angular/common';
 
 @Component({

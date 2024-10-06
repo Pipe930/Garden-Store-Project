@@ -1,9 +1,9 @@
 import { Component, inject, input, OnInit, output, signal } from '@angular/core';
-import { Product } from '../../pages/interfaces/product';
+import { Product } from '../../../pages/interfaces/product';
 import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
-import { ProductsService } from '../../pages/services/products.service';
-import { environment } from '../../../environments/environment.development';
+import { ProductsService } from '../../../pages/services/products.service';
+import { environment } from '../../../../environments/environment.development';
 
 @Component({
   selector: 'app-card',
