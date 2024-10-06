@@ -5,6 +5,7 @@ import { Cart } from './models/cart.model';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { AddItemCartDto } from './dto/add-item-cart.dto';
 import { SubstractItemCartDto } from './dto/substract-item-cart.dto';
+import { Category } from '../categories/models/category.model';
 
 @Injectable()
 export class CartService {
@@ -18,11 +19,17 @@ export class CartService {
             include: [
                 {
                     model: Item,
-                    attributes: ["quantity", "priceUnit", "idProduct"],
+                    attributes: ["quantity", "priceUnit"],
                     include: [
                         {
                             model: Product,
-                            attributes: ["title", "price", "stock"]
+                            attributes: ["idProduct", "title", "price", "brand", "stock", "priceDiscount"],
+                            include: [
+                                {
+                                    model: Category,
+                                    attributes: ["name"]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -52,7 +59,7 @@ export class CartService {
 
         if(!cart) throw new NotFoundException("Carrito no encontrado");
         if(!product) throw new NotFoundException("Producto no encontrado");
-        if(product.stock < quantity) throw new BadRequestException("No hay suficiente stock");
+        if(product.stock < quantity) throw new BadRequestException("El producto no tiene suficiente stock");
 
         const item = await Item.findOne<Item>({
             where: {

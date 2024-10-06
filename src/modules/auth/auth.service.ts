@@ -245,4 +245,22 @@ export class AuthService {
             statusCode: HttpStatus.OK
         }
     }
+
+    async logout(idUser: number): Promise<ResponseData>{
+
+        const refreshToken = await RefreshToken.findOne<RefreshToken>({
+            where: {
+                idRefreshToken: idUser
+            }
+        });
+
+        if(!refreshToken) throw new NotFoundException("Sesion no encontrada");
+
+        await refreshToken.destroy();
+
+        return {
+            message: "Sesion cerrada con exito",
+            statusCode: HttpStatus.OK
+        }
+    }
 }
