@@ -1,6 +1,5 @@
 import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateSaleDto } from './dto/create-sale.dto';
-import { UpdateSaleDto } from './dto/update-sale.dto';
 import { Sale, SaleProduct, TypeStatus } from './models/sale.model';
 import { Cart } from '../cart/models/cart.model';
 import { Item } from '../cart/models/item.model';
@@ -139,8 +138,8 @@ export class SalesService {
     
     return {
       "Authorization": "Token",
-      "Tbk-Api-Key-Id": this.configService.get<string>('TBK_API_KEY_ID'),
-      "Tbk-Api-Key-Secret": this.configService.get<string>('TBK_API_KEY_SECRET'),
+      "Tbk-Api-Key-Id": this.configService.get<string>('tbkApiKeyId'),
+      "Tbk-Api-Key-Secret": this.configService.get<string>('tbkApiKeySecret'),
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
       'Referrer-Policy': 'origin-when-cross-origin',

@@ -83,8 +83,6 @@ export class AuthService {
             };
 
         } catch (error) {
-
-            console.log(error);
             throw new BadRequestException("No se creo el usuario correctamente");
         }
     }

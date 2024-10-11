@@ -13,8 +13,8 @@ export enum TypeStatus {
 
 export enum TypeWithdrawal {
 
-    IN_STORE = 'EN TIENDA',
-    DELIVERY = 'A DOMICILIO'
+    IN_STORE = 'RETIRO EN TIENDA',
+    DELIVERY = 'DESPACHO A DOMICILIO'
 }
 
 @Table({

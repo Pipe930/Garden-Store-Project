@@ -1,6 +1,13 @@
 import { Column, DataType, Table, Model, BelongsToMany, ForeignKey } from "sequelize-typescript";
 import { Role } from "./rol.model";
 
+enum TypeActions {
+    CREATE = "CREATE",
+    READ = "READ",
+    UPDATE = "UPDATE",
+    DELETE = "DELETE"
+}
+
 @Table({
     tableName: "permission",
     modelName: "Permission",
@@ -22,6 +29,18 @@ export class Permission extends Model {
         allowNull: false
     })
     declare name: string;
+
+    @Column({
+        type: DataType.STRING(100),
+        allowNull: false
+    })
+    declare recourse: string;
+
+    @Column({
+        type: DataType.ENUM(TypeActions.CREATE, TypeActions.READ, TypeActions.UPDATE, TypeActions.DELETE),
+        allowNull: false
+    })
+    declare actions: string;
 
     @Column({
         type: DataType.TEXT,
