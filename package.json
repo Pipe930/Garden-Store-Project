@@ -27,7 +27,6 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
-    "@nestjs/sequelize": "^10.0.1",
     "@types/morgan": "^1.9.9",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",

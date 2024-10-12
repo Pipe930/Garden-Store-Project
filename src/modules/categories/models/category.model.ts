@@ -4,9 +4,7 @@ import { Product } from "src/modules/products/models/product.model";
 @Table({
     tableName: "categories",
     modelName: "Category",
-    timestamps: true,
-    deletedAt: true,
-    paranoid: true
+    timestamps: false
 })
 export class Category extends Model {
 
@@ -33,7 +31,7 @@ export class Category extends Model {
         allowNull: false,
         unique: true,
         validate: {
-            notEmpty: true
+            notEmpty: false
         }
     })
     declare slug: string;
@@ -46,16 +44,4 @@ export class Category extends Model {
 
     @HasMany(() => Product)
     declare products: Product[];
-
-    @BeforeUpdate
-    @BeforeCreate
-    static generateSlug(instance: Category) {
-        instance.slug = instance.name.toLowerCase().replace(/ /g, "-");
-    }
-
-    @BeforeUpdate
-    @BeforeCreate
-    static titleCase(instance: Category) {
-        instance.name = instance.name.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
-    }
 }

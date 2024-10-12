@@ -9,9 +9,9 @@ enum TypeActions {
 }
 
 @Table({
-    tableName: "permission",
+    tableName: "permissions",
     modelName: "Permission",
-    timestamps: true
+    timestamps: false
 })
 export class Permission extends Model {
 

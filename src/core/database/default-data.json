@@ -75,182 +75,182 @@
     "permissions": [
 
         {
-            "name": "crear",
+            "name": "crear categorias",
             "recourse": "categoria",
             "actions": "CREATE"
         },
         {
-            "name": "leer",
+            "name": "leer categorias",
             "recourse": "categoria",
             "actions": "READ"
         },
         {
-            "name": "actualizar",
+            "name": "actualizar categorias",
             "recourse": "categoria",
             "actions": "UPDATE"
         },
         {
-            "name": "eliminar",
+            "name": "eliminar categorias",
             "recourse": "categoria",
             "actions": "DELETE"
         },
         {
-            "name": "crear",
+            "name": "crear roles",
             "recourse": "rol",
             "actions": "CREATE"
         },
         {
-            "name": "leer",
+            "name": "leer roles",
             "recourse": "rol",
             "actions": "READ"
         },
         {
-            "name": "actualizar",
+            "name": "actualizar roles",
             "recourse": "rol",
             "actions": "UPDATE"
         },
         {
-            "name": "eliminar",
+            "name": "eliminar roles",
             "recourse": "rol",
             "actions": "DELETE"
         },
         {
-            "name": "crear",
+            "name": "crear permisos",
             "recourse": "permiso",
             "actions": "CREATE"
         },
         {
-            "name": "leer",
+            "name": "leer permisos",
             "recourse": "permiso",
             "actions": "READ"
         },
         {
-            "name": "actualizar",
+            "name": "actualizar permisos",
             "recourse": "permiso",
             "actions": "UPDATE"
         },
         {
-            "name": "eliminar",
+            "name": "eliminar permisos",
             "recourse": "permiso",
             "actions": "DELETE"
         },
         {
-            "name": "crear",
+            "name": "crear usuarios",
             "recourse": "usuario",
             "actions": "CREATE"
         },
         {
-            "name": "leer",
+            "name": "leer usuarios",
             "recourse": "usuario",
             "actions": "READ"
         },
         {
-            "name": "actualizar",
+            "name": "actualizar usuarios",
             "recourse": "usuario",
             "actions": "UPDATE"
         },
         {
-            "name": "eliminar",
+            "name": "eliminar usuarios",
             "recourse": "usuario",
             "actions": "DELETE"
         },
         {
-            "name": "crear",
+            "name": "crear productos",
             "recourse": "producto",
             "actions": "CREATE"
         },
         {
-            "name": "leer",
+            "name": "leer productos",
             "recourse": "producto",
             "actions": "READ"
         },
         {
-            "name": "actualizar",
+            "name": "actualizar productos",
             "recourse": "producto",
             "actions": "UPDATE"
         },
         {
-            "name": "eliminar",
+            "name": "eliminar productos",
             "recourse": "producto",
             "actions": "DELETE"
         },
         {
-            "name": "crear",
+            "name": "crear ventas",
             "recourse": "venta",
             "actions": "CREATE"
         },
         {
-            "name": "leer",
+            "name": "leer ventas",
             "recourse": "venta",
             "actions": "READ"
         },
         {
-            "name": "actualizar",
+            "name": "actualizar ventas",
             "recourse": "venta",
             "actions": "UPDATE"
         },
         {
-            "name": "eliminar",
+            "name": "eliminar ventas",
             "recourse": "venta",
             "actions": "DELETE"
         },
         {
-            "name": "crear",
+            "name": "crear compras",
             "recourse": "compra",
             "actions": "CREATE"
         },
         {
-            "name": "leer",
+            "name": "leer compras",
             "recourse": "compra",
             "actions": "READ"
         },
         {
-            "name": "actualizar",
+            "name": "actualizar compras",
             "recourse": "compra",
             "actions": "UPDATE"
         },
         {
-            "name": "eliminar",
+            "name": "eliminar compras",
             "recourse": "compra",
             "actions": "DELETE"
         },
         {
-            "name": "crear",
+            "name": "crear proveedores",
             "recourse": "proveedor",
             "actions": "CREATE"
         },
         {
-            "name": "leer",
+            "name": "leer proveedores",
             "recourse": "proveedor",
             "actions": "READ"
         },
         {
-            "name": "actualizar",
+            "name": "actualizar proveedores",
             "recourse": "proveedor",
             "actions": "UPDATE"
         },
         {
-            "name": "eliminar",
+            "name": "eliminar proveedores",
             "recourse": "proveedor",
             "actions": "DELETE"
         },
         {
-            "name": "crear",
+            "name": "crear comentarios",
             "recourse": "comentario",
             "actions": "CREATE"
         },
         {
-            "name": "leer",
+            "name": "leer comentarios",
             "recourse": "comentario",
             "actions": "READ"
         },
         {
-            "name": "actualizar",
+            "name": "actualizar comentarios",
             "recourse": "comentario",
             "actions": "UPDATE"
         },
         {
-            "name": "eliminar",
+            "name": "eliminar comentarios",
             "recourse": "comentario",
             "actions": "DELETE"
         }

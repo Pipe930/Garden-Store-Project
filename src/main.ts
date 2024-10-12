@@ -22,6 +22,7 @@ async function bootstrap() {
   const inserDataService = app.get(InsertDataService);
 
   await inserDataService.insertDataLocates();
+  await inserDataService.insertDataCategories();
 
   const configService = app.get(ConfigService);
   await app.listen(parseInt(configService.get("port")));

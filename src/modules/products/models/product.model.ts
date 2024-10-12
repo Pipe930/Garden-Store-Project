@@ -156,10 +156,4 @@ export class Product extends Model {
 
     @BelongsTo(() => Category)
     declare category: Category;
-
-    @BeforeUpdate
-    @BeforeCreate
-    static generateSlug(product: Product) {
-        product.slug = product.title.toLowerCase().replace(/ /g, "-");
-    }
 }

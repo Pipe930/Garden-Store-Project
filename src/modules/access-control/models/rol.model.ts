@@ -3,9 +3,9 @@ import { User } from "../../users/models/user.model";
 import { Permission, RolePermission } from "./permission.model";
 
 @Table({
-    tableName: "role",
+    tableName: "roles",
     modelName: "Role",
-    timestamps: true
+    timestamps: false
 })
 export class Role extends Model {
 

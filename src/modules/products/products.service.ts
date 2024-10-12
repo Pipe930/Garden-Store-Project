@@ -9,6 +9,7 @@ import { HttpService } from '@nestjs/axios';
 import { FileUploadDto } from './dto/file-upload.dto';
 import { ImagesProduct } from './models/image.model';
 import { Offer } from '../offers/models/offer.model';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class ProductsService {
@@ -32,7 +33,7 @@ export class ProductsService {
         brand,
         price,
         priceDiscount: await this.calculateDiscount(price, idOffer),
-        slug: "",
+        slug: this.generateSlug(title),
         returnPolicy,
         description,
         idCategory,
@@ -149,10 +150,11 @@ export class ProductsService {
       product.title = title;
       product.brand = brand;
       product.price = price;
+      product.priceDiscount = await this.calculateDiscount(price, product.idOffer);
+      product.slug = this.generateSlug(title);
       product.returnPolicy = returnPolicy;
       product.description = description;
       product.idCategory = idCategory;
-      product.priceDiscount = await this.calculateDiscount(price, product.idOffer);
       product.idOffer = idOffer;
   
       await product.save();
@@ -249,5 +251,10 @@ export class ProductsService {
 
     return 0;
 
+  }
+
+  private generateSlug(title: string): string {
+    const slug = title.toLowerCase().replace(/ /g, "-");
+    return slug + "-" + randomUUID().split("-").join("");
   }
 }
