@@ -2,6 +2,7 @@ import { BelongsTo, Column, DataType, ForeignKey, Is, Table, Model, BeforeCreate
 import { Category } from "src/modules/categories/models/category.model";
 import { ImagesProduct } from "./image.model";
 import { Offer } from "src/modules/offers/models/offer.model";
+import { Item } from "src/modules/cart/models/item.model";
 
 export enum AvailabilityStatus {
     InStock = "In Stock",

@@ -1,8 +1,7 @@
-import { Column, DataType, Is, Table, Model, BelongsToMany, HasOne, HasMany } from "sequelize-typescript";
+import { Column, DataType, Table, Model, BelongsToMany, HasOne, HasMany } from "sequelize-typescript";
 import { Role, RoleUser } from "../../access-control/models/rol.model";
 import { RefreshToken } from "./token.model";
 import { Address, AddressUser } from "src/modules/address/models/address.model";
-import { Exclude } from "class-transformer";
 
 @Table({
     tableName: "users",
@@ -63,7 +62,6 @@ export class User extends Model {
             notEmpty: true
         }
     })
-    @Exclude()
     declare password: string;
 
     @Column({

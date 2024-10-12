@@ -13,9 +13,9 @@ export class Item extends Model {
         primaryKey: true,
         autoIncrement: true,
         type: DataType.INTEGER,
-        field: "id_item_cart"
+        field: "id_item"
     })
-    declare idItemCart: number;
+    declare idItem: number;
 
     @Column({
         type: DataType.INTEGER,

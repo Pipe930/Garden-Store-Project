@@ -11,7 +11,7 @@ import { Category } from '../categories/models/category.model';
 export class CartService {
 
     async findCartUser(idUser: number): Promise<ResponseData>{
-
+        
         const cart = await Cart.findOne<Cart>({
             where: {
                 idCartUser: idUser
@@ -19,7 +19,7 @@ export class CartService {
             include: [
                 {
                     model: Item,
-                    attributes: ["quantity", "priceUnit"],
+                    attributes: ["idItem", "quantity", "priceUnit"],
                     include: [
                         {
                             model: Product,
@@ -35,9 +35,8 @@ export class CartService {
                 }
             ],
             order: [
-                [Item, "idItem", "DESC"]
+                [{model: Item, as: 'items'}, 'idItem', 'ASC']
             ]
-            
         });
 
         cart.priceTotal = this.cartTotal(cart);
