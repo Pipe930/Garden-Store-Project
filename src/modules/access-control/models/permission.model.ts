@@ -26,7 +26,10 @@ export class Permission extends Model {
     @Column({
         type: DataType.STRING(100),
         unique: true,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
     })
     declare name: string;
 

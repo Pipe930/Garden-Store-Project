@@ -1,5 +1,6 @@
 import { Column, DataType, Table, Model, Sequelize, ForeignKey } from "sequelize-typescript";
 import { User } from "./user.model";
+import { validate } from "class-validator";
 
 @Table({
     tableName: "tokenActivation",
@@ -19,13 +20,20 @@ export class TokenActivation extends Model {
     @Column({
         type: DataType.STRING(300),
         allowNull: false,
-        unique: true
+        unique: true,
+        validate: {
+            notEmpty: true
+        }
     })
     declare token: string;
 
     @Column({
         type: DataType.STRING(2),
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+            len: [2, 2]
+        }
     })
     declare uuid: string;
 

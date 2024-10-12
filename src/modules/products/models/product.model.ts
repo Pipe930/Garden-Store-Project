@@ -1,6 +1,7 @@
 import { BelongsTo, Column, DataType, ForeignKey, Is, Table, Model, BeforeCreate, BeforeUpdate, HasMany } from "sequelize-typescript";
 import { Category } from "src/modules/categories/models/category.model";
 import { ImagesProduct } from "./image.model";
+import { Offer } from "src/modules/offers/models/offer.model";
 
 export enum AvailabilityStatus {
     InStock = "In Stock",
@@ -31,55 +32,43 @@ export class Product extends Model {
     })
     declare title: string;
 
-    @Is("validPrice", (value: number) => {
-
-        if (value < 100) {
-            throw new Error("El precio no puede ser menor a 100 pesos");
-        }
-    })
     @Column({
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            min: 1000
+        }
     })
     declare price: number;
 
-    @Is("validStock", (value: number) => {
-
-        if (value < 0) {
-            throw new Error("El stock no puede ser negativo");
-        }
-    })
-    @Column({
-        type: DataType.INTEGER,
-        allowNull: false,
-        defaultValue: 0
-    })
-    declare stock: number;
-
-    @Is("validSold", (value: number) => {
-
-        if (value < 0) {
-            throw new Error("La cantidad vendida no puede ser negativa");
-        }
-    })
-    @Column({
-        type: DataType.INTEGER,
-        allowNull: false,
-        defaultValue: 0
-    })
-    declare sold: number;
-
-    @Is("validPriceDiscount", (value: number) => {
-
-        if (value < 0) {
-            throw new Error("El descuento no puede ser negativo");
-        }
-    })
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        field: "price_discount"
+        validate: {
+            min: 0
+        }
+    })
+    declare stock: number;
+
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        validate: {
+            min: 0
+        }
+    })
+    declare sold: number;
+
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        field: "price_discount",
+        validate: {
+            min: 0
+        }
     })
     declare priceDiscount: number;
 
@@ -99,7 +88,11 @@ export class Product extends Model {
     @Column({
         type: DataType.FLOAT,
         allowNull: false,
-        defaultValue: 0.0
+        defaultValue: 0.0,
+        validate: {
+            min: 0.0,
+            max: 5.0
+        }
     })
     declare rating: number;
 
@@ -107,7 +100,10 @@ export class Product extends Model {
         type: DataType.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        field: "reviews_count"
+        field: "reviews_count",
+        validate: {
+            min: 0
+        }
     })
     declare reviewsCount: number;
 
@@ -146,6 +142,14 @@ export class Product extends Model {
         field: "id_category"
     })
     declare idCategory: number;
+
+    @ForeignKey(() => Offer)
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: true,
+        field: "id_offer"
+    })
+    declare idOffer: number;
     
     @HasMany(() => ImagesProduct)
     declare images: ImagesProduct[];

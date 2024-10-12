@@ -2,6 +2,7 @@ import { Column, DataType, Is, Table, Model, BelongsToMany, HasOne, HasMany } fr
 import { Role, RoleUser } from "../../access-control/models/rol.model";
 import { RefreshToken } from "./token.model";
 import { Address, AddressUser } from "src/modules/address/models/address.model";
+import { Exclude } from "class-transformer";
 
 @Table({
     tableName: "users",
@@ -24,7 +25,11 @@ export class User extends Model {
         type: DataType.STRING(20),
         allowNull: true,
         defaultValue: "(sin nombre)",
-        field: "first_name"
+        field: "first_name",
+        validate: {
+            notEmpty: false,
+            len: [3, 20]
+        }
     })
     declare firstName: string;
 
@@ -32,24 +37,33 @@ export class User extends Model {
         type: DataType.STRING(20),
         allowNull: true,
         defaultValue: "(sin apellido)",
-        field: "last_name"
+        field: "last_name",
+        validate: {
+            notEmpty: false,
+            len: [3, 20]
+        }
     })
     declare lastName: string;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.STRING(255),
         allowNull: false,
         unique: true,
         validate: {
-            isEmail: true
+            isEmail: true,
+            notEmpty: true
         }
     })
     declare email: string;
 
     @Column({
         type: DataType.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
     })
+    @Exclude()
     declare password: string;
 
     @Column({
@@ -59,17 +73,15 @@ export class User extends Model {
     })
     declare active: boolean;
 
-    @Is("phoneValid", (value: string) => {
-
-        const regexTelefonoChile = /^\+56\d{9}$/;
-
-        if(!regexTelefonoChile.test(value)) throw new Error("El numero de telefono no es valido")
-        
-    })
     @Column({
         type: DataType.STRING(12),
         allowNull: false,
-        unique: true
+        unique: true,
+        validate: {
+            is: /^\+56\d{9}$/,
+            notEmpty: true,
+            len: [12, 12]
+        }
     })
     declare phone: string;
 

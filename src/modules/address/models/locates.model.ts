@@ -18,13 +18,20 @@ export class Region extends Model {
     @Column({
         type: DataType.STRING(60),
         allowNull: false,
-        field: "name"
+        field: "name",
+        unique: true,
+        validate: {
+            notEmpty: true
+        }
     })
     declare name: string;
 
     @Column({
         type: DataType.STRING(2),
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
     })
     declare code: string;
 
@@ -50,7 +57,10 @@ export class Province extends Model {
 
     @Column({
         type: DataType.STRING(60),
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
     })
     declare name: string;
 
@@ -86,7 +96,10 @@ export class Commune extends Model {
 
     @Column({
         type: DataType.STRING(60),
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
     })
     declare name: string;
 

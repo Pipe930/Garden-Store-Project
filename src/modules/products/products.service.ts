@@ -8,6 +8,7 @@ import { Op } from 'sequelize';
 import { HttpService } from '@nestjs/axios';
 import { FileUploadDto } from './dto/file-upload.dto';
 import { ImagesProduct } from './models/image.model';
+import { Offer } from '../offers/models/offer.model';
 
 @Injectable()
 export class ProductsService {
@@ -16,7 +17,7 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto):Promise<ResponseData> {
 
-    const { title, brand, returnPolicy, price, description, idCategory } = createProductDto;
+    const { title, brand, returnPolicy, price, description, idCategory, idOffer } = createProductDto;
 
     const product = await Product.findOne<Product>({ where: { title: { [Op.iLike]: title } } });
     const category = await Category.findByPk<Category>(idCategory);
@@ -30,10 +31,12 @@ export class ProductsService {
         title,
         brand,
         price,
+        priceDiscount: await this.calculateDiscount(price, idOffer),
         slug: "",
         returnPolicy,
         description,
-        idCategory
+        idCategory,
+        idOffer
       });
 
       return {
@@ -134,7 +137,7 @@ export class ProductsService {
 
   async update(id: number, updateProductDto: UpdateProductDto): Promise<ResponseData> {
 
-    const { title, brand, returnPolicy, price, description, idCategory } = updateProductDto;
+    const { title, brand, returnPolicy, price, description, idCategory, idOffer } = updateProductDto;
 
     const product = await Product.findByPk<Product>(id);
     const category = await Category.findByPk<Category>(idCategory);
@@ -149,6 +152,8 @@ export class ProductsService {
       product.returnPolicy = returnPolicy;
       product.description = description;
       product.idCategory = idCategory;
+      product.priceDiscount = await this.calculateDiscount(price, product.idOffer);
+      product.idOffer = idOffer;
   
       await product.save();
     } catch (error) {
@@ -166,7 +171,7 @@ export class ProductsService {
 
     const product = await Product.findByPk<Product>(id);
 
-    if(!product) throw new NotFoundException("Producto no encontrado");
+    if(!product) throw new NotFoundException("Producto no encontrado");    
 
     await product.destroy();
 
@@ -181,7 +186,6 @@ export class ProductsService {
     const { file, filename, type, idProduct, typeFormat } = fileUpload;
 
     const [filenameImage, extendsImage] = filename.split(".");
-    
     const nowDate = new Date();
     const newFileNameImage = filenameImage + "-" + new Intl.DateTimeFormat('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(nowDate).toString() + "-" + nowDate.getTime().toString() + "." + extendsImage;
     const dataForm = new FormData();
@@ -230,5 +234,20 @@ export class ProductsService {
         type
       }
     }
+  }
+
+  private async calculateDiscount(price: number, idOffer: number): Promise<number> {
+
+    if(idOffer){
+
+      const offer = await Offer.findByPk(idOffer);
+  
+      if(!offer) throw new NotFoundException("La oferta ingresada no existe");
+  
+      return price - (price * offer.discount / 100);
+    }
+
+    return 0;
+
   }
 }

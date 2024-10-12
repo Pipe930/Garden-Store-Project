@@ -20,7 +20,10 @@ export class Role extends Model {
     @Column({
         type: DataType.STRING(40),
         unique: true,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
     })
     declare name: string;
 

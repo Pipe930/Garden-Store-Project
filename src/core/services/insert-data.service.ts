@@ -1,6 +1,8 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { Commune, Province, Region } from 'src/modules/address/models/locates.model';
+import { Category } from 'src/modules/categories/models/category.model';
+import { readFileSync } from 'fs';
 
 @Injectable()
 export class InsertDataService {
@@ -13,7 +15,7 @@ export class InsertDataService {
 
         if(await Region.count() > 0) return;
 
-        console.log("[+] Inserting Data...");
+        console.log("[+] Inserting Categories...");
 
         const regions = await this.httpService.axiosRef.get("https://apis.digital.gob.cl/dpa/regiones", { headers: { "User-Agent": "" } });
 
@@ -47,6 +49,15 @@ export class InsertDataService {
             }
         }
 
-        console.log("[+] Data Inserted Successfully");
+        console.log("[+] Data Inserted Categories Successfully");
+    }
+
+    async insertDataCategories(): Promise<void> {
+
+        if(await Category.count() > 0) return;
+
+        console.log("[+] Inserting Categories...");
+
+        const categories = JSON.parse(readFileSync("src/core/data/categories.json"));
     }
 }

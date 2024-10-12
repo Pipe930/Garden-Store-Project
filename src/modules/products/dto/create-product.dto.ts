@@ -1,4 +1,4 @@
-import { IsBase64, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, Min } from "class-validator";
 
 export class CreateProductDto {
 
@@ -28,4 +28,8 @@ export class CreateProductDto {
     @IsNumber()
     @IsNotEmpty()
     readonly idCategory: number;
+
+    @IsNumber()
+    @IsOptional()
+    readonly idOffer: number;
 }

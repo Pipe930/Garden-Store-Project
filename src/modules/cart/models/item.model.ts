@@ -19,14 +19,20 @@ export class Item extends Model {
 
     @Column({
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            min: 1
+        }
     })
     declare quantity: number;
 
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
-        field: "price_unit"
+        field: "price_unit",
+        validate: {
+            min: 1000
+        }
     })
     declare priceUnit: number;
 

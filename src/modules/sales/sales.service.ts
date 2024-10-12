@@ -46,7 +46,6 @@ export class SalesService {
       });
 
       cartUser.items.forEach(async item => {
-
         await SaleProduct.create({
           idSale: sale.idSale,
           idProduct: item.idProduct,

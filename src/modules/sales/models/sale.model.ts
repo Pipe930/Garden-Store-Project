@@ -35,35 +35,50 @@ export class Sale extends Model {
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
-        field: 'price_net'
+        field: 'price_net',
+        validate: {
+            min: 1000
+        }
     })
     declare priceNet: number;
 
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
-        field: 'price_iva'
+        field: 'price_iva',
+        validate: {
+            min: 100
+        }
     })
     declare priceIva: number;
 
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
-        field: 'price_total'
+        field: 'price_total',
+        validate: {
+            min: 1000
+        }
     })
     declare priceTotal: number;
 
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
-        field: 'discount_applied'
+        field: 'discount_applied',
+        validate: {
+            min: 0
+        }
     })
     declare discountApplied: number;
 
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
-        field: 'products_quantity'
+        field: 'products_quantity',
+        validate: {
+            min: 1
+        }
     })
     declare productsQuantity: number;
 

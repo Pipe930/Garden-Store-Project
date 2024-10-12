@@ -27,7 +27,10 @@ export class Shipping extends Model {
     @Column({
         type: DataType.STRING(255),
         allowNull: false,
-        field: 'information_shipping'
+        field: 'information_shipping',
+        validate: {
+            notEmpty: true
+        }
     })
     declare informationShipping: string;
 
@@ -48,14 +51,17 @@ export class Shipping extends Model {
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
-        field: 'tracking_number'
+        field: 'tracking_number',
     })
     declare trackingNumber: number;
 
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
-        field: 'shipping_cost'
+        field: 'shipping_cost',
+        validate: {
+            min: 1000
+        }
     })
     declare shippingCost: number;
 

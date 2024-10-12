@@ -21,7 +21,10 @@ export class Cart extends Model {
         type: DataType.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        field: "price_total"
+        field: "price_total",
+        validate: {
+            min: 0
+        }
     })
     declare priceTotal: number;
 
@@ -29,7 +32,10 @@ export class Cart extends Model {
         type: DataType.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        field: "quantity_total"
+        field: "quantity_total",
+        validate: {
+            min: 0
+        }
     })
     declare quantityTotal: number;
 
@@ -37,7 +43,10 @@ export class Cart extends Model {
         type: DataType.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        field: "products_total"
+        field: "products_total",
+        validate: {
+            min: 0
+        }
     })
     declare productsTotal: number;
 
@@ -45,7 +54,10 @@ export class Cart extends Model {
         type: DataType.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        field: "price_total_discount"
+        field: "price_total_discount",
+        validate: {
+            min: 0
+        }
     })
     declare priceTotalDiscount: number;
 

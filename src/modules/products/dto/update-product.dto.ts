@@ -28,4 +28,8 @@ export class UpdateProductDto {
     @IsNumber()
     @IsNotEmpty()
     readonly idCategory: number;
+
+    @IsNumber()
+    @IsOptional()
+    readonly idOffer: number;
 }

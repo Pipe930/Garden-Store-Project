@@ -21,20 +21,26 @@ export class Category extends Model {
     @Column({
         type: DataType.STRING(100),
         allowNull: false,
-        unique: true
+        unique: true,
+        validate: {
+            notEmpty: true
+        }
     })
     declare name: string;
 
     @Column({
         type: DataType.STRING(100),
         allowNull: false,
-        unique: true
+        unique: true,
+        validate: {
+            notEmpty: true
+        }
     })
     declare slug: string;
 
     @Column({
         type: DataType.TEXT,
-        allowNull: true,
+        allowNull: true
     })
     declare description: string;
 

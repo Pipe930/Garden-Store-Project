@@ -34,12 +34,16 @@ export class CartService {
                     ]
                 }
             ],
+            order: [
+                [Item, "idItem", "DESC"]
+            ]
             
         });
 
         cart.priceTotal = this.cartTotal(cart);
         cart.quantityTotal = this.cartQuantity(cart);
         cart.productsTotal = this.cartProducts(cart);
+        cart.priceTotalDiscount = this.cartPriceDiscount(cart);
 
         if(!cart) throw new NotFoundException("Carrito no encontrado");
 
@@ -189,6 +193,17 @@ export class CartService {
 
         cart.items.forEach(item => {
             total += item.quantity;
+        });
+
+        return total;
+    }
+
+    private cartPriceDiscount(cart: Cart): number {
+
+        let total = 0;
+
+        cart.items.forEach(item => {
+            total += item.product.priceDiscount;
         });
 
         return total;
