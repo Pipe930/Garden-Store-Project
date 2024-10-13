@@ -1,5 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, Min } from "class-validator";
-import { TypeWithdrawal } from "../models/sale.model";
+import { IsNotEmpty, IsNumber, Min } from "class-validator";
 
 
 export class CreateSaleDto {
@@ -18,8 +17,4 @@ export class CreateSaleDto {
     @IsNumber()
     @Min(1)
     declare productsQuantity: number;
-
-    @IsEnum(TypeWithdrawal)
-    @IsNotEmpty()
-    declare withdrawal: string;
 }

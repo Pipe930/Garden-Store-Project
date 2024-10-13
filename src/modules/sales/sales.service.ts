@@ -7,6 +7,8 @@ import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { CreateTransbankDto } from './dto/create-transbank.dto';
+import { AvailabilityStatus, Product } from '../products/models/product.model';
+import { UpdateSaleDto } from './dto/update-status-sale.dto';
 
 @Injectable()
 export class SalesService {
@@ -18,7 +20,7 @@ export class SalesService {
 
   async create(createSaleDto: CreateSaleDto, idUser: number):Promise<ResponseData> {
 
-    let { priceTotal, productsQuantity, withdrawal, discountApplied } = createSaleDto;
+    let { priceTotal, productsQuantity, discountApplied } = createSaleDto;
 
     const cartUser = await Cart.findOne({
       where: {
@@ -41,7 +43,6 @@ export class SalesService {
         productsQuantity,
         discountApplied,
         status: TypeStatus.PENDING,
-        withdrawal,
         idUser
       });
 
@@ -88,6 +89,23 @@ export class SalesService {
       statusCode: HttpStatus.OK,
       data: sales
     };
+  }
+
+  async updateStatusSale(idSale: number, updateSaleDto: UpdateSaleDto): Promise<ResponseData> {
+
+    const sale = await Sale.findByPk(idSale);
+
+    if(!sale) throw new BadRequestException('No se encontro la venta');
+    if(sale.status === TypeStatus.PAID) throw new BadRequestException('La venta ya se encuentra pagada');
+
+    sale.status = updateSaleDto.status;
+    await sale.save();
+
+    return {
+
+      statusCode: HttpStatus.OK,
+      message: 'Estado de la venta actualizado con exito'
+    }
   }
 
   async createTransbankTransaction(createTransbankDto: CreateTransbankDto): Promise<ResponseData> {
@@ -155,5 +173,34 @@ export class SalesService {
     let percentageIva = 19 / 100;
     let netPrice = priceTotal - priceTotal * percentageIva;
     return netPrice;
+  }
+
+  private async validateStatusSale(status: string, sale: Sale): Promise<void> {
+
+    if(status !== TypeStatus.PAID) return;
+
+    const products = await SaleProduct.findAll({
+      where: {
+        idSale: sale.idSale
+      }
+    });
+
+    products.forEach(async productSale => {
+
+      const product = await Product.findByPk(productSale.idProduct);
+
+      if(product.stock < productSale.quantity) throw new BadRequestException('No hay stock suficiente para la venta');
+
+      product.stock -= productSale.quantity;
+      product.sold += productSale.quantity;
+
+      if(product.stock <= 10) product.availabilityStatus = AvailabilityStatus.LowStock;
+      if(product.stock === 0) product.availabilityStatus = AvailabilityStatus.OutOfStock;
+
+      await product.save();
+    });
+
+    sale.status = status;
+    await sale.save();
   }
 }

@@ -51,23 +51,31 @@ export class ProductsService {
     }
   }
 
-  async findAll(): Promise<ResponseData> {
+  async findAll(page: number): Promise<ResponseData> {
 
+    const limit = 20;
+    const offset = (page - 1) * limit;
     const products = await Product.findAll<Product>({
       include:[
-
         {
           model: ImagesProduct,
           attributes: ['urlImage', 'type']
         }
-      ]
+      ],
+      limit,
+      offset
     });
+
+    const currentPage = page ? +page : 0;
+    const totalPages = Math.ceil(await Product.count() / limit);
 
     if(products.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT }
 
     return {
       statusCode: HttpStatus.OK,
-      message: "Lista de productos",
+      count: products.length,
+      currentPage,
+      totalPages,
       data: products
     };
   }
@@ -252,6 +260,13 @@ export class ProductsService {
     return 0;
 
   }
+
+  private getPagingData(totalItems: number, page: number, limit: number) {
+    const currentPage = page ? +page : 0;
+    const totalPages = Math.ceil(totalItems / limit);
+  
+    return { totalPages, currentPage };
+  };
 
   private generateSlug(title: string): string {
     const slug = title.toLowerCase().replace(/ /g, "-");

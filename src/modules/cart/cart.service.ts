@@ -202,7 +202,7 @@ export class CartService {
         let total = 0;
 
         cart.items.forEach(item => {
-            total += item.product.priceDiscount;
+            total += item.product.priceDiscount * item.quantity;
         });
 
         return total;
@@ -216,11 +216,21 @@ export class CartService {
 
         if(item){
             item.quantity += quantity;
-            item.priceUnit = item.quantity * product.price;
+
+            if(product.idOffer){
+                item.priceUnit = item.quantity * product.priceDiscount;
+            } else {
+                item.priceUnit = item.quantity * product.price;
+            }
             await item.save();
         } else {
 
-            const priceUnit = product.price * quantity;
+            let priceUnit = 0;
+            if(product.idOffer){
+                priceUnit = quantity * product.priceDiscount;
+            } else {
+                priceUnit = quantity * product.price;
+            }
 
             await Item.create<Item>({
                 quantity,

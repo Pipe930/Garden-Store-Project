@@ -4,6 +4,8 @@ export interface ResponseData {
 
     message?: string;
     data?: Array<Model> | Model;
-    count?: number; 
+    count?: number;
+    currentPage?: number;
+    totalPages?: number;
     statusCode: number;
 }

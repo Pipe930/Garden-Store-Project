@@ -1,14 +1,14 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
 import { Commune } from "./locates.model";
 import { User } from "src/modules/users/models/user.model";
-import { validate } from "class-validator";
+import { Branch } from "src/modules/branch/models/branch.model";
 
 @Table({
     tableName: "address",
     modelName: "Address",
     timestamps: false
 })
-export class Address extends Model {
+export class Address extends Model<Address> {
 
     @Column({
         primaryKey: true,
@@ -74,6 +74,9 @@ export class Address extends Model {
 
     @HasMany(() => AddressUser)
     declare addressUser: AddressUser[];
+
+    @HasOne(() => Branch)
+    declare branch: Branch;
 }
 
 

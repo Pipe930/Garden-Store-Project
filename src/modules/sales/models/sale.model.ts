@@ -11,12 +11,6 @@ export enum TypeStatus {
     CANCELED = 'CANCELADO'
 }
 
-export enum TypeWithdrawal {
-
-    IN_STORE = 'RETIRO EN TIENDA',
-    DELIVERY = 'DESPACHO A DOMICILIO'
-}
-
 @Table({
     tableName: 'sales',
     modelName: 'Sale',
@@ -87,12 +81,6 @@ export class Sale extends Model {
         allowNull: false
     })
     declare status: string;
-
-    @Column({
-        type: DataType.ENUM(TypeWithdrawal.IN_STORE, TypeWithdrawal.DELIVERY),
-        allowNull: false
-    })
-    declare withdrawal: string;
 
     @ForeignKey(() => User)
     @Column({

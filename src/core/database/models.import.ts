@@ -12,6 +12,7 @@ import { Sale, SaleProduct } from "src/modules/sales/models/sale.model";
 import { Shipping } from "src/modules/sales/models/shipping.model";
 import { ImagesProduct } from "src/modules/products/models/image.model";
 import { Offer } from "src/modules/offers/models/offer.model";
+import { Branch, ProductBranch } from "src/modules/branch/models/branch.model";
 
 export const ArrayModels: Array<any> = [
     User,
@@ -34,5 +35,7 @@ export const ArrayModels: Array<any> = [
     Shipping,
     SaleProduct,
     ImagesProduct,
-    Offer
+    Offer,
+    Branch,
+    ProductBranch
 ]

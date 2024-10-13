@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Req, Put, ParseIntPipe } from '@nestjs/common';
 import { SalesService } from './sales.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { AuthGuard } from 'src/core/guards/auth.guard';
 import { CreateTransbankDto } from './dto/create-transbank.dto';
+import { UpdateSaleDto } from './dto/update-status-sale.dto';
 
 @Controller('sales')
 export class SalesController {
@@ -18,6 +19,12 @@ export class SalesController {
   @UseGuards(AuthGuard)
   findAllSalesUser(@Req() req: any) {
     return this.salesService.findUserSales(req.user.idUser);
+  }
+
+  @Put('status/:idSale')
+  @UseGuards(AuthGuard)
+  cancelSale(@Param('idSale', ParseIntPipe) idSale: number, @Body() updateSateDto: UpdateSaleDto) {
+    return this.salesService.updateStatusSale(idSale, updateSateDto);
   }
 
   @Post('transbank/create')

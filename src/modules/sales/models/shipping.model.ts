@@ -2,11 +2,17 @@ import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize
 import { Sale } from "./sale.model";
 import { Address } from "src/modules/address/models/address.model";
 
-enum ShippingStatus {
+export enum ShippingStatus {
     PREPARING = 'PREPARANDO',
     PENDING = 'PENDIENTE',
     SHIPPED = 'ENVIADO',
     DELIVERED = 'ENTREGADO'
+}
+
+export enum TypeWithdrawal {
+
+    IN_STORE = 'RETIRO EN TIENDA',
+    DELIVERY = 'DESPACHO A DOMICILIO'
 }
 
 @Table({
@@ -66,7 +72,13 @@ export class Shipping extends Model {
     declare shippingCost: number;
 
     @Column({
-        type: DataType.ENUM(...Object.values(ShippingStatus)),
+        type: DataType.ENUM(TypeWithdrawal.IN_STORE, TypeWithdrawal.DELIVERY),
+        allowNull: false
+    })
+    declare withdrawal: string;
+
+    @Column({
+        type: DataType.ENUM(ShippingStatus.PREPARING, ShippingStatus.PENDING, ShippingStatus.SHIPPED, ShippingStatus.DELIVERED),
         allowNull: false
     })
     declare status: string;

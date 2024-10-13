@@ -18,6 +18,7 @@ import { SalesModule } from './modules/sales/sales.module';
 import { InsertDataService } from './core/services/insert-data.service';
 import { HttpModule } from '@nestjs/axios';
 import { OffersModule } from './modules/offers/offers.module';
+import { BranchModule } from './modules/branch/branch.module';
 
 @Module({
   imports: [
@@ -47,7 +48,8 @@ import { OffersModule } from './modules/offers/offers.module';
     CartModule,
     AddressModule,
     SalesModule,
-    OffersModule
+    OffersModule,
+    BranchModule
   ],
   providers: [
     {
