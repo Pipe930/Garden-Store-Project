@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { Sale, SaleProduct, TypeStatus } from './models/sale.model';
 import { Cart } from '../cart/models/cart.model';
@@ -101,7 +101,7 @@ export class SalesService {
 
     const sale = await Sale.findByPk(idSale);
 
-    if(!sale) throw new BadRequestException('No se encontro la venta');
+    if(!sale) throw new NotFoundException('No se encontro la venta');
     if(sale.status === TypeStatus.PAID) throw new BadRequestException('La venta ya se encuentra pagada');
 
     sale.status = updateSaleDto.status;

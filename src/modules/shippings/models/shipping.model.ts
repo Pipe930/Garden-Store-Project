@@ -65,7 +65,7 @@ export class Shipping extends Model {
         allowNull: false,
         field: 'shipping_cost',
         validate: {
-            min: 1000
+            min: 0
         }
     })
     declare shippingCost: number;
@@ -78,6 +78,7 @@ export class Shipping extends Model {
 
     @Column({
         type: DataType.ENUM(ShippingStatus.PREPARING, ShippingStatus.PENDING, ShippingStatus.SHIPPED, ShippingStatus.DELIVERED),
+        defaultValue: ShippingStatus.PREPARING,
         allowNull: false
     })
     declare status: string;

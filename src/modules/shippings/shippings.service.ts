@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateShippingDto } from './dto/create-shipping.dto';
 import { UpdateShippingDto } from './dto/update-shipping.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
@@ -37,7 +37,7 @@ export class ShippingsService {
 
       const shipping = await Shipping.findByPk(idShipping);
 
-      if(!shipping) throw new BadRequestException("No se encontro el envio");
+      if(!shipping) throw new NotFoundException("No se encontro el envio");
       if(shipping.status === ShippingStatus.DELIVERED) throw new BadRequestException("El envio ya fue entregado");
 
       shipping.status = shippingStatusDto.status;

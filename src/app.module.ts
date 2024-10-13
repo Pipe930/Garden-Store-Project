@@ -20,6 +20,7 @@ import { HttpModule } from '@nestjs/axios';
 import { OffersModule } from './modules/offers/offers.module';
 import { BranchModule } from './modules/branch/branch.module';
 import { ShippingsModule } from './modules/shippings/shippings.module';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 
 @Module({
   imports: [
@@ -51,7 +52,8 @@ import { ShippingsModule } from './modules/shippings/shippings.module';
     SalesModule,
     OffersModule,
     BranchModule,
-    ShippingsModule
+    ShippingsModule,
+    SubscriptionsModule
   ],
   providers: [
     {
