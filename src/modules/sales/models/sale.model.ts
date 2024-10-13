@@ -2,10 +2,9 @@ import { randomUUID } from "crypto";
 import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
 import { Product } from "src/modules/products/models/product.model";
 import { User } from "src/modules/users/models/user.model";
-import { Shipping } from "./shipping.model";
+import { Shipping } from "src/modules/shippings/models/shipping.model";
 
 export enum TypeStatus {
-
     PENDING = 'PENDIENTE',
     PAID = 'PAGADO',
     CANCELED = 'CANCELADO'

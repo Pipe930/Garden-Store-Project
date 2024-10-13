@@ -1,5 +1,5 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
-import { Sale } from "./sale.model";
+import { Sale } from "src/modules/sales/models/sale.model";
 import { Address } from "src/modules/address/models/address.model";
 
 export enum ShippingStatus {
@@ -10,7 +10,6 @@ export enum ShippingStatus {
 }
 
 export enum TypeWithdrawal {
-
     IN_STORE = 'RETIRO EN TIENDA',
     DELIVERY = 'DESPACHO A DOMICILIO'
 }
@@ -42,14 +41,14 @@ export class Shipping extends Model {
 
     @Column({
         type: DataType.DATE,
-        allowNull: false,
+        allowNull: true,
         field: 'shipping_date'
     })
     declare shippingDate: Date;
 
     @Column({
         type: DataType.DATE,
-        allowNull: false,
+        allowNull: true,
         field: 'delivery_date'
     })
     declare deliveryDate: Date;

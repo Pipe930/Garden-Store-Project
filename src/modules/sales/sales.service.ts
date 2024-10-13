@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { CreateTransbankDto } from './dto/create-transbank.dto';
 import { AvailabilityStatus, Product } from '../products/models/product.model';
 import { UpdateSaleDto } from './dto/update-status-sale.dto';
+import { Shipping } from '../shippings/models/shipping.model';
 
 @Injectable()
 export class SalesService {
@@ -78,9 +79,14 @@ export class SalesService {
       where: {
         idUser
       },
-      include: {
-        model: SaleProduct
-      }
+      include: [
+        {
+          model: SaleProduct
+        },
+        {
+          model: Shipping
+        }
+      ]
     });
 
     if(sales.length === 0) throw new BadRequestException('No se encontraron ventas para el usuario');
