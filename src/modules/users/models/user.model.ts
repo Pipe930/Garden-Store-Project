@@ -2,6 +2,7 @@ import { Column, DataType, Table, Model, BelongsToMany, HasOne, HasMany } from "
 import { Role, RoleUser } from "../../access-control/models/rol.model";
 import { RefreshToken } from "./token.model";
 import { Address, AddressUser } from "src/modules/address/models/address.model";
+import { Subscription } from "src/modules/subscriptions/models/subscription.model";
 
 @Table({
     tableName: "users",
@@ -98,6 +99,9 @@ export class User extends Model {
 
     @HasOne(() => RefreshToken)
     declare refreshToken: RefreshToken;
+
+    @HasOne(() => Subscription)
+    declare subscription: Subscription;
 
     @HasMany(() => AddressUser)
     declare addresses: Address[];

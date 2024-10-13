@@ -6,9 +6,13 @@ import { ResponseData } from 'src/core/interfaces/response-data.interface';
 
 @Injectable()
 export class SubscriptionsService {
-  async create(createSubscriptionDto: CreateSubscriptionDto): Promise<ResponseData> {
+  async create(createSubscriptionDto: CreateSubscriptionDto, idUser: number): Promise<ResponseData> {
 
     const { mount } = createSubscriptionDto;
+
+    const subscriptionExists = await Subscription.findByPk(idUser);
+
+    if (subscriptionExists) throw new BadRequestException("Ya tienes una suscripción activa");
 
     try {
 
@@ -23,7 +27,6 @@ export class SubscriptionsService {
       }
     }
     catch (error) {
-
       throw new BadRequestException("No se creo la suscripción correctamente");
     }
   }

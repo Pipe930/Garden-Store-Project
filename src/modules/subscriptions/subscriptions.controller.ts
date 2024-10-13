@@ -11,14 +11,14 @@ export class SubscriptionsController {
 
   @Post()
   @UseGuards(AuthGuard)
-  create(@Body() createSubscriptionDto: CreateSubscriptionDto) {
-    return this.subscriptionsService.create(createSubscriptionDto);
+  create(@Body() createSubscriptionDto: CreateSubscriptionDto, @Req() request: RequestJwt) {
+    return this.subscriptionsService.create(createSubscriptionDto, request.user.idUser);
   }
 
-  @Get(':id')
+  @Get('subscription')
   @UseGuards(AuthGuard)
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.subscriptionsService.findOne(id);
+  findOne(@Req() request: RequestJwt) {
+    return this.subscriptionsService.findOne(request.user.idUser);
   }
 
   @Put('subscription/renovate')
