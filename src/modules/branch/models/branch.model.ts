@@ -1,6 +1,7 @@
-import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { Address } from "src/modules/address/models/address.model";
 import { Product } from "src/modules/products/models/product.model";
+import { Employee } from "./employee.model";
 
 @Table({
     tableName: 'branchs',
@@ -108,6 +109,9 @@ export class Branch extends Model {
         allowNull: false
     })
     declare idAddress: number;
+
+    @HasMany(() => Employee)
+    declare employees: Employee[];
 }
 
 

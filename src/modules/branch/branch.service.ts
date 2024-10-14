@@ -3,6 +3,9 @@ import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { Branch, ProductBranch } from './models/branch.model';
 import { CreateStockBranchDto } from './dto/create-stock-branch.dto';
 import { Product } from '../products/models/product.model';
+import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { Employee } from './models/employee.model';
+import { UpdateEmployeeDto } from './dto/update-employee.dto';
 
 interface BranchProduct {
 
@@ -94,6 +97,108 @@ export class BranchService {
     return {
       statusCode: 200,
       data: branchStock
+    }
+  }
+
+  async createEmployee(createEmployeeDto: CreateEmployeeDto): Promise<ResponseData> {
+
+    const { 
+      firstName, 
+      lastName, 
+      email, 
+      phone, 
+      birthday,
+      gender,
+      rut,
+      dateContract,
+      salary,
+      condition,
+      idBranch
+    } = createEmployeeDto;
+
+    const branch = await Branch.findByPk(idBranch);
+
+    if(!branch) throw new NotFoundException('La sucursal no existe');
+
+    try {
+      
+      await Employee.create({
+        firstName,
+        lastName,
+        email,
+        phone,
+        birthday,
+        gender,
+        rut,
+        dateContract,
+        salary,
+        condition,
+        idBranch
+      });
+
+    } catch (error) {
+      throw new BadRequestException('No se pudo añadir el empleado a la sucursal correctamente');
+    }
+
+    return {
+      statusCode: 201,
+      message: 'Se añadio el empleado a la sucursal correctamente'
+    }
+  }
+
+  async findEmployeesByBranch(idBranch: number): Promise<ResponseData> {
+
+    const branch = await Branch.findByPk(idBranch);
+
+    if(!branch) throw new NotFoundException('La sucursal no existe');
+
+    const employees = await Employee.findAll({
+      where: {
+        idBranch
+      }
+    });
+
+    if(employees.length === 0) throw new NotFoundException('No hay empleados en la sucursal');
+
+    return {
+      statusCode: 200,
+      data: employees
+    }
+  }
+
+  async updateEmployee(idEmployee: number, updateEmployeeDto: UpdateEmployeeDto): Promise<ResponseData> {
+
+    const { email, phone, dateContract, salary, condition, idBranch } = updateEmployeeDto;
+
+    const employee = await Employee.findByPk(idEmployee);
+    const branch = await Branch.findByPk(idBranch);
+
+    if(!employee) throw new NotFoundException('El empleado no existe');
+    if(!branch) throw new NotFoundException('La sucursal no existe');
+
+    employee.email = email;
+    employee.phone = phone;
+    employee.dateContract = dateContract;
+    employee.salary = salary;
+    employee.condition = condition;
+    employee.idBranch = idBranch;
+    await employee.save();
+
+    return {
+      statusCode: 200,
+      message: 'Se actualizo el empleado correctamente'
+    }
+  }
+
+  async findOneEmployee(idEmployee: number): Promise<ResponseData> {
+
+    const employee = await Employee.findByPk(idEmployee);
+
+    if(!employee) throw new NotFoundException('El empleado no existe');
+
+    return {
+      statusCode: 200,
+      data: employee
     }
   }
 
