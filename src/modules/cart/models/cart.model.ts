@@ -63,7 +63,4 @@ export class Cart extends Model {
 
     @HasMany(() => Item)
     declare items: Item[];
-
-    @BelongsTo(() => User)
-    declare user: User;
 }

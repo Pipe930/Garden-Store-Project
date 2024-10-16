@@ -1,7 +1,8 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
+import { BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { Address } from "src/modules/address/models/address.model";
 import { Product } from "src/modules/products/models/product.model";
 import { Employee } from "./employee.model";
+import { PurchaseOrder } from "src/modules/purchase/models/purchase-order.model";
 
 @Table({
     tableName: 'branchs',
@@ -112,6 +113,12 @@ export class Branch extends Model {
 
     @HasMany(() => Employee)
     declare employees: Employee[];
+
+    @HasMany(() => PurchaseOrder)
+    declare purchaseOrders: PurchaseOrder[];
+
+    @BelongsToMany(() => Product, () => ProductBranch)
+    declare products: Product[];
 }
 
 

@@ -64,10 +64,6 @@
             "description": "rol para todos los usuarios que deseen vender productos a las sucursales"
         },
         {
-            "name": "gerente",
-            "description": "rol para todos los usuarios que deseen administrar la sucursal"
-        },
-        {
             "name": "staff",
             "description": "rol para todos los usuarios que deseen administrar la tienda"
         }
@@ -253,6 +249,81 @@
             "name": "eliminar comentarios",
             "recourse": "comentario",
             "actions": "DELETE"
+        },
+        {
+            "name": "crear sucursales",
+            "recourse": "sucursal",
+            "actions": "CREATE"
+        },
+        {
+            "name": "leer sucursales",
+            "recourse": "sucursal",
+            "actions": "READ"
+        },
+        {
+            "name": "actualizar sucursales",
+            "recourse": "sucursal",
+            "actions": "UPDATE"
+        },
+        {
+            "name": "crear empleados",
+            "recourse": "empleado",
+            "actions": "CREATE"
+        },
+        {
+            "name": "leer empleados",
+            "recourse": "empleado",
+            "actions": "READ"
+        },
+        {
+            "name": "actualizar empleados",
+            "recourse": "empleado",
+            "actions": "UPDATE"
+        },
+        {
+            "name": "eliminar empleados",
+            "recourse": "empleado",
+            "actions": "DELETE"
+        },
+        {
+            "name": "leer reseñas",
+            "recourse": "resenas",
+            "actions": "READ"
+        },
+        {
+            "name": "actualizar reseñas",
+            "recourse": "resenas",
+            "actions": "UPDATE"
+        },
+        {
+            "name": "eliminar reseñas",
+            "recourse": "resenas",
+            "actions": "DELETE"
+        },
+        {
+            "name": "crear reseñas",
+            "recourse": "resenas",
+            "actions": "CREATE"
+        },
+        {
+            "name": "leer publicaciones",
+            "recourse": "posts",
+            "actions": "READ"
+        },
+        {
+            "name": "actualizar publicaciones",
+            "recourse": "posts",
+            "actions": "UPDATE"
+        },
+        {
+            "name": "eliminar publicaciones",
+            "recourse": "posts",
+            "actions": "DELETE"
+        },
+        {
+            "name": "crear publicaciones",
+            "recourse": "posts",
+            "actions": "CREATE"
         }
     ]
 }

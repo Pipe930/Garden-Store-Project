@@ -17,7 +17,8 @@ export class Subscription extends Model {
     @Column({
         primaryKey: true,
         autoIncrement: true,
-        type: DataType.INTEGER
+        type: DataType.INTEGER,
+        field: 'id_subscription_user'
     })
     declare idSubscriptionUser: number;
 
@@ -32,6 +33,7 @@ export class Subscription extends Model {
         type: DataType.INTEGER,
         allowNull: false,
         defaultValue: 1,
+        field: 'months_page',
         validate: {
             min: 1
         }

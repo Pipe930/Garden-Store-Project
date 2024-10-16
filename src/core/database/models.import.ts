@@ -15,6 +15,9 @@ import { Offer } from "src/modules/offers/models/offer.model";
 import { Branch, ProductBranch } from "src/modules/branch/models/branch.model";
 import { Subscription } from "src/modules/subscriptions/models/subscription.model";
 import { Employee } from "src/modules/branch/models/employee.model";
+import { Purchase, PurchaseProduct } from "src/modules/purchase/models/purchase.model";
+import { Supplier } from "src/modules/purchase/models/supplier.model";
+import { PurchaseOrder } from "src/modules/purchase/models/purchase-order.model";
 
 export const ArrayModels: Array<any> = [
     User,
@@ -41,5 +44,9 @@ export const ArrayModels: Array<any> = [
     Branch,
     ProductBranch,
     Subscription,
-    Employee
+    Employee,
+    Supplier,
+    Purchase,
+    PurchaseProduct,
+    PurchaseOrder
 ]

@@ -21,6 +21,7 @@ import { OffersModule } from './modules/offers/offers.module';
 import { BranchModule } from './modules/branch/branch.module';
 import { ShippingsModule } from './modules/shippings/shippings.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
+import { PurchaseModule } from './modules/purchase/purchase.module';
 
 @Module({
   imports: [
@@ -53,7 +54,8 @@ import { SubscriptionsModule } from './modules/subscriptions/subscriptions.modul
     OffersModule,
     BranchModule,
     ShippingsModule,
-    SubscriptionsModule
+    SubscriptionsModule,
+    PurchaseModule
   ],
   providers: [
     {

@@ -12,7 +12,8 @@ export class Offer extends Model {
     @Column({
         primaryKey: true,
         autoIncrement: true,
-        type: DataType.INTEGER
+        type: DataType.INTEGER,
+        field: 'id_offer'
     })
     declare idOffer: number;
 
@@ -26,13 +27,15 @@ export class Offer extends Model {
     @Column({
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        field: 'start_date'
     })
     declare startDate: Date;
 
     @Column({
         type: DataType.DATE,
-        allowNull: false
+        allowNull: false,
+        field: 'end_date'
     })
     declare endDate: Date;
 

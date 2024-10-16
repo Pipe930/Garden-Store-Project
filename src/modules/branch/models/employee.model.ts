@@ -1,5 +1,6 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { Branch } from "./branch.model";
+import { Purchase } from "src/modules/purchase/models/purchase.model";
 
 export enum TypeGender {
 
@@ -117,4 +118,7 @@ export class Employee extends Model {
         allowNull: false
     })
     declare idBranch: number;
+
+    @HasMany(() => Purchase)
+    declare purchases: Purchase[];
 }
