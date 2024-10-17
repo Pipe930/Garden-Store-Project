@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { AuthService } from '../../services/auth.service';
 import { NgClass } from '@angular/common';
 import { AlertService } from '../../../core/services/alert.service';
 import { ValidatorService } from '../../../core/services/validator.service';
+import { catchError, of } from 'rxjs';
+import { HttpStatusCode } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +21,10 @@ export class RegisterComponent {
   private readonly _builder = inject(FormBuilder);
   private readonly _authService = inject(AuthService);
   private readonly _alertService = inject(AlertService);
-  private readonly _validatorService = inject(ValidatorService)
+  private readonly _validatorService = inject(ValidatorService);
+
+  public activateMessage = signal<boolean>(false);
+  public message = signal<string>("");
 
   public formRegister: FormGroup = this._builder.group({
 
@@ -41,23 +46,29 @@ export class RegisterComponent {
       return;
     }
 
-    this.formRegister.value.phone = `+569${this.formRegister.value.phone}`;
+    if(this.formRegister.value.phone.length === 8) this.formRegister.value.phone = `+569${this.formRegister.value.phone}`;
 
-    this._authService.register(this.formRegister.value).subscribe(
-    (result) => {
+    this._authService.register(this.formRegister.value).pipe(
+      catchError((error) => {
+
+        if(error.error.statusCode === HttpStatusCode.BadRequest){
+
+          this.activateMessage.set(true);
+          this.message.set(error.error.message);
+
+          setTimeout(() => {
+            this.activateMessage.set(false);
+          }, 5000);
+
+          return of();
+        }
+
+        return of();
+      })
+    ).subscribe((result) => {
 
       this._router.navigate(["auth/login"]);
       this._alertService.success("Registro exitoso", "Tu cuenta a sido registrada con exito, te enviamos un correo para que envies tu cuenta");
-    },
-    (error) => {
-
-      if(error.error.statusCode === 400){
-
-        this._alertService.error("Error en el registro", error.error.message);
-        return;
-      }
-
-      this._alertService.error("Error en el registro", "No se pudo registrar tu cuenta, intenta de nuevo");
     })
   }
 

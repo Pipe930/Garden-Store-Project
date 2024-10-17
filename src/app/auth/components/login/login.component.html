@@ -1,6 +1,13 @@
 <div class="container">
   <div class="container__container-fluid">
     <h2 class="container-fuid__title">Iniciar Sesión <i class='bx bx-log-in'></i></h2>
+
+    @if(activateMessage()){
+      <div class="alert alert-danger d-flex align-items-center justify-content-between" role="alert">
+        Las credenciales no son validas
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    }
     <form class="container-fuid__form" novalidate [formGroup]="formLogin" (ngSubmit)="login()">
 
       <div class="mb-3">

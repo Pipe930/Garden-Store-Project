@@ -3,9 +3,7 @@ import { urlsAuthorization } from '../utils/urls-api';
 
 export const apiAuthorizationInterceptor: HttpInterceptorFn = (req, next) => {
 
-  if(!urlsAuthorization.includes(req.url)){
-    return next(req);
-  }
+  if(!urlsAuthorization.includes(req.url)) return next(req);
 
   return next(req.clone({
     setHeaders: {

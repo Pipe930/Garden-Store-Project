@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { catchError, EMPTY, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { Router } from '@angular/router';
+import { urlsAuthorization } from '../utils/urls-api';
 
 export const apiExceptionInterceptor: HttpInterceptorFn = (req, next) => {
 
@@ -12,6 +13,8 @@ export const apiExceptionInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
 
     catchError((error: HttpErrorResponse) => {
+
+      if(!urlsAuthorization.includes(req.url)) return next(req);
 
       if(error.status === HttpStatusCode.Unauthorized){
 

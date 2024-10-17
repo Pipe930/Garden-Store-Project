@@ -28,34 +28,30 @@ export class ListProductsComponent {
       this.listCategories.set(result.data);
     })
 
-    this._productsService.getAllProducts().subscribe(result => {
-      this.listProducts.set(result.data)
+    this._productsService.getAllProducts(this.currentPage());
+    this._productsService.products$.subscribe(result => {
+      this.listProducts.set(result);
     })
   }
 
   public nextPage():void{
 
     this.currentPage.update(value => value + 1);
-    // this._productsService.getProductsPage(this.currentPage);
+    this._productsService.getAllProducts(this.currentPage());
   }
   public previousPage():void{
 
     if(this.currentPage() > 1) this.currentPage.update(value => value - 1);
 
-    // this._productsService.getProductsPage(this.currentPage);
+    this._productsService.getAllProducts(this.currentPage());
   }
 
   public searchProduct():void {
 
-    const name_product = this.nameProduct().nativeElement;
-    const id_category = this.selectCategory().nativeElement;
+    const name_product = this.nameProduct().nativeElement.value;
+    const id_category = this.selectCategory().nativeElement.value;
 
-    let searchProduct = {
-      id_category: Number.parseInt(id_category.value),
-      name_product: name_product.value
-    }
-
-    // this._productsService.searchProduct(searchProduct);
+    this._productsService.searchProduct(name_product, id_category);
   }
 
   get getService(){
