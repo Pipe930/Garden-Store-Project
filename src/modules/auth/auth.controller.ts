@@ -8,6 +8,8 @@ import { ConfirmForgotPasswordDto } from './dto/forgot-password-confirm.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
+import { DeleteAccountDto } from './dto/delete-account.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -54,13 +56,19 @@ export class AuthController {
 
     @Post('change-password')
     @UseGuards(AuthGuard)
-    changePassword(@Body() changePasswordDto: ChangePasswordDto, @Req() req){
-        return this.authService.changePassword(changePasswordDto, req.user.idUser);
+    changePassword(@Body() changePasswordDto: ChangePasswordDto, @Req() request: RequestJwt){
+        return this.authService.changePassword(changePasswordDto, request.user.idUser);
     }
 
     @Get('logout')
     @UseGuards(AuthGuard)
-    logout(@Req() req){
-        return this.authService.logout(req.user.idUser);
+    logout(@Req() request: RequestJwt){
+        return this.authService.logout(request.user.idUser);
+    }
+
+    @Post('delete/account')
+    @UseGuards(AuthGuard)
+    deleteAccount(@Req() request: RequestJwt, @Body() deleteAccountDto: DeleteAccountDto){
+        return this.authService.deleteAccount(request.user.idUser, deleteAccountDto.password);
     }
 }

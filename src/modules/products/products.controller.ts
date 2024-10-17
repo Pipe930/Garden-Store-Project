@@ -33,6 +33,11 @@ export class ProductsController {
     return this.productsService.findProductBySlug(slug);
   }
 
+  @Get('search')
+  search(@Query('title') title: string, @Query('category', ParseIntPipe) category: number) {
+    return this.productsService.searchProduct(title, category);
+  }
+
   @Get('category/:id')
   findByCategory(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findProductByCategory(id);

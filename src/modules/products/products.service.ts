@@ -144,6 +144,30 @@ export class ProductsService {
     }
   }
 
+  async searchProduct(title: string, idCategory: number): Promise<ResponseData> {
+
+    const products = await Product.findAll<Product>(
+      { where: { [Op.or]: {
+        title: { [Op.iLike]: `%${title}%` },
+        idCategory
+      } },
+      include: [
+        {
+          model: ImagesProduct,
+          attributes: ['urlImage', 'type']
+        }
+      ]
+    });
+
+    if(products.length === 0) throw new NotFoundException("No se encontraron productos con ese titulo");
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: "Productos encontrados",
+      data: products
+    }
+  }
+
   async update(id: number, updateProductDto: UpdateProductDto): Promise<ResponseData> {
 
     const { title, brand, returnPolicy, price, description, idCategory, idOffer } = updateProductDto;

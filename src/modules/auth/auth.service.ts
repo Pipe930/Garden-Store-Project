@@ -261,4 +261,19 @@ export class AuthService {
             statusCode: HttpStatus.OK
         }
     }
+
+    async deleteAccount(idUser: number, password: string): Promise<ResponseData>{
+            
+        const user = await User.findByPk<User>(idUser);
+
+        if(!user) throw new NotFoundException("Usuario no encontrado");
+        if(!this.passwordService.checkPassword(password, user.password)) throw new UnauthorizedException("La contraseña no es valida");
+
+        await user.destroy();
+
+        return {
+            message: "La cuenta a sido eliminada con exito",
+            statusCode: HttpStatus.OK
+        }
+    }
 }
