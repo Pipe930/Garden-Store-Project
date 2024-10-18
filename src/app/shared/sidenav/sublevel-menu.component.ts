@@ -62,8 +62,7 @@ import { Sidenav } from '@core/interfaces/sidenav';
               [collapsed]="collapsedVar"
               [multiple]="multipleVar"
               [expanded]="item.expanded"
-              >
-              </app-sublevel-menu>
+              />
             }
           </li>
         }

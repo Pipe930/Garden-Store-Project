@@ -1,0 +1,67 @@
+@import '../../../themes/variables.scss';
+
+.container__table{
+  width: 100%;
+  border-collapse: collapse;
+
+  .table__header{
+
+    background-color: $color-dark-700;
+    text-align: center;
+
+    tr{
+
+      color: $color-light;
+
+      .table__header-text{
+
+        padding: 1rem 0;
+      }
+    }
+  }
+
+  .table__body{
+
+    .table__message{
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    tr{
+
+      .table__body-text{
+
+        padding: 1rem 1rem;
+        text-align: center;
+
+        .table__icon{
+          font-size: 1.4rem;
+        }
+      }
+
+      &:nth-child(even){
+        background-color: $color-dark-100;
+      }
+    }
+
+  }
+
+  .table__footer{
+
+    .table__footer-text{
+
+      .table__btns-pages{
+        display: flex;
+        justify-content: center;
+        padding: 1rem 0;
+
+        .table__btn-pre,
+        .table__btn-next{
+
+          padding: 0.4rem 1rem;
+          transition: background .3s ease-out;
+        }
+      }
+    }
+  }
+}

@@ -10,10 +10,12 @@ import { HeaderComponent } from '../shared/header/header.component';
   standalone: true,
   imports: [RouterOutlet, NgClass, SidenavComponent, HeaderComponent],
   template: `
-    <app-sidenav (onToggleSideNav)="onToggleSideNav($event)"></app-sidenav>
+    <app-sidenav (onToggleSideNav)="onToggleSideNav($event)"/>
     <div class="body" [ngClass]="getBodyClass()">
-      <app-header></app-header>
-      <router-outlet></router-outlet>
+      <app-header/>
+      <div class="body__container">
+        <router-outlet/>
+      </div>
     </div>
   `,
   styles: [
@@ -33,6 +35,14 @@ import { HeaderComponent } from '../shared/header/header.component';
         background-color: $color-light;
         padding: 1.6rem 3rem;
         background-color: $color-dark-200;
+
+        .body__container{
+
+          background-color: $color-light;
+          padding: 1.8rem;
+          border-radius: .6rem;
+          box-shadow: 10px 10px 8px -8px $color-dark-300;
+        }
       }
 
       .body-trimmed{

@@ -1,1 +1,18 @@
-<p>dashboard works!</p>
+<main class="container">
+
+  <div class="container__content-main">
+
+    <div class="content-main__container-cards d-flex flex-wrap gap-0">
+
+      @for (data of listData(); track $index) {
+        <div class="card p-3 w-50 content-main__card" [class]="data.backgraund">
+          <div class="card-body">
+            <p class="card-text">{{data.title}}</p>
+            <h3 class="card-title">{{data.count | currency: 'CLP'}}</h3>
+            <p class="card-text">{{data.saved}}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</main>

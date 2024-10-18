@@ -1,0 +1,78 @@
+@let tableColumnsVar = tableColumns();
+@let messageNoContentVar = messageNoContent();
+@let dataRowsVar = dataRows();
+@let showActionButtonVar = showActionButton();
+
+
+<table class="container__table">
+  <thead class="table__header">
+    <tr>
+      <th class="table__header-text">ID</th>
+      @for (column of tableColumnsVar; track $index) {
+        <th>
+          {{column.header}}
+        </th>
+      }
+    </tr>
+  </thead>
+
+  <tbody class="table__body">
+
+    @if (dataRowsVar.length == 0) {
+      <tr>
+        <td [colSpan]="tableColumns.length + 1">
+          <p class="table__message">No tenemos {{messageNoContentVar}} registrados</p>
+        </td>
+      </tr>
+    }
+
+    @for (object of dataRowsVar; track $index) {
+      <tr>
+        <td class="table__body-text">
+          {{$index+1}}
+        </td>
+
+        @for (column of tableColumnsVar; track $index) {
+          <td class="table__body-text">
+
+            @if(column.fieldName == 'action' && showActionButtonVar) {
+              <button class="table__btn-detail btn btn-primary" (click)="onEdit(object)">
+                Detalle
+              </button>
+            }
+
+            @if(column.dataType == 'boolean'){
+              @if(object[column.fieldName]){
+                <i class='bx bxs-check-circle table__icon text-success'></i>
+              } @else {
+                <i class='bx bxs-x-circle table__icon text-danger'></i>
+              }
+            }
+
+            @if(column.dataType == 'date'){
+              <p>{{object[column.fieldName] | date:'dd/MM/YYYY'}}</p>
+            }
+
+            @if(column.fieldName !== 'action' && column.dataType !== 'boolean' && column.dataType !== 'date'){
+
+              {{object[column.fieldName]}}
+            }
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+
+  @if(dataRowsVar.length != 0){
+    <tfoot class="table__footer">
+      <tr>
+        <td class="table__footer-text" [colSpan]="tableColumns.length + 1">
+          <div class="table__btns-pages">
+            <button class="table__btn-pre btn btn-success">Previous</button>
+            <button class="table__btn-next btn btn-success">Next</button>
+          </div>
+        </td>
+      </tr>
+    </tfoot>
+  }
+</table>

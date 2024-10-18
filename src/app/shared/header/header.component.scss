@@ -16,11 +16,64 @@
     overflow: hidden;
 
     .header__content-left{
+      .header__search-container{
 
-      .header__title{
+        position: relative;
 
-        font-size: 30px;
-        font-weight: bold;
+        .header__normal-search{
+
+          display: flex;
+          margin-right: 0.8rem;
+
+          .header__search{
+
+            width: 300px;
+            border: none;
+            height: 2.4rem;
+            padding: 0 1rem;
+            background-color: $color-dark-100;
+            color: $color-dark;
+            box-shadow: none;
+            outline: 0;
+            transition: box-shadow .3s ease-in;
+
+            &:focus{
+              box-shadow: 0 0 8px $color-dark-300;
+            }
+          }
+
+          .header__btn-search{
+
+            padding: 0 .6rem;
+            background-color: $color-primary-400;
+            color: $color-light;
+
+
+            .header__icon{
+
+              font-size: 1.4rem;
+              line-height: 2.4rem;
+            }
+
+          }
+
+        }
+
+        .header__menu-search-btn{
+
+          font-size: 18px;
+          height: 42px;
+          width: 42px;
+          border: 1px solid transparent;
+          background-color: $color-dark-100;
+          border-radius: 50%;
+          outline: 0;
+          transition: background .3s ease-in-out;
+
+          &:hover, &:focus{
+            background-color: $color-dark-200;
+          }
+        }
       }
     }
 

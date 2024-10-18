@@ -6,20 +6,20 @@
   <div class="header__header-content">
 
     <div class="header__content-left">
-      <h2 class="header__title">Dashboard</h2>
+      <div class="header__search-container">
+        @if(!canShowSearchAsOverlayVar){
+          <div class="header__normal-search">
+            <input type="search" class="header__search" placeholder="Buscar...">
+            <button class="header__btn-search">
+              <i class='bx bx-search header__icon'></i>
+            </button>
+          </div>
+        }
+      </div>
     </div>
     <div class="header__content-right">
       <div class="header__menu">
         <div class="header__search-container">
-
-          @if(!canShowSearchAsOverlayVar){
-            <div class="header__normal-search">
-              <input type="search" class="header__search" placeholder="Buscar...">
-              <button class="header__btn-search">
-                <i class='bx bx-search header__icon'></i>
-              </button>
-            </div>
-          }
           @if(canShowSearchAsOverlayVar){
             <button
             class="header__menu-search-btn ripple"
@@ -31,6 +31,11 @@
         <div class="header__menu-item">
           <button class="header__menu-item-btn ripple">
             <i class='bx bxs-bell header__icon'></i>
+          </button>
+        </div>
+        <div class="header__menu-item">
+          <button class="header__menu-item-btn ripple">
+            <i class='bx bxs-message-rounded-dots header__icon'></i>
           </button>
         </div>
       </div>
