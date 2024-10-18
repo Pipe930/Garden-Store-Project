@@ -1,0 +1,64 @@
+@let collapsedVar = collapsed();
+@let navDataVar = navData();
+@let multipleVar = multiple();
+
+<aside class="sidenav" [ngClass]="collapsedVar ? 'sidenav-collapsed': ''">
+
+  <div class="sidenav__logo-container">
+    <button class="logo-container__logo" (click)="toggleCollapse()">A</button>
+    @if(collapsedVar){
+      <div class="logo-container__text" @fadeInOut>Dashboard</div>
+      <button class="logo-container__btn-close" @rotate (click)="closeSidenav()">
+        <i class='bx bx-x bx-md close-icon'></i>
+      </button>
+    }
+  </div>
+
+  <div class="sidenav__scrollwrap scollwrap-delayed">
+    <ul class="sidenav__list">
+      @for (data of navDataVar; track $index) {
+        <li class="list__item">
+
+          @if(data.items && data.items.length > 0){
+            <a class="list__link" [routerLink]="[data.routerLink + '/list']" (click)="handleClick(data)"
+              [ngClass]="getActiveClass(data)"
+            >
+              <i [class]=" data.icon + ' list__icon'"></i>
+              @if(collapsedVar){
+                <span class="list__text" @fadeInOut>{{data.label}}</span>
+              }
+
+              @if(data.items && collapsedVar){
+                <i class="list__menu-collapse-icon"
+                [ngClass]="!data.expanded ? 'bx bx-chevron-right bx-md':'bx bx-chevron-down bx-md'"></i>
+              }
+            </a>
+          }
+
+          @if(!data.items || (data.items && data.items.length === 0)){
+            <a class="list__link"
+            [routerLink]="[data.routerLink]"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}">
+              <i [class]=" data.icon + ' list__icon'"></i>
+              @if(collapsedVar){
+                <span class="list__text" @fadeInOut>{{data.label}}</span>
+              }
+            </a>
+          }
+
+          @if(collapsedVar && data.items && data.items.length > 0){
+
+            <app-sublevel-menu
+              [data]="data"
+              [collapsed]="collapsedVar"
+              [multiple]="multipleVar"
+              [expanded]="data.expanded"
+            ></app-sublevel-menu>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+
+</aside>

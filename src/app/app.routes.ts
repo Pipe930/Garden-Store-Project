@@ -9,5 +9,9 @@ export const routes: Routes = [
   {
     path: "auth",
     loadChildren: () => import("./auth/auth.routes").then(m => m.routesAuth)
+  },
+  {
+    path: "admin",
+    loadChildren: () => import("./admin/admin.routes").then(m => m.routesAdmin)
   }
 ];

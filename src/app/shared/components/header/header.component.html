@@ -1,0 +1,113 @@
+@let canShowSearchAsOverlayVar = canShowSearchAsOverlay();
+@let listNotificationsVar = listNotifications();
+@let listUserItemsVar = listUserItems();
+
+<header class="header">
+  <div class="header__header-content">
+
+    <div class="header__content-left">
+      <h2 class="header__title">Dashboard</h2>
+    </div>
+    <div class="header__content-right">
+      <div class="header__menu">
+        <div class="header__search-container">
+
+          @if(!canShowSearchAsOverlayVar){
+            <div class="header__normal-search">
+              <input type="search" class="header__search" placeholder="Buscar...">
+              <button class="header__btn-search">
+                <i class='bx bx-search header__icon'></i>
+              </button>
+            </div>
+          }
+          @if(canShowSearchAsOverlayVar){
+            <button
+            class="header__menu-search-btn ripple"
+            >
+              <i class='bx bx-search header__icon'></i>
+            </button>
+          }
+        </div>
+        <div class="header__menu-item">
+          <button class="header__menu-item-btn ripple">
+            <i class='bx bxs-bell header__icon'></i>
+          </button>
+        </div>
+      </div>
+      <div class="header__container-user-avatar">
+        <div class="header__user-avatar">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="avatar_user" class="header__img-avatar">
+          <div class="circle-indicator pulse"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<ng-template #searchOverlay>
+  <div class="overlay overlay-search overlay-fall" cdkMenu>
+    <input type="search" placeholder="Buscar..." class="overlay__search">
+    <button class="overlay__search-btn">
+      <i class='bx bx-search overlay__icon'></i>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #notificationOverlay>
+  <div class="overlay overlay-notification overlay-fall" cdkMenu>
+    <ul>
+      <li class="overlay__notification-head-container">
+        <div class="overlay__norification-head">
+          <h3>Notification</h3>
+        </div>
+        <span class="overlay__view-all-link">
+          <a href="">View All</a>
+        </span>
+      </li>
+      @for (notification of listNotificationsVar; track $index) {
+
+        <li class="overlay__notification-message-container"
+        cdkMenuItem
+        >
+          <i [class]="notification.icon"></i>
+          <div>
+            <div class="overlay__notification-subject">
+              {{notification.subject}}
+            </div>
+            <p class="overlay__notification-description">
+              {{notification.description}}
+            </p>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #userOverlay>
+  <div class="overlay overlay-user overlay-fall" cdkMenu>
+
+    <ul class="overlay-user__list">
+
+      @for (item of listUserItemsVar; track $index) {
+
+        <li cdkMenuItem class="overlay-user__item">
+          @if(item.label != 'Logout'){
+            <a href="" class="overlay-user__link">
+
+              <i class="icon" [ngClass]="item.icon"></i>
+              <span class="overlay-user__text">{{item.label}}</span>
+            </a>
+          }
+
+          @if(item.label == 'Logout'){
+            <a class="overlay-user__link" (click)="logout()">
+              <i class="icon" [ngClass]="item.icon"></i>
+              <span class="overlay-user__text">{{item.label}}</span>
+            </a>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+</ng-template>
