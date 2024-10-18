@@ -1,5 +1,5 @@
 import { Component, HostListener, inject, output, signal } from '@angular/core';
-import { Sidenav, SidenavToggle } from '../../../core/interfaces/sidenav';
+import { Sidenav, SidenavToggle } from '@core/interfaces/sidenav';
 import { navbarData } from './navbar-data';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass } from '@angular/common';

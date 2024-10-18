@@ -1,14 +1,14 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, signal, Signal, viewChild } from '@angular/core';
-import { Product, productJson } from '../../interfaces/product';
-import { ProductsService } from '../../services/products.service';
+import { Product, productJson } from '@pages/interfaces/product';
+import { ProductsService } from '@pages/services/products.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SessionService } from '../../../core/services/session.service';
-import { AlertService } from '../../../core/services/alert.service';
+import { SessionService } from '@core/services/session.service';
+import { AlertService } from '@core/services/alert.service';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { register } from 'swiper/element';
-import { CartService } from '../../services/cart.service';
-import { environment } from '../../../../environments/environment.development';
-import { CardComponent } from '../../../shared/components/card/card.component';
+import { CartService } from '@pages/services/cart.service';
+import { environment } from '@env/environment.development';
+import { CardComponent } from '@shared/card/card.component';
 register();
 
 @Component({

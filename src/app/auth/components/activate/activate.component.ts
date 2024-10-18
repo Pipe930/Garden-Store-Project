@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '@auth/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertService } from '../../../core/services/alert.service';
+import { AlertService } from '@core/services/alert.service';
 
 @Component({
   selector: 'app-activate',

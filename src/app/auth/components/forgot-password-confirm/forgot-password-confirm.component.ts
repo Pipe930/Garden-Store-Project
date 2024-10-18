@@ -1,10 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '@auth/services/auth.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgClass } from '@angular/common';
-import Swal from 'sweetalert2';
-import { AlertService } from '../../../core/services/alert.service';
+import { AlertService } from '@core/services/alert.service';
 
 @Component({
   selector: 'app-forgot-password-confirm',

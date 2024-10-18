@@ -2,8 +2,8 @@ import { NgClass } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidenavToggle } from '../core/interfaces/sidenav';
-import { SidenavComponent } from '../shared/components/sidenav/sidenav.component';
-import { HeaderComponent } from '../shared/components/header/header.component';
+import { SidenavComponent } from '../shared/sidenav/sidenav.component';
+import { HeaderComponent } from '../shared/header/header.component';
 
 @Component({
   selector: 'app-admin',

@@ -2,7 +2,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { NgClass } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { Sidenav } from '../../../core/interfaces/sidenav';
+import { Sidenav } from '@core/interfaces/sidenav';
 
 @Component({
   selector: 'app-sublevel-menu',

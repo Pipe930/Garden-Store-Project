@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { FormRegister, RegisterResponse } from '../interfaces/register';
+import { FormRegister, RegisterResponse } from '@auth/interfaces/register';
 import { map, Observable } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
-import { FormLogin, LoginResponse } from '../interfaces/login';
-import { ForgotPasswordResponse, FormForgotPassword, FormForgotPasswordConfirm } from '../interfaces/forgot-password';
-import { ActivateAccountInterface, ResponseActivateAccount } from '../interfaces/activate';
+import { environment } from '@env/environment.development';
+import { FormLogin, LoginResponse } from '@auth/interfaces/login';
+import { ForgotPasswordResponse, FormForgotPassword, FormForgotPasswordConfirm } from '@auth/interfaces/forgot-password';
+import { ActivateAccountInterface, ResponseActivateAccount } from '@auth/interfaces/activate';
 
 @Injectable({
   providedIn: 'root'

@@ -1,16 +1,16 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AlertService } from '../../../core/services/alert.service';
-import { CartService } from '../../services/cart.service';
-import { Cart, cartJson } from '../../interfaces/cart';
-import { AddressService } from '../../services/address.service';
-import { Address, addressObject } from '../../interfaces/address';
-import { Commune, Province, Region } from '../../interfaces/locates';
-import { TransationTransbank, TypePaimentEnum, TypeRetirementEnum, Voucher, VoucherObject } from '../../interfaces/purchase';
+import { AlertService } from '@core/services/alert.service';
+import { CartService } from '@pages/services/cart.service';
+import { Cart, cartJson } from '@pages/interfaces/cart';
+import { AddressService } from '@pages/services/address.service';
+import { Address, addressObject } from '@pages/interfaces/address';
+import { Commune, Province, Region } from '@pages/interfaces/locates';
+import { TransationTransbank, TypePaimentEnum, TypeRetirementEnum, Voucher, VoucherObject } from '@pages/interfaces/purchase';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common';
-import { SessionService } from '../../../core/services/session.service';
-import { TransbankService } from '../../services/transbank.service';
+import { SessionService } from '@core/services/session.service';
+import { TransbankService } from '@pages/services/transbank.service';
 
 @Component({
   selector: 'app-purchase',

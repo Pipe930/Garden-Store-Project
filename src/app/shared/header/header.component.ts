@@ -1,6 +1,6 @@
 import { Component, HostListener, inject, signal } from '@angular/core';
-import { AuthService } from '../../../auth/services/auth.service';
-import { SessionService } from '../../../core/services/session.service';
+import { AuthService } from '@auth/services/auth.service';
+import { SessionService } from '@core/services/session.service';
 import { Router } from '@angular/router';
 import { Items, Notifications, notifications, userItems } from './header-dummy-data';
 import { NgClass } from '@angular/common';

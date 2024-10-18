@@ -1,4 +1,4 @@
-import { Sidenav } from "../../../core/interfaces/sidenav"
+import { Sidenav } from "@core/interfaces/sidenav"
 
 export const navbarData: Array<Sidenav> = [
   {

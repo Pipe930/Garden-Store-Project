@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CarouselComponent } from '../../../shared/components/carousel/carousel.component';
+import { CarouselComponent } from '@shared/carousel/carousel.component';
 
 @Component({
   selector: 'app-home',
@@ -8,6 +8,4 @@ import { CarouselComponent } from '../../../shared/components/carousel/carousel.
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
-
-}
+export class HomeComponent {}
