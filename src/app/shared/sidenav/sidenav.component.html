@@ -20,7 +20,7 @@
         <li class="list__item">
 
           @if(data.items && data.items.length > 0){
-            <a class="list__link" [routerLink]="[data.routerLink + '/list']" (click)="handleClick(data)"
+            <a class="list__link" (click)="handleClick(data)"
               [ngClass]="getActiveClass(data)"
             >
               <i [class]=" data.icon + ' list__icon'"></i>
@@ -35,7 +35,7 @@
             </a>
           }
 
-          @if(!data.items || (data.items && data.items.length === 0)){
+          @if(!data.items || (data.items && data.items.length == 0)){
             <a class="list__link"
             [routerLink]="[data.routerLink]"
             routerLinkActive="active"

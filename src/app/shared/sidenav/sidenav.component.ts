@@ -86,6 +86,7 @@ export class SidenavComponent {
         }
       }
     }
+    console.log(item.expanded);
 
     item.expanded = !item.expanded;
   }

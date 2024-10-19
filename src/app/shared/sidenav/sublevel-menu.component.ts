@@ -14,12 +14,9 @@ import { Sidenav } from '@core/interfaces/sidenav';
     @let collapsedVar = collapsed();
     @let multipleVar = multiple();
 
-    @if(collapsedVar && dataVar.items && dataVar.items.length > 0){
-      <ul class="sublevel-nav"
-      [@submenu]="collapsedVar
-      ? {value: 'visible', params: {transitionParams: '.4s cubic-bezier(0.86, 0, 0.07, 1)', height: '*'}}
-      :{value: 'hidden', params: {transitionParams: '.4s cubic-bezier(0.86, 0, 0.07, 1)', height: '0'}}"
-      >
+    @if(collapsedVar && dataVar.items && dataVar.items.length > 0 && dataVar.expanded){
+      <ul class="sublevel-nav">
+
         @for (item of dataVar.items; track $index) {
           <li class="sublevel-nav__item">
 
@@ -69,28 +66,13 @@ import { Sidenav } from '@core/interfaces/sidenav';
       </ul>
     }
   `,
-  styleUrl: './sidenav.component.scss',
-  animations: [
-
-    trigger("submenu", [
-      state("hidden", style({
-        height: "0",
-        overflow: "hidden"
-      })),
-      state("visible", style({
-        height: "*"
-      })),
-      transition("visible => hidden, hidden => visible", [style({overflow: "hidden"}),
-        animate("{{transitionParams}}")]),
-      transition("void => *", animate(0))
-    ])
-  ]
+  styleUrl: './sidenav.component.scss'
 })
 export class SublevelMenuComponent {
 
-  public data = input.required<Sidenav>();
+  public data = input.required<Sidenav | any>();
   public collapsed = input.required<boolean>();
-  public expanded = input<boolean | undefined>();
+  public expanded = input.required<boolean | undefined>();
   public multiple = input.required<boolean>();
 
   private readonly _router = inject(Router);
@@ -98,7 +80,7 @@ export class SublevelMenuComponent {
   public handleClick(item:Sidenav):void {
 
     if(!this.multiple()){
-      /*
+
       if(this.data().items && this.data().items.length > 0){
 
         for(let modelItem of this.data().items){
@@ -109,7 +91,7 @@ export class SublevelMenuComponent {
           }
         }
       }
-      */
+
     }
 
     item.expanded = !item.expanded;
