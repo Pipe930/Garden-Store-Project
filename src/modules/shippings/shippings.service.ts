@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateShippingDto } from './dto/create-shipping.dto';
 import { UpdateShippingDto } from './dto/update-shipping.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
@@ -27,7 +27,7 @@ export class ShippingsService {
       };
 
     } catch (error) {
-      throw new BadRequestException("No se creo el envio correctamente"); 
+      throw new InternalServerErrorException("Error no se creo el envio correctamente"); 
     }
   }
 
@@ -53,7 +53,7 @@ export class ShippingsService {
       };
 
     } catch (error) {
-      throw new BadRequestException("No se actualizo el estado del envio"); 
+      throw new InternalServerErrorException("Error no se actualizo el estado del envio"); 
     }
   }
 }

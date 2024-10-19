@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './models/category.model';
@@ -14,7 +14,7 @@ export class CategoriesService {
 
     const category = await Category.findOne<Category>({ where: { name: { [Op.iLike]: name } } });
 
-    if(category) throw new NotFoundException("El nombre de la categoria ya existe");
+    if(category) throw new ConflictException("El nombre de la categoria ya existe");
 
     try {    
       const newCategory = await Category.create<Category>({ name: this.titleCase(name), slug: this.generateSlug(name), description });

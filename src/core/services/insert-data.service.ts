@@ -67,6 +67,7 @@ export class InsertDataService {
 
         jsonData.categories.forEach((category: Category) => {
             category.slug = category.name.toLowerCase().replace(/ /g, "-");
+            category.name = category.name.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
         });
         await Category.bulkCreate(jsonData.categories);
         await Role.bulkCreate(jsonData.roles);

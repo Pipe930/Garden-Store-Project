@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Role } from './models/rol.model';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { CreateRoleDto } from './dto/create-role.dto';
@@ -28,18 +28,22 @@ export class AccessControlService {
             }
         });
 
-        if(roleExists) throw new BadRequestException("El nombre del rol ya existe");
+        if(roleExists) throw new ConflictException("El nombre del rol ya existe");
 
-        const roleCreated = await Role.create<Role>({
-            name: name.toLowerCase(),
-            description
-        });
+        try {
+            const roleCreated = await Role.create<Role>({
+                name: name.toLowerCase(),
+                description
+            });
 
-        return {
-            statusCode: HttpStatus.CREATED,
-            message: "Rol creado exitosamente",
-            data: roleCreated
-        };
+            return {
+                statusCode: HttpStatus.CREATED,
+                message: "Rol creado exitosamente",
+                data: roleCreated
+            };
+        } catch (error) {
+            throw new InternalServerErrorException("Error al crear el rol");
+        }
     }
 
     async updateRole(idRole: number, createRoleDto: CreateRoleDto): Promise<ResponseData>{

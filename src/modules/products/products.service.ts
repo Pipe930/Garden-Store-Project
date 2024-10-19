@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './models/product.model';
@@ -23,7 +23,7 @@ export class ProductsService {
     const product = await Product.findOne<Product>({ where: { title: { [Op.iLike]: title } } });
     const category = await Category.findByPk<Category>(idCategory);
 
-    if(product) throw new BadRequestException("Ya existe un producto con ese titulo");
+    if(product) throw new ConflictException("Ya existe un producto con ese titulo");
     if(!category) throw new BadRequestException("La categoria ingresada no existe");
 
     try{
@@ -47,7 +47,7 @@ export class ProductsService {
       }
     } catch (error) {
 
-      throw new BadRequestException("No se guardo el producto correctamente");
+      throw new InternalServerErrorException("No se guardo el producto correctamente");
     }
   }
 
@@ -282,15 +282,7 @@ export class ProductsService {
     }
 
     return 0;
-
   }
-
-  private getPagingData(totalItems: number, page: number, limit: number) {
-    const currentPage = page ? +page : 0;
-    const totalPages = Math.ceil(totalItems / limit);
-  
-    return { totalPages, currentPage };
-  };
 
   private generateSlug(title: string): string {
     const slug = title.toLowerCase().replace(/ /g, "-");

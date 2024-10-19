@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
@@ -40,7 +40,7 @@ export class AuthService {
         }
         });
     
-        if(user) throw new BadRequestException("El correo o telefono ingresado ya existe");
+        if(user) throw new ConflictException("El correo o telefono ingresado ya existe");
         if(password !== rePassword) throw new BadRequestException("Las contraseñas no coinciden");
 
         const role = await Role.findOne<Role>({
@@ -83,7 +83,7 @@ export class AuthService {
             };
 
         } catch (error) {
-            throw new BadRequestException("No se creo el usuario correctamente");
+            throw new InternalServerErrorException("Error no se creo el usuario correctamente");
         }
     }
 
@@ -150,13 +150,17 @@ export class AuthService {
 
         if(!user) throw new NotFoundException("El email ingresado no se encuentra registrado");
 
-        const newToken = await TokenActivation.create<TokenActivation>({
-            token: await this.tokenService.encryptedString(),
-            uuid: this.tokenService.getUuidToken(),
-            idUser: user.idUser
-        });
-
-        await this.sendEmailService.sendEmail(newToken, email, "resetPassword");
+        try {     
+            const newToken = await TokenActivation.create<TokenActivation>({
+                token: await this.tokenService.encryptedString(),
+                uuid: this.tokenService.getUuidToken(),
+                idUser: user.idUser
+            });
+    
+            await this.sendEmailService.sendEmail(newToken, email, "resetPassword");
+        } catch (error) {
+            throw new InternalServerErrorException("Error al enviar el correo");            
+        }
 
         return {
             statusCode: HttpStatus.OK,

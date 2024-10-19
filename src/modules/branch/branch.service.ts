@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { Branch, ProductBranch } from './models/branch.model';
 import { CreateStockBranchDto } from './dto/create-stock-branch.dto';
@@ -6,6 +6,7 @@ import { Product } from '../products/models/product.model';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { Employee } from './models/employee.model';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { Op } from 'sequelize';
 
 interface BranchProduct {
 
@@ -66,7 +67,7 @@ export class BranchService {
         quantity
       });
     } catch (error) {
-      throw new BadRequestException('No se pudo añadir el stock a la sucursal correctamente');
+      throw new InternalServerErrorException('Error No se pudo añadir el stock a la sucursal correctamente');
     }
 
     branch.capacityOccupied += quantity;
@@ -117,7 +118,17 @@ export class BranchService {
     } = createEmployeeDto;
 
     const branch = await Branch.findByPk(idBranch);
+    const employee = await Employee.findOne({
+      where: {
+        [Op.or]: {
+          rut,
+          email,
+          phone
+        }
+      }
+    });
 
+    if(employee) throw new ConflictException('El empleado ya existe');
     if(!branch) throw new NotFoundException('La sucursal no existe');
 
     try {
@@ -137,7 +148,7 @@ export class BranchService {
       });
 
     } catch (error) {
-      throw new BadRequestException('No se pudo añadir el empleado a la sucursal correctamente');
+      throw new InternalServerErrorException('Erro No se pudo añadir el empleado correctamente');
     }
 
     return {

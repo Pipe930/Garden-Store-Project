@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { Subscription, SubscriptionStatus } from './models/subscription.model';
@@ -12,7 +12,7 @@ export class SubscriptionsService {
 
     const subscriptionExists = await Subscription.findByPk(idUser);
 
-    if (subscriptionExists) throw new BadRequestException("Ya tienes una suscripción activa");
+    if (subscriptionExists) throw new ConflictException("Ya tienes una suscripción activa");
 
     try {
 
@@ -27,7 +27,7 @@ export class SubscriptionsService {
       }
     }
     catch (error) {
-      throw new BadRequestException("No se creo la suscripción correctamente");
+      throw new InternalServerErrorException("No se creo la suscripción correctamente");
     }
   }
 

@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { Sale, SaleProduct, TypeStatus } from './models/sale.model';
 import { Cart } from '../cart/models/cart.model';
@@ -65,7 +65,7 @@ export class SalesService {
       await cartUser.save();
 
     } catch (error) {  
-      throw new BadRequestException('No se pudo crear la venta');
+      throw new InternalServerErrorException('Error No se pudo crear la venta');
     }
     return {
       statusCode: HttpStatus.CREATED,

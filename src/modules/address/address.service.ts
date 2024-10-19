@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { Commune, Province, Region } from './models/locates.model';
 import { CreateAddressDto } from './dto/create-address.dto';
@@ -86,24 +86,29 @@ export class AddressService {
 
         if(!commune) throw new NotFoundException("No tenemos una comuna con ese id");
 
-        const address = await Address.create<Address>({
-            name,
-            addressName,
-            numDepartment,
-            city,
-            description,
-            idCommune
-        });
+        try {
 
-        await AddressUser.create<AddressUser>({
-            idAddress: address.idAddress,
-            idUser
-        });
-
-        return {
-            statusCode: HttpStatus.CREATED,
-            message: "La direccion se creo con exito",
-            data: address
+            const address = await Address.create<Address>({
+                name,
+                addressName,
+                numDepartment,
+                city,
+                description,
+                idCommune
+            });
+    
+            await AddressUser.create<AddressUser>({
+                idAddress: address.idAddress,
+                idUser
+            });
+    
+            return {
+                statusCode: HttpStatus.CREATED,
+                message: "La direccion se creo con exito",
+                data: address
+            }
+        } catch (error) {
+            throw new InternalServerErrorException("Error no se pudo crear la dirección");
         }
     }
 

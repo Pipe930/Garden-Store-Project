@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
@@ -10,6 +10,10 @@ export class OffersService {
   async create(createOfferDto: CreateOfferDto):Promise<ResponseData> {
 
     const { title, endDate, discount, description } = createOfferDto;
+
+    const offer = await Offer.findOne({ where: { title } });
+
+    if(offer) throw new ConflictException("La oferta ya existe");
 
     try {
       
@@ -27,7 +31,7 @@ export class OffersService {
       }
 
     } catch (error) {
-      throw new BadRequestException("La oferta no se creo exitosamente");
+      throw new InternalServerErrorException("La oferta no se creo exitosamente");
     }      
   }
 
