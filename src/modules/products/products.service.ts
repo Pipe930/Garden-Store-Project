@@ -10,6 +10,8 @@ import { FileUploadDto } from './dto/file-upload.dto';
 import { ImagesProduct } from './models/image.model';
 import { Offer } from '../offers/models/offer.model';
 import { randomUUID } from 'crypto';
+import { SearchProductDto } from './dto/search-product.dto';
+import { PaginateDto } from './dto/paginate.dto';
 
 @Injectable()
 export class ProductsService {
@@ -22,7 +24,9 @@ export class ProductsService {
 
     const product = await Product.findOne<Product>({ where: { title: { [Op.iLike]: title } } });
     const category = await Category.findByPk<Category>(idCategory);
+    const offer = await Offer.findByPk<Offer>(idOffer); 
 
+    if(!offer && idOffer) throw new BadRequestException("La oferta ingresada no existe");
     if(product) throw new ConflictException("Ya existe un producto con ese titulo");
     if(!category) throw new BadRequestException("La categoria ingresada no existe");
 
@@ -46,20 +50,33 @@ export class ProductsService {
         data: newProduct
       }
     } catch (error) {
-
       throw new InternalServerErrorException("No se guardo el producto correctamente");
     }
   }
 
-  async findAll(page: number): Promise<ResponseData> {
+  async findAll(paginateDto: PaginateDto): Promise<ResponseData> {
 
-    const limit = 20;
+    let { page, limit } = paginateDto;
+
+    if(!page || !limit){
+      page = 1
+      limit = 20
+    }
+
     const offset = (page - 1) * limit;
     const products = await Product.findAll<Product>({
       include:[
         {
           model: ImagesProduct,
           attributes: ['urlImage', 'type']
+        },
+        {
+          model: Category,
+          attributes: ['idCategory', 'name']
+        },
+        {
+          model: Offer,
+          attributes: ['idOffer', 'title', 'discount']
         }
       ],
       limit,
@@ -88,6 +105,14 @@ export class ProductsService {
         {
           model: ImagesProduct,
           attributes: ['urlImage', 'type']
+        },
+        {
+          model: Category,
+          attributes: ['idCategory', 'name']
+        },
+        {
+          model: Offer,
+          attributes: ['idOffer', 'title', 'discount']
         }
       ]
     });
@@ -109,6 +134,14 @@ export class ProductsService {
         {
           model: ImagesProduct,
           attributes: ['urlImage', 'type']
+        },
+        {
+          model: Category,
+          attributes: ['idCategory', 'name']
+        },
+        {
+          model: Offer,
+          attributes: ['idOffer', 'title', 'discount']
         }
       ]
     }
@@ -131,6 +164,14 @@ export class ProductsService {
         {
           model: ImagesProduct,
           attributes: ['urlImage', 'type']
+        },
+        {
+          model: Category,
+          attributes: ['idCategory', 'name']
+        },
+        {
+          model: Offer,
+          attributes: ['idOffer', 'title', 'discount']
         }
       ]
     });
@@ -144,17 +185,30 @@ export class ProductsService {
     }
   }
 
-  async searchProduct(title: string, idCategory: number): Promise<ResponseData> {
+  async searchProduct(searchProductDto: SearchProductDto): Promise<ResponseData> {
+
+    let { title, category } = searchProductDto;
+
+    if(!title) title = "";
+    if(!category) category = 0;
 
     const products = await Product.findAll<Product>(
       { where: { [Op.or]: {
         title: { [Op.iLike]: `%${title}%` },
-        idCategory
+        idCategory: category
       } },
       include: [
         {
           model: ImagesProduct,
           attributes: ['urlImage', 'type']
+        },
+        {
+          model: Category,
+          attributes: ['idCategory', 'name']
+        },
+        {
+          model: Offer,
+          attributes: ['idOffer', 'title', 'discount']
         }
       ]
     });
@@ -170,7 +224,7 @@ export class ProductsService {
 
   async update(id: number, updateProductDto: UpdateProductDto): Promise<ResponseData> {
 
-    const { title, brand, returnPolicy, price, description, idCategory, idOffer } = updateProductDto;
+    const { title, brand, returnPolicy, price, description, published, idCategory, idOffer } = updateProductDto;
 
     const product = await Product.findByPk<Product>(id);
     const category = await Category.findByPk<Category>(idCategory);
@@ -182,6 +236,7 @@ export class ProductsService {
       product.title = title;
       product.brand = brand;
       product.price = price;
+      product.published = published;
       product.priceDiscount = await this.calculateDiscount(price, product.idOffer);
       product.slug = this.generateSlug(title);
       product.returnPolicy = returnPolicy;
@@ -236,17 +291,17 @@ export class ProductsService {
     if(!product) throw new NotFoundException("Producto no encontrado");
     if(imageProduct) throw new BadRequestException("Este producto ya tiene una imagen de tipo portada");
 
-    try {
+    // try {
       
-      await this.httpService.axiosRef.post("http://127.0.0.1:8000/upload", dataForm, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-    } catch (error) {
+    //   await this.httpService.axiosRef.post("http://127.0.0.1:8000/upload", dataForm, {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data'
+    //     }
+    //   });
+    // } catch (error) {
 
-      if(error.code === "ECONNREFUSED") throw new BadRequestException("No se envio correctamente al proveedor de imagenes");
-    }
+    //   if(error.code === "ECONNREFUSED") throw new BadRequestException("No se envio correctamente al proveedor de imagenes");
+    // }
 
     try {
       
@@ -257,7 +312,7 @@ export class ProductsService {
       })
     } catch (error) {
 
-      throw new BadRequestException("No se guardo la imagen correctamente");
+      throw new InternalServerErrorException("No se guardo la imagen correctamente");
     }
 
     return {
@@ -285,6 +340,7 @@ export class ProductsService {
   }
 
   private generateSlug(title: string): string {
+    
     const slug = title.toLowerCase().replace(/ /g, "-");
     return slug + "-" + randomUUID().split("-").join("");
   }

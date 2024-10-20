@@ -156,4 +156,7 @@ export class Product extends Model {
 
     @BelongsTo(() => Category)
     declare category: Category;
+
+    @BelongsTo(() => Offer)
+    declare offer: Offer;
 }

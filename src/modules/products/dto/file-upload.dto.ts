@@ -1,7 +1,6 @@
 import { IsBase64, IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString } from "class-validator";
 
-
-export class FileUploadDto{
+export class FileUploadDto {
 
     @IsBase64()
     @IsNotEmpty()
