@@ -1,4 +1,5 @@
-import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, MinDate } from 'class-validator';
 
 export class UpdateOfferDto {
 
@@ -7,6 +8,8 @@ export class UpdateOfferDto {
     readonly title: string;
 
     @IsDate()
+    @Transform(({ value }) => new Date(value))
+    @MinDate(new Date())
     @IsNotEmpty()
     readonly endDate: Date;
 

@@ -291,17 +291,16 @@ export class ProductsService {
     if(!product) throw new NotFoundException("Producto no encontrado");
     if(imageProduct) throw new BadRequestException("Este producto ya tiene una imagen de tipo portada");
 
-    // try {
+    try {
       
-    //   await this.httpService.axiosRef.post("http://127.0.0.1:8000/upload", dataForm, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data'
-    //     }
-    //   });
-    // } catch (error) {
-
-    //   if(error.code === "ECONNREFUSED") throw new BadRequestException("No se envio correctamente al proveedor de imagenes");
-    // }
+      await this.httpService.axiosRef.post("http://127.0.0.1:8000/upload", dataForm, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+    } catch (error) {
+      if(error.code === "ECONNREFUSED") throw new BadRequestException("No se envio correctamente al proveedor de imagenes");
+    }
 
     try {
       
