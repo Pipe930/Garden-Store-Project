@@ -36,7 +36,7 @@
       <textarea class="form-control" id="description" rows="3" formControlName="description" [ngClass]="{
         'is-invalid': description.invalid && (description.dirty || description.touched)
       }"></textarea>
-      @if(name.getError("maxlength")){
+      @if(description.getError("maxlength")){
         <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
       }
     </div>

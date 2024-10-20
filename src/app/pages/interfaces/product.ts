@@ -3,6 +3,17 @@ type imageType = {
   type: string;
 }
 
+type TypeCategory = {
+  idCategory: number;
+  name: string;
+}
+
+type TypeOffer = {
+  idOffer: number;
+  name: string;
+  discount: number;
+}
+
 export interface Product {
 
   idProduct: number;
@@ -22,7 +33,8 @@ export interface Product {
   createAt: Date;
   updateAt: Date;
   images: Array<imageType>;
-  idCategory: number;
+  category: TypeCategory;
+  offer: TypeOffer;
 }
 
 export interface ResponseProducts {
@@ -54,6 +66,14 @@ export const productJson: Product = {
   updateAt: new Date(),
   slug: "",
   description: "",
-  idCategory: 0,
+  category: {
+    idCategory: 0,
+    name: ""
+  },
+  offer: {
+    idOffer: 0,
+    name: "",
+    discount: 0
+  },
   images: []
 }

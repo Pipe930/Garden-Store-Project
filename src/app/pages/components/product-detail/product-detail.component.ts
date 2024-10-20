@@ -4,7 +4,7 @@ import { ProductsService } from '@pages/services/products.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '@core/services/session.service';
 import { AlertService } from '@core/services/alert.service';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { register } from 'swiper/element';
 import { CartService } from '@pages/services/cart.service';
 import { environment } from '@env/environment.development';
@@ -14,7 +14,7 @@ register();
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CurrencyPipe, CardComponent, CommonModule],
+  imports: [CardComponent, DecimalPipe],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],
@@ -48,7 +48,7 @@ export class ProductDetailComponent {
       this.product.set(result.data);
       this.loadImages(result.data);
 
-      this._productsService.getProductsFilterCategory(result.data.idCategory).subscribe(result => {
+      this._productsService.getProductsFilterCategory(result.data.category.idCategory).subscribe(result => {
         this.productList.set(result.data);
       })
     })

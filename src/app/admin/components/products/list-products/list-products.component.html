@@ -1,0 +1,10 @@
+@let listProductsVar = listProducts();
+@let columnsVar = columns();
+
+<div class="container__container-title">
+  <h2 class="container__title">Productos</h2>
+  <button class="container__btn btn btn-success" [routerLink]="['/admin/products/create']">
+    Crear Producto
+  </button>
+</div>
+<app-table [messageNoContent]="'productos'" [dataRows]="listProductsVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editProduct($event)"></app-table>

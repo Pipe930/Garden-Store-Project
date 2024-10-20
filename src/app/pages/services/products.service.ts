@@ -42,7 +42,7 @@ export class ProductsService {
   }
 
   public getProduct(slug: string):Observable<ResponseProduct>{
-    return this._http.get<ResponseProduct>(`${this.urlApiProducts}/product/${slug}`);
+    return this._http.get<ResponseProduct>(`${this.urlApiProducts}/product/detail/${slug}`);
   }
 
   public getProductsFilterCategory(id_category: number):Observable<ResponseProducts>{

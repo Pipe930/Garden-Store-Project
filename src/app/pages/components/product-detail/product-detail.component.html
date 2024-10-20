@@ -1,3 +1,6 @@
+@let productVar = product();
+@let quantityVar = quantity();
+
 <div class="container-detail">
   <div class="container__product">
 
@@ -16,45 +19,49 @@
       </div>
 
       <div class="product__description-product">
-        <h2 class="description-product__title">{{product().title}}</h2>
+        <h2 class="description-product__title">{{productVar.title}}</h2>
         <div class="description-product__stock">
-          <p><strong>ID</strong> {{product().idProduct}}</p>
-          <p>Quedan {{product().stock}} unidades</p>
+          <p><strong>ID</strong> {{productVar.idProduct}}</p>
+          <p>Quedan {{productVar.stock}} unidades</p>
         </div>
         <hr>
         <div class="description-product__info">
-          <p>Por {{product().brand}}</p>
-          <!-- <div class="description-product__discount-percentage" *ngIf="product.offer">
-            <p class="description-product__percentage">{{product.offer.percentage_discount}}%</p>
-          </div> -->
-          <div class="description-product__prices">
-            <!-- <div *ngIf="!product.offer && product.stock >= quantity">
-              <p class="prices__price">$ {{product.price | number}}</p>
+          <p>Por {{productVar.brand}}</p>
+
+          @if(productVar.offer){
+            <div class="description-product__discount-percentage">
+              <p class="description-product__percentage">{{productVar.offer.discount}}%</p>
             </div>
-            <div *ngIf="product.offer || product.stock < quantity">
-              <p class="prices__price"><s>$ {{product.price | number}}</s></p>
-            </div> -->
+          }
+          <div class="description-product__prices">
+
+            @if(!productVar.offer && productVar.stock >= quantityVar){
+              <p class="prices__price">$ {{productVar.price | number}}</p>
+              <p class="prices__price"><s>$ {{productVar.price | number}}</s></p>
+            }
             <p class="prices__text">Precio de Referencia</p>
 
-            <!-- <p class="prices__price" *ngIf="product.offer">$ {{product.discount_price | number}}</p>
-            <p class="prices__text" *ngIf="product.offer">Precio de Descuento</p> -->
+            @if(productVar.offer){
+              <p class="prices__price">$ {{productVar.priceDiscount | number}}</p>
+              <p class="prices__text">Precio de Descuento</p>
+            }
 
-            <p class="prices__price">{{product().price | currency: 'CLP'}}</p>
+            <p class="prices__price">$ {{productVar.price | number}}</p>
           </div>
-          @if (product().stock < quantity()) {
+          @if (productVar.stock < quantityVar) {
             <p class="prices__aviable">No Disponible</p>
           }
           <div class="description-product__cart">
             <div class="description-product__container-add-cart">
-              <button class="description-product__btn-add" (click)="sumQuantity()">
+              <button class="description-product__btn-add btn btn-success" (click)="sumQuantity()">
                 +
               </button>
-              <p class="description-product__quantity">{{quantity()}}</p>
-              <button class="description-product__btn-substract" (click)="subQuantity()">
+              <p class="description-product__quantity">{{quantityVar}}</p>
+              <button class="description-product__btn-substract btn btn-success" (click)="subQuantity()">
                 -
               </button>
             </div>
-            <button class="description-product__btn-add-cart" (click)="addCart(product().idProduct)" [disabled]="product().stock < quantity()">Añadir al Carrito <i class='bx bxs-cart-add bx-sm'></i></button>
+            <button class="description-product__btn-add-cart btn btn-success" (click)="addCart(productVar.idProduct)" [disabled]="productVar.stock < quantityVar">Añadir al Carrito <i class='bx bxs-cart-add bx-sm'></i></button>
           </div>
         </div>
         <div class="description-product__description">
@@ -64,7 +71,7 @@
             <button class="description-product__tablinks">Cambios y Devoluciones</button>
           </div>
           <div class="description-product__content">
-            <p>{{product().description}}</p>
+            <p>{{productVar.description}}</p>
           </div>
         </div>
       </div>
@@ -75,7 +82,7 @@
       <div class="slider__slider-wrapper">
         <swiper-container #swiper pagination="false" effect="coverflow" grab-cursor="false" slides-per-group="4" slides-per-view="4" speed="1200">
           @for (productCategory of productList(); track $index) {
-            @if(productCategory.idProduct !== product().idProduct){
+            @if(productCategory.idProduct !== productVar.idProduct){
               <swiper-slide>
                 <app-card (eventProduct)="eventProductGet($event)" [product]="productCategory" [reload]="true" class="slider-wrapper__card-item"></app-card>
               </swiper-slide>

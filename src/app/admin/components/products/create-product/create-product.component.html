@@ -1,0 +1,110 @@
+@let alertMessageVar = alertMessage();
+@let listlistCategoriesVar = listCategories();
+
+<div class="container__container-title">
+  <h2 class="container__container-title">Crear Producto</h2>
+  <button class="container__btn btn btn-primary" [routerLink]="['/admin/products/list']">Volver</button>
+</div>
+
+<div class="container__container-form">
+  <form action="" class="container-form__form" [formGroup]="formProduct" (ngSubmit)="createProduct()">
+
+    @if(alertMessageVar){
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> Este titulo de producto ya existe
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    }
+    <div class="mb-3">
+      <label for="titleInput" class="form-label">Titulo</label>
+      <input type="text" class="form-control form__input" id="titleInput" formControlName="title" [ngClass]="{
+        'is-invalid': title.invalid && (title.dirty || title.touched)
+      }">
+      @if(title.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(title.getError("minlength")){
+        <span class="invalid-feedback">Tiene que tener un minimo de 4 caracteres</span>
+      }
+      @if(title.getError("maxlength")){
+        <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+      }
+    </div>
+    <div class="row">
+      <div class="mb-3 col">
+        <label for="priceInput" class="form-label">Precio</label>
+        <input type="number" class="form-control form__input" id="priceInput" formControlName="price" [ngClass]="{
+          'is-invalid': price.invalid && (price.dirty || price.touched)
+        }">
+        @if(price.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(price.getError("min")){
+          <span class="invalid-feedback">El precio minimo es de $1000 pesos</span>
+        }
+      </div>
+      <div class="mb-3 col">
+        <label for="brandInput" class="form-label">Marca</label>
+        <input type="text" class="form-control form__input" id="brandInput" formControlName="brand" [ngClass]="{
+          'is-invalid': brand.invalid && (brand.dirty || brand.touched)
+        }">
+        @if(brand.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(brand.getError("minlength")){
+          <span class="invalid-feedback">Tiene que tener un minimo de 4 caracteres</span>
+        }
+        @if(brand.getError("maxlength")){
+          <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+        }
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="returnPolicyInput" class="form-label">Politica de Retorno</label>
+      <input type="text" class="form-control form__input" id="returnPolicyInput" formControlName="returnPolicy" [ngClass]="{
+        'is-invalid': returnPolicy.invalid && (returnPolicy.dirty || returnPolicy.touched)
+      }">
+      @if(returnPolicy.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(returnPolicy.getError("minlength")){
+        <span class="invalid-feedback">Tiene que tener un minimo de 4 caracteres</span>
+      }
+      @if(returnPolicy.getError("maxlength")){
+        <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Descripción (Opcional)</label>
+      <textarea class="form-control" id="description" rows="5" formControlName="description" [ngClass]="{
+        'is-invalid': description.invalid && (description.dirty || description.touched)
+      }"></textarea>
+      @if(description.getError("maxlength")){
+        <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Categoria</label>
+      <select class="form-select" formControlName="category">
+        @for (category of listlistCategoriesVar; track $index) {
+          <option [value]="category.idCategory">{{category.name}}</option>
+        }
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="formFile" class="form-label">Imagen Portada</label>
+      <input class="form-control" accept="image/*" (change)="changeImage()" #imageProduct type="file" id="formFile" formControlName="thumbnail" [ngClass]="{
+        'is-invalid': thumbnail.invalid && (thumbnail.dirty || thumbnail.touched)
+      }">
+      @if(thumbnail.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      <div class="form__container-img-preview">
+        <img src="../../../../assets/imgs/upload-image_2023-04-11-023334_kxuh.png" class="form__image-preview img-thumbnail" #imagePreview>
+      </div>
+    </div>
+    <button type="submit" class="form__btn-create btn btn-success" [disabled]="formProduct.invalid">
+      Guardar
+    </button>
+  </form>
+</div>

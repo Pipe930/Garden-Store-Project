@@ -1,7 +1,10 @@
+@let listCategoriesVar = listCategories();
+@let columnsVar = columns();
+
 <div class="container__container-title">
   <h2 class="container__title">Categorias</h2>
   <button class="container__btn btn btn-success" [routerLink]="['/admin/categories/create']">
     Crear Categoria
   </button>
 </div>
-<app-table [messageNoContent]="'categorias'" [dataRows]="listCategories" [tableColumns]="columns" [showActionButton]="true" (eventEdit)="editCategory($event)"></app-table>
+<app-table [messageNoContent]="'categorias'" [dataRows]="listCategoriesVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editCategory($event)"></app-table>

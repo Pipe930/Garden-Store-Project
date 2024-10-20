@@ -19,19 +19,19 @@ export interface CategoryResponse {
 
 export const categoryColumns: Array<TableColumns> = [
 
-    {
-      header: "Nombre",
-      fieldName: "name",
-      dataType: "string"
-    },
-    {
-      header: "Descripción",
-      fieldName: "description",
-      dataType: "string"
-    },
-    {
-      header: "Acciones",
-      fieldName: "action",
-      dataType: "action"
-    }
-  ]
+  {
+    header: "Nombre",
+    fieldName: "name",
+    dataType: "string"
+  },
+  {
+    header: "Descripción",
+    fieldName: "description",
+    dataType: "string"
+  },
+  {
+    header: "Acciones",
+    fieldName: "action",
+    dataType: "action"
+  }
+]
