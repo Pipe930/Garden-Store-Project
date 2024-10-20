@@ -1,5 +1,6 @@
 import { categoryColumns } from '@admin/interfaces/category-table';
 import { CategoryService } from '@admin/services/category.service';
+import { HttpStatusCode } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TableColumns } from '@core/interfaces/table';
@@ -22,9 +23,8 @@ export class ListCategoriesComponent {
   public columns = signal<TableColumns[]>(categoryColumns);
 
   ngOnInit(): void {
-
     this._categoryService.getAllCategories().subscribe(result => {
-      if(result) this.listCategories.set(result.data);
+      if(result.statusCode === HttpStatusCode.Ok) this.listCategories.set(result.data);
     })
   }
 

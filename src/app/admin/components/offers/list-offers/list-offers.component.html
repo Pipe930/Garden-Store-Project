@@ -1,0 +1,10 @@
+@let listOffersVar = listOffers();
+@let columnsVar = columns();
+
+<div class="container__container-title">
+  <h2 class="container__title">Ofertas</h2>
+  <button class="container__btn btn btn-success" [routerLink]="['/admin/offers/create']">
+    Crear Oferta
+  </button>
+</div>
+<app-table [messageNoContent]="'ofertas'" [dataRows]="listOffersVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editOffer($event)"></app-table>

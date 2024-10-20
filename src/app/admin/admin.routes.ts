@@ -18,6 +18,10 @@ export const routesAdmin: Routes = [
       {
         path: "products",
         loadChildren: () => import('./components/products/products.routes').then(m => m.routesProducts)
+      },
+      {
+        path: "offers",
+        loadChildren: () => import('./components/offers/offers.routes').then(m => m.routesOffers)
       }
     ]
   }

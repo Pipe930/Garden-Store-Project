@@ -40,6 +40,8 @@ export interface Product {
 export interface ResponseProducts {
   statusCode: number;
   message: string;
+  currentPage: number;
+  totalPages: number;
   data: Array<Product>;
 }
 

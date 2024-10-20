@@ -1,11 +1,13 @@
+@let productVar = product();
+
 <div class="card border-success product">
   <div class="card-header product__header">
-    <h5 class="card-title">{{product().title}}</h5>
-    <p class="card-text">{{product().brand}}</p>
+    <h5 class="card-title">{{productVar.title}}</h5>
+    <p class="card-text">{{productVar.brand}}</p>
     <div class="d-flex justify-content-between">
 
-      <p class="card-text"><strong>ID</strong> {{product().idProduct}}</p>
-      <p class="card-text">Unid {{product().stock}}</p>
+      <p class="card-text"><strong>ID</strong> {{productVar.idProduct}}</p>
+      <p class="card-text">Unid {{productVar.stock}}</p>
     </div>
   </div>
   <picture>
@@ -15,7 +17,7 @@
 
     <div class="d-flex justify-content-between align-items-center product__container-price">
       <div class="">
-        <p class="card-text product__price">$ {{product().price | currency: 'CLP'}}</p>
+        <p class="card-text product__price">$ {{productVar.price | currency: 'CLP'}}</p>
         <p class="card-text product__text">Precio Efectivo</p>
       </div>
       <div class="">
@@ -25,7 +27,7 @@
 
     <div class="d-grid gap-2">
 
-      <button class="btn btn-success" type="button" (click)="productDetail(product())">Ver</button>
+      <button class="btn btn-success" type="button" (click)="productDetail(productVar)">Ver</button>
     </div>
   </div>
 </div>

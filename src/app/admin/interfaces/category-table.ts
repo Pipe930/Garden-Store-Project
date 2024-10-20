@@ -1,4 +1,4 @@
-import { TableColumns } from "@core/interfaces/table";
+import { DataType, TableColumns } from "@core/interfaces/table";
 import { Category } from "@pages/interfaces/category";
 
 export interface CategoriesResponse {
@@ -22,16 +22,16 @@ export const categoryColumns: Array<TableColumns> = [
   {
     header: "Nombre",
     fieldName: "name",
-    dataType: "string"
+    dataType: DataType.STRING
   },
   {
     header: "Descripción",
     fieldName: "description",
-    dataType: "string"
+    dataType: DataType.STRING
   },
   {
     header: "Acciones",
     fieldName: "action",
-    dataType: "action"
+    dataType: DataType.ACTION
   }
 ]

@@ -25,7 +25,7 @@ export class ListProductsComponent {
   ngOnInit(): void {
 
     this._productService.getAllProducts().subscribe(result => {
-      if(result.statusCode !== HttpStatusCode.NoContent) this.listProducts.set(result.data);
+      if(result.statusCode === HttpStatusCode.Ok) this.listProducts.set(result.data);
     })
   }
 

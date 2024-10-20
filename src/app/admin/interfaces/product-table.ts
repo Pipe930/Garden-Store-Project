@@ -1,10 +1,9 @@
-import { TableColumns } from "@core/interfaces/table";
+import { DataType, TableColumns } from "@core/interfaces/table";
 import { Product } from "@pages/interfaces/product";
 
 export interface ProductsResponse {
   statusCode: number;
   data: Product[];
-
 }
 
 export interface CreateProductForm {
@@ -39,26 +38,26 @@ export const productColumns: Array<TableColumns> = [
   {
     header: "Titulo",
     fieldName: "title",
-    dataType: "string"
+    dataType: DataType.STRING
   },
   {
     header: "Precio",
     fieldName: "price",
-    dataType: "number"
+    dataType: DataType.NUMBER
   },
   {
     header: "Stock",
     fieldName: "stock",
-    dataType: "number"
+    dataType: DataType.NUMBER
   },
   {
     header: "Publicado",
     fieldName: "published",
-    dataType: "boolean"
+    dataType: DataType.BOOLEAN
   },
   {
     header: "Acciones",
     fieldName: "action",
-    dataType: "action"
+    dataType: DataType.ACTION
   }
 ]

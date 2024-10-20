@@ -33,15 +33,18 @@
     <div class="row">
       <div class="mb-3 col">
         <label for="priceInput" class="form-label">Precio</label>
-        <input type="number" class="form-control form__input" id="priceInput" formControlName="price" [ngClass]="{
-          'is-invalid': price.invalid && (price.dirty || price.touched)
-        }">
-        @if(price.getError("required")){
-          <span class="invalid-feedback">Este campo es requerido</span>
-        }
-        @if(price.getError("min")){
-          <span class="invalid-feedback">El precio minimo es de $1000 pesos</span>
-        }
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input type="number" class="form-control form__input" id="priceInput" formControlName="price" [ngClass]="{
+            'is-invalid': price.invalid && (price.dirty || price.touched)
+          }">
+          @if(price.getError("required")){
+            <span class="invalid-feedback">Este campo es requerido</span>
+          }
+          @if(price.getError("min")){
+            <span class="invalid-feedback">El precio minimo es de $1000 pesos</span>
+          }
+        </div>
       </div>
       <div class="mb-3 col">
         <label for="brandInput" class="form-label">Marca</label>
@@ -83,8 +86,8 @@
         <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
       }
     </div>
-    <div class="mb-3">
-      <label for="description" class="form-label">Categoria</label>
+    <div class="input-group mb-3">
+      <label for="description" class="input-group-text">Categoria</label>
       <select class="form-select" formControlName="category">
         @for (category of listlistCategoriesVar; track $index) {
           <option [value]="category.idCategory">{{category.name}}</option>
