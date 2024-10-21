@@ -36,6 +36,7 @@ export class SendEmailService {
 
         let templatePath: string;
         let htmlContent: string;
+        let subject: string;
 
         if(type === "activationAcctount") {
 
@@ -46,6 +47,8 @@ export class SendEmailService {
                 privacy_policy_link: '',
                 terms_link: ''
             });
+
+            subject = "Activacion de Cuenta";
         }
         
         if(type === "resetPassword") {
@@ -56,22 +59,59 @@ export class SendEmailService {
                 privacy_policy_link: '',
                 terms_link: ''
             });
-        };
+
+            subject = "Recuperar Contraseña";
+        }
     
         try {
 
-            console.log(htmlContent);
-            // const { data, error } = await this.resend.emails.send({
-            //     from: "Acme <onboarding@resend.dev>",
-            //     to: [email],
-            //     subject: "Activacion de Cuenta",
-            //     html: htmlContent,
-            // });
+            const { data, error } = await this.resend.emails.send({
+                from: "Acme <onboarding@resend.dev>",
+                to: [email],
+                subject,
+                html: htmlContent,
+            });
         
-            // if(error) throw new BadRequestException("El correo no se envio correctamente");
+            if(error) throw new BadRequestException("El correo no se envio correctamente");
     
         } catch (error) {
     
+            throw new BadRequestException('No se pudo enviar el correo de activación');
+        }
+    }
+
+    /**
+     * 
+     * @param string $email
+     * @param string $otp
+     * @returns void
+     * 
+     * @description Envia un correo con el OTP
+     */
+
+    public async sendEmailOTP(email: string, otp: string): Promise<void>{
+
+        const templatePath = join(__dirname, '..', '..', 'templates', 'sendOPT.html');
+
+        const htmlContent = this.loadTemplate(templatePath, {
+            verification_code: otp,
+            privacy_policy_link: '',
+            terms_link: ''
+        });
+
+        const subject = "Verificar Correo";
+
+        try {
+
+            const { data, error } = await this.resend.emails.send({
+                from: "Acme <onboarding@resend.dev>",
+                to: [email],
+                subject,
+                html: htmlContent,
+            });
+        
+            if(error) throw new BadRequestException("El correo no se envio correctamente");
+        } catch (error) {
             throw new BadRequestException('No se pudo enviar el correo de activación');
         }
     }

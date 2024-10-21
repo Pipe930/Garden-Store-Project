@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Role } from './models/rol.model';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { CreateRoleDto } from './dto/create-role.dto';

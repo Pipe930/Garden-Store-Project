@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
@@ -16,6 +16,9 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { Role, RoleUser } from '../access-control/models/rol.model';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { Cart } from '../cart/models/cart.model';
+import { UserOPTVerification } from '../users/models/userOPTVerification';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { ResendOTPDto } from './dto/resend-otp.dto';
 
 @Injectable()
 export class AuthService {
@@ -87,7 +90,7 @@ export class AuthService {
         }
     }
 
-    async login(loginUserDto: LoginUserDto) {
+    async login(loginUserDto: LoginUserDto): Promise<ResponseData>{
 
         const { email, password } = loginUserDto;
         const user = await this.usersService.findEmailUser(email);
@@ -106,6 +109,66 @@ export class AuthService {
         };
     }
 
+    async loginAdmin(loginUserDto: LoginUserDto): Promise<ResponseData> {
+
+        const { email, password } = loginUserDto;
+        const user = await this.usersService.findEmailUser(email);
+
+        if(!user || !this.passwordService.checkPassword(password, user.password)) throw new UnauthorizedException("Las credeciales no son validas");
+        if(!user.active) throw new UnauthorizedException("La cuenta no esta activada");
+        if(!this.userRoleValid(user, "administrador")) throw new UnauthorizedException("El usuario no tiene permisos de administrador");
+
+        return this.verifyOPTVerifyEmail(user);
+    }
+
+    async verifyOPT(verifyOTP: VerifyOtpDto): Promise<ResponseData>{
+        
+        const { otp, idUser } = verifyOTP;
+
+        const OTPfind = await UserOPTVerification.findOne<UserOPTVerification>({
+            where: {
+                idUser
+            }
+        });
+
+        if(!OTPfind) throw new NotFoundException("Este usuario no tiene un OTP");
+        if(new Date().getTime() > OTPfind.expiresAt.getTime()) throw new BadRequestException("El OTP a expirado");
+        if(!this.passwordService.checkPassword(otp, OTPfind.otp)) throw new BadRequestException("El OTP no es valido");
+
+        await OTPfind.destroy();
+
+        const user = await User.findByPk<User>(idUser);
+
+        user.lastLogin = new Date();
+        await user.save();
+
+        return {
+
+            message: "Autenticacion realizada con exito",
+            statusCode: HttpStatus.OK,
+            data: await this.tokenService.generateTokenJWT(user)
+        }
+    }
+
+    async resendOTP(resendOTP: ResendOTPDto): Promise<any>{
+
+        const { idUser } = resendOTP;
+
+        const OTPfind = await UserOPTVerification.findOne<UserOPTVerification>({
+            where: {
+                idUser
+            }
+        });
+
+        if(!OTPfind) throw new NotFoundException("Este usuario no tiene un OTP");
+
+        const user = await User.findByPk<User>(idUser);
+
+        await OTPfind.destroy();
+
+        return this.verifyOPTVerifyEmail(user);
+    }
+
     async activationAccount(activationAccount: ActivationAccountDto): Promise<ResponseData>{
 
         const { uuid, token } = activationAccount;
@@ -121,8 +184,7 @@ export class AuthService {
 
         if(!tokenActivate) throw new NotFoundException("Token de activacion no encontrado");
 
-        const timeNow = new Date().getTime();
-        const timeDiff = (timeNow - tokenActivate.time.getTime()) / (1000 * 60);
+        const timeDiff = (new Date().getTime() - tokenActivate.time.getTime()) / (1000 * 60);
 
         if(timeDiff >= 30) throw new BadRequestException("El token a expirado");
 
@@ -279,5 +341,41 @@ export class AuthService {
             message: "La cuenta a sido eliminada con exito",
             statusCode: HttpStatus.OK
         }
+    }
+
+    async verifyOPTVerifyEmail(user: User): Promise<any>{
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const hashOtp = this.passwordService.passwordEncrypted(otp);
+
+        const OTPfind = await UserOPTVerification.findByPk(user.idUser);
+
+        if(OTPfind) throw new ConflictException("Ya se envio un correo con el OTP");
+
+        try {            
+            await UserOPTVerification.create<UserOPTVerification>({
+                idUser: user.idUser,
+                otp: hashOtp,
+                expiresAt: Date.now() + 900000
+            });
+    
+            await this.sendEmailService.sendEmailOTP(user.email, otp);    
+        } catch (error) {
+
+            console.log(error);
+            throw new InternalServerErrorException("Error al enviar el correo");
+        }
+        return {
+            message: "Correo enviado con exito",
+            statusCode: HttpStatus.OK,
+            data: {
+                idUser: user.idUser,
+                email: user.email
+            }
+        }
+    }
+
+    private userRoleValid(user: User, role: string): boolean{
+        return user.rolesUser.some(roles => roles.name === role);
     }
 }

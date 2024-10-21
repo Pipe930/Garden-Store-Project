@@ -10,6 +10,8 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
 import { DeleteAccountDto } from './dto/delete-account.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { ResendOTPDto } from './dto/resend-otp.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -58,6 +60,21 @@ export class AuthController {
     @UseGuards(AuthGuard)
     changePassword(@Body() changePasswordDto: ChangePasswordDto, @Req() request: RequestJwt){
         return this.authService.changePassword(changePasswordDto, request.user.idUser);
+    }
+
+    @Post('loginAdmin')
+    loginAdmin(@Body() loginUserDto: LoginUserDto){
+        return this.authService.loginAdmin(loginUserDto);
+    }
+
+    @Post('verifyOTP')
+    verifyOPT(@Body() verifyOTP: VerifyOtpDto){
+        return this.authService.verifyOPT(verifyOTP);
+    }
+
+    @Post('resendOTP')
+    resendOTP(@Body() resendOTP: ResendOTPDto){
+        return this.authService.resendOTP(resendOTP);
     }
 
     @Get('logout')

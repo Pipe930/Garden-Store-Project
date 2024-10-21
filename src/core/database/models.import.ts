@@ -18,6 +18,7 @@ import { Employee } from "src/modules/branch/models/employee.model";
 import { Purchase, PurchaseProduct } from "src/modules/purchase/models/purchase.model";
 import { Supplier } from "src/modules/purchase/models/supplier.model";
 import { PurchaseOrder } from "src/modules/purchase/models/purchase-order.model";
+import { UserOPTVerification } from "src/modules/users/models/userOPTVerification";
 
 export const ArrayModels: Array<any> = [
     User,
@@ -48,5 +49,6 @@ export const ArrayModels: Array<any> = [
     Supplier,
     Purchase,
     PurchaseProduct,
-    PurchaseOrder
+    PurchaseOrder,
+    UserOPTVerification
 ]

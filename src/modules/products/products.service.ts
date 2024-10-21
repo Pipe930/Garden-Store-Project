@@ -58,10 +58,8 @@ export class ProductsService {
 
     let { page, limit } = paginateDto;
 
-    if(!page || !limit){
-      page = 1
-      limit = 20
-    }
+    if(!page) page = 1;
+    if(!limit) limit = 1;
 
     const offset = (page - 1) * limit;
     const products = await Product.findAll<Product>({

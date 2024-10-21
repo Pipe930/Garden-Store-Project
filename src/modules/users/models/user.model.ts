@@ -3,6 +3,7 @@ import { Role, RoleUser } from "../../access-control/models/rol.model";
 import { RefreshToken } from "./token.model";
 import { Address, AddressUser } from "src/modules/address/models/address.model";
 import { Subscription } from "src/modules/subscriptions/models/subscription.model";
+import { UserOPTVerification } from "./userOPTVerification";
 
 @Table({
     tableName: "users",
@@ -102,6 +103,9 @@ export class User extends Model {
 
     @HasOne(() => Subscription)
     declare subscription: Subscription;
+
+    @HasOne(() => UserOPTVerification)
+    declare userOPTVerification: UserOPTVerification;
 
     @HasMany(() => AddressUser)
     declare addresses: Address[];
