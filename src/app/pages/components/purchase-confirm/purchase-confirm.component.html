@@ -1,0 +1,38 @@
+
+<div class="container-purchase">
+
+  <div class="container__header">
+    <h1 class="container__title">Su compra se a realizado y validado de forma exitosa</h1>
+    <p class="container__text">¡Gracias por confiar en nosotros!</p>
+    <i class='bx bxs-check-circle container__icon'></i>
+  </div>
+
+  <div class="container__purchase-info">
+    <div class="purchase-info__section-title">
+        <h3 class="purchase-info__text">DETALLE DEL PAGO</h3>
+    </div>
+    <div class="purchase-info__section">
+        <span class="purchase-info__text">NÚMERO DE TARJETA:</span> XXXX-XXXX-XXXX-{{transbankInfo.card_detail.card_number}}
+    </div>
+    <div class="purchase-info__section">
+        <span class="purchase-info__text">TIPO TARJETA:</span> {{ typeCard() }}
+    </div>
+    <div class="purchase-info__section">
+        <span class="purchase-info__text">FECHA:</span> {{transbankInfo.transaction_date | date: ('dd/MM/yyyy, hh:mm a')}}
+    </div>
+    <div class="purchase-info__section">
+        <span class="purchase-info__text">ORDEN DE COMPRA:</span> {{transbankInfo.buy_order}}
+    </div>
+    <div class="purchase-info__section">
+        <span class="purchase-info__text">SESSION:</span> {{transbankInfo.session_id}}
+    </div>
+    <div class="purchase-info__section">
+        <span class="purchase-info__text">MONTO:</span> ${{transbankInfo.amount | number}}
+    </div>
+    <div class="purchase-info__section">
+        <span class="purchase-info__text">ESTADO:</span> {{transbankInfo.status}}
+    </div>
+  </div>
+
+  <button [routerLink]="['/']" class="container__btn">Volver al Inicio</button>
+</div>

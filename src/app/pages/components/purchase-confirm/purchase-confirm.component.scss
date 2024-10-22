@@ -1,0 +1,54 @@
+@import '../../../../themes/variables.scss';
+
+.container-purchase{
+
+  padding: 3rem;
+
+  .container__header{
+
+    text-align: center;
+
+    .container__title{
+
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .container__icon{
+
+      margin-top: 10px;
+      font-size: 40px;
+      color: $color-success;
+    }
+  }
+
+  .container__purchase-info{
+
+    background-color: $color-light;
+    padding: 2rem;
+
+    .purchase-info__section-title{
+
+      margin-bottom: 2rem;
+    }
+
+    .purchase-info__section{
+
+      margin: 10px 0;
+    }
+  }
+
+  .container__btn{
+
+    margin-top: 1rem;
+    padding: 10px 20px;
+    color: $color-light;
+    background-color: $color-success;
+    transition: background 300ms ease-in-out;
+
+    &:hover{
+
+      background-color: $color-success-600;
+    }
+  }
+}

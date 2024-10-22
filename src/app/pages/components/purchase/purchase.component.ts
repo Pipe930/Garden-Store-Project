@@ -196,22 +196,28 @@ export class PurchaseComponent implements OnInit {
 
   public toggleDispatchShop():void {
 
-    this.voucher.address = addressObject;
-    this.displayDispatchShop = true;
-    this.displayDispatchSend = false;
-    this.voucher.branch.id_branch = "";
-
-    this.voucher.type_retirement.retirement = TypeRetirementEnum.STORE_PICKUP;
+    this.voucher.typeRetirement = TypeRetirementEnum.STORE_PICKUP;
+    this.resetDataAddress();
   }
 
   public toggleDispatchSend():void {
 
-    this.voucher.address = addressObject;
-    this.displayDispatchSend = true;
-    this.displayDispatchShop = false;
-    this.voucher.branch.id_branch = "";
+    this.voucher.typeRetirement= TypeRetirementEnum.HOME_DELIVERY;
+    this.resetDataAddress();
+  }
 
-    this.voucher.type_retirement.retirement = TypeRetirementEnum.HOME_DELIVERY;
+  private resetDataAddress(): void{
+
+    if(this.voucher.typeRetirement === TypeRetirementEnum.STORE_PICKUP){
+      this.displayDispatchSend = false;
+      this.displayDispatchShop = true;
+    } else {
+      this.displayDispatchSend = true;
+      this.displayDispatchShop = false;
+    }
+
+    this.voucher.address = addressObject;
+    this.voucher.idBranch = 0;
   }
 
   public toggleFormAddress():void {
@@ -223,7 +229,7 @@ export class PurchaseComponent implements OnInit {
 
     const element = event.target as HTMLInputElement;
 
-    this.voucher.type_person.selected = element.value;
+    this.voucher.typePerson = element.value;
 
   }
 
@@ -231,27 +237,24 @@ export class PurchaseComponent implements OnInit {
 
     const element = event.target as HTMLSelectElement;
 
-    this.voucher.branch.id_branch = element.value;
+    this.voucher.idBranch = parseInt(element.value);
   }
 
   public selectPayment(event: Event):void {
 
     const element = event.target as HTMLInputElement;
 
-    const payment = {
-      payment: element.value,
-    }
-    this.voucher.type_pay = payment;
+    this.voucher.typePay = element.value;
   }
 
   public selectedAddress(address: Address):void{
 
-    this.voucher.address = address;
+    this.voucher.address= address;
   }
 
   public continuePay():void{
 
-    if((this.voucher.address.address.name !== "" || this.voucher.branch.id_branch !== "") && this.voucher.type_person.selected !== ""){
+    if((this.voucher.address.address.addressName !== "" || this.voucher.idBranch !== 0) && this.voucher.typePerson !== ""){
 
       this.isSelectAddress = false;
       this.isSelectPay = true;
@@ -264,9 +267,9 @@ export class PurchaseComponent implements OnInit {
 
   public createPay():void {
 
-    if((this.voucher.address.address.addressName !== "" || this.voucher.branch.id_branch !== "") &&
-      this.voucher.type_person.selected !== "" &&
-      this.voucher.type_pay.payment !== ""){
+    if((this.voucher.address.address.addressName !== "" || this.voucher.idBranch !== 0) &&
+      this.voucher.typePerson !== "" &&
+      this.voucher.typePay !== ""){
 
         let tokenUser = this._sessionService.getSession()?.access;
         let arrayTokenUser = tokenUser?.split(".");
@@ -282,6 +285,9 @@ export class PurchaseComponent implements OnInit {
 
         this._transbankService.createTransationTransbank(transation).subscribe(result => {
 
+          this.voucher.totalPrice = this.cart().priceTotal;
+          this.voucher.productsQuantity = this.cart().productsTotal;
+          this.voucher.discountApplied = this.cart().priceTotalDiscount;
           localStorage.setItem("voucher", JSON.stringify(this.voucher));
           let form = document.createElement("form");
           form.method = "POST";

@@ -1,12 +1,5 @@
 import { Address } from "./address";
 
-export interface CreatePurchase {
-
-  withdrawal: string;
-  address?: number;
-  branch?: number;
-}
-
 export interface Purchase {
 
   createAt: Date;
@@ -41,13 +34,13 @@ export enum TypeRetirementEnum {
   HOME_DELIVERY = 'A DOMICILIO'
 }
 
-export const enum TypeStatusTransbankEnum {
+export enum TypeStatusTransbankEnum {
 
   AUTHORIZED = 'AUTHORIZED',
   FAILED = 'FAILED'
 }
 
-export const enum TypePaimentEnum {
+export enum TypePaimentEnum {
   DEBIT_CARD = 'debit-card',
   CREDIT_CARD = 'credit-card',
   MARKET_PAYMENT = 'market-payment'
@@ -99,30 +92,22 @@ export interface ResponseConfirmTransbank{
   data: ConfirmTransbank
 }
 
-type TypePerson = {
-
-  selected: string;
-}
-
-type TypeRetirement = {
-  retirement: string;
-}
-
-type TypePay = {
-  payment: string;
-}
-
-type TypeBranch = {
-  id_branch: string;
-}
-
 export interface Voucher {
 
   address: Address;
-  type_person: TypePerson;
-  type_retirement: TypeRetirement;
-  type_pay: TypePay;
-  branch: TypeBranch;
+  typePerson: string;
+  typeRetirement: string;
+  typePay: string;
+  idBranch: number;
+  totalPrice: number;
+  productsQuantity: number;
+  discountApplied: number;
+}
+
+export interface CreateVoucher {
+  productsQuantity: number;
+  priceTotal: number;
+  discountApplied: number;
 }
 
 
@@ -143,18 +128,13 @@ export const VoucherObject: Voucher = {
     idAddressUser: 0,
     idUser: 0
   },
-  type_person: {
-    selected: ""
-  },
-  type_retirement: {
-    retirement: ""
-  },
-  type_pay: {
-    payment: ""
-  },
-  branch: {
-    id_branch: ""
-  }
+  typePerson: "",
+  typeRetirement: "",
+  typePay: "",
+  idBranch: 0,
+  productsQuantity: 0,
+  totalPrice: 0,
+  discountApplied: 0
 }
 
 export const TransbankInfo: ConfirmTransbank = {

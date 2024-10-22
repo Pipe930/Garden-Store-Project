@@ -28,15 +28,16 @@
         <div class="description-product__info">
           <p>Por {{productVar.brand}}</p>
 
-          @if(productVar.offer){
-            <div class="description-product__discount-percentage">
-              <p class="description-product__percentage">{{productVar.offer.discount}}%</p>
-            </div>
-          }
           <div class="description-product__prices">
+            @if(productVar.offer){
+              <div class="description-product__discount-percentage">
+                <p class="description-product__percentage">{{productVar.offer.discount}}%</p>
+              </div>
+            }
 
             @if(!productVar.offer && productVar.stock >= quantityVar){
               <p class="prices__price">$ {{productVar.price | number}}</p>
+            } @else {
               <p class="prices__price"><s>$ {{productVar.price | number}}</s></p>
             }
             <p class="prices__text">Precio de Referencia</p>
@@ -45,8 +46,6 @@
               <p class="prices__price">$ {{productVar.priceDiscount | number}}</p>
               <p class="prices__text">Precio de Descuento</p>
             }
-
-            <p class="prices__price">$ {{productVar.price | number}}</p>
           </div>
           @if (productVar.stock < quantityVar) {
             <p class="prices__aviable">No Disponible</p>
