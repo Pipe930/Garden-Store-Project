@@ -40,10 +40,7 @@ export class Address extends Model<Address> {
     @Column({
         type: DataType.STRING(10),
         allowNull: true,
-        field: "num_department",
-        validate: {
-            notEmpty: false
-        }
+        field: "num_department"
     })
     declare numDepartment: string;
 

@@ -108,6 +108,8 @@ export class AddressService {
                 data: address
             }
         } catch (error) {
+
+            console.log(error);
             throw new InternalServerErrorException("Error no se pudo crear la dirección");
         }
     }

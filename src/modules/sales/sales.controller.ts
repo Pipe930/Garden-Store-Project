@@ -10,7 +10,7 @@ import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
 export class SalesController {
   constructor(private readonly salesService: SalesService) {}
 
-  @Post('')
+  @Post()
   @UseGuards(AuthGuard)
   create(@Body() createSaleDto: CreateSaleDto, @Req() request: RequestJwt) {
     return this.salesService.create(createSaleDto, request.user.idUser);

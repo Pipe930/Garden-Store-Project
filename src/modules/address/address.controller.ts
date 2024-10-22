@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Req, Use
 import { AddressService } from './address.service';
 import { AuthGuard } from 'src/core/guards/auth.guard';
 import { CreateAddressDto } from './dto/create-address.dto';
+import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
 
 @Controller('address')
 export class AddressController {
@@ -34,25 +35,25 @@ export class AddressController {
 
     @Post('user')
     @UseGuards(AuthGuard)
-    createAddress(@Body() createAddressDto: CreateAddressDto, @Req() req: any) {
-        return this.addressService.createAddressUser(createAddressDto, req.user.idUser);
+    createAddress(@Body() createAddressDto: CreateAddressDto, @Req() request: RequestJwt) {
+        return this.addressService.createAddressUser(createAddressDto, request.user.idUser);
     }
 
     @Get('user')
     @UseGuards(AuthGuard)
-    findAllAddressesUser(@Req() req: any) {
-        return this.addressService.findAllAddressUser(req.user.idUser);
+    findAllAddressesUser(@Req() request: RequestJwt) {
+        return this.addressService.findAllAddressUser(request.user.idUser);
     }
 
     @Put('user/:idAddressUser')
     @UseGuards(AuthGuard)
-    updateAddressUser(@Body() createAddressDto: CreateAddressDto, @Param('idAddressUser', ParseIntPipe) idAddressUser: number, @Req() req: any) {
-        return this.addressService.updateAddressUser( idAddressUser, req.user.idUser, createAddressDto);
+    updateAddressUser(@Body() createAddressDto: CreateAddressDto, @Param('idAddressUser', ParseIntPipe) idAddressUser: number, @Req() request: RequestJwt) {
+        return this.addressService.updateAddressUser( idAddressUser, request.user.idUser, createAddressDto);
     }
 
     @Delete('user/:idAddressUser')
     @UseGuards(AuthGuard)
-    deleteAddressUser(@Param('idAddressUser', ParseIntPipe) idAddressUser: number, @Req() req: any) {
-        return this.addressService.deleteAddressUser(idAddressUser, req.user.idUser);
+    deleteAddressUser(@Param('idAddressUser', ParseIntPipe) idAddressUser: number, @Req() request: RequestJwt) {
+        return this.addressService.deleteAddressUser(idAddressUser, request.user.idUser);
     }
 }

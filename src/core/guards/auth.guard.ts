@@ -28,12 +28,8 @@ export class AuthGuard implements CanActivate {
         }
       );
 
-      const user = await User.findByPk<User>(payload.idUser);
-
-      if(!user) throw new Error;
-
       request['user'] = payload;
-    } catch {
+    } catch(error) {
       throw new UnauthorizedException("El token ingresado no es valido");
     }
 
