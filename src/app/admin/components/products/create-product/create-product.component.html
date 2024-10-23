@@ -7,7 +7,7 @@
 </div>
 
 <div class="container__container-form">
-  <form action="" class="container-form__form" [formGroup]="formProduct" (ngSubmit)="createProduct()">
+  <form novalidate class="container-form__form" [formGroup]="formProduct" (ngSubmit)="createProduct()">
 
     @if(alertMessageVar){
       <div class="alert alert-danger alert-dismissible fade show" role="alert">

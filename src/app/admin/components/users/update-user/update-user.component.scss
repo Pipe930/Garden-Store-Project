@@ -1,0 +1,30 @@
+.container__container-title{
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.container__container-form{
+  margin-top: 2rem;
+
+  .container-form__form{
+
+    .form__btn-create{
+
+      padding: 0.6rem 1rem;
+      transition: background .3s ease;
+    }
+  }
+
+  .information-aditional{
+
+    .container__header{
+
+      .header__title{
+
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}

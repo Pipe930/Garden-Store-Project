@@ -123,7 +123,7 @@
 
                 <div class="accordion-right__map"></div>
 
-                <form [formGroup]="formCreateAddress" (ngSubmit)="createAddress()" class="accordion-right__form">
+                <form novalidate [formGroup]="formCreateAddress" (ngSubmit)="createAddress()" class="accordion-right__form">
 
                   <fieldset class="mb-3">
                     <label for="nameAddress" class="form-label">Nombre de la Dirección</label>

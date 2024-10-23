@@ -8,7 +8,7 @@
 <div class="container__container-form">
 
 
-  <form action="" class="container-form__form" [formGroup]="formCategory" (ngSubmit)="createCategory()">
+  <form novalidate class="container-form__form" [formGroup]="formCategory" (ngSubmit)="createCategory()">
 
     @if(alertMessageVar){
       <div class="alert alert-danger alert-dismissible fade show" role="alert">

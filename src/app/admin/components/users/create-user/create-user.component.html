@@ -1,0 +1,126 @@
+@let alertMessageVar = alerMessage();
+
+<div class="container__container-title">
+  <h2 class="container__container-title">Crear Usuario</h2>
+  <button class="container__btn btn btn-primary" [routerLink]="['/admin/users/list']">Volver</button>
+</div>
+
+<div class="container__container-form">
+  <form novalidate class="container-form__form" [formGroup]="createUserForm" (ngSubmit)="createUser()">
+
+    <div class="container-fluid">
+      @if(alertMessageVar){
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Error!</strong> El correo o telefono ingresado ya existe
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      }
+
+      <div class="row">
+        <div class="mb-3 col">
+          <label for="firstNameInput" class="form-label">Nombre</label>
+          <input type="text" class="form-control form__input" id="firstNameInput" formControlName="firstName" [ngClass]="{
+            'is-invalid': firstName.invalid && (firstName.dirty || firstName.touched)
+          }">
+          @if(firstName.getError("required")){
+            <span class="invalid-feedback">Este campo es requerido</span>
+          }
+          @if(firstName.getError("minlength")){
+            <span class="invalid-feedback">Tiene que tener un minimo de 3 caracteres</span>
+          }
+          @if(firstName.getError("maxlength")){
+            <span class="invalid-feedback">Tiene que tener un maximo de 20 caracteres</span>
+          }
+        </div>
+        <div class="mb-3 col">
+          <label for="lastNameInput" class="form-label">Apellido</label>
+          <input type="text" class="form-control form__input" id="lastNameInput" formControlName="lastName" [ngClass]="{
+            'is-invalid': lastName.invalid && (lastName.dirty || lastName.touched)
+          }">
+          @if(lastName.getError("required")){
+            <span class="invalid-feedback">Este campo es requerido</span>
+          }
+          @if(lastName.getError("minlength")){
+            <span class="invalid-feedback">Tiene que tener un minimo de 3 caracteres</span>
+          }
+          @if(lastName.getError("maxlength")){
+            <span class="invalid-feedback">Tiene que tener un maximo de 20 caracteres</span>
+          }
+        </div>
+      </div>
+      <div class="mb-3 col">
+        <label for="emailInput" class="form-label">Email</label>
+        <input type="email" class="form-control form__input" id="emailInput" formControlName="email" [ngClass]="{
+          'is-invalid': email.invalid && (email.dirty || email.touched)
+        }">
+        @if(email.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(email.getError("email")){
+          <span class="invalid-feedback">Tiene que ingresar un correo valido</span>
+        }
+        @if(email.getError("maxlength")){
+          <span class="invalid-feedback">Tiene que tener un maximo de 20 caracteres</span>
+        }
+      </div>
+      <div class="mb-3 col">
+        <label for="phoneInput" class="form-label">Telefono</label>
+        <div class="input-group">
+          <span class="input-group-text">+569</span>
+          <input type="text" class="form-control form__input" id="phoneInput" formControlName="phone" [ngClass]="{
+            'is-invalid': phone.invalid && (phone.dirty || phone.touched)
+          }">
+          @if(phone.getError("required")){
+            <span class="invalid-feedback">Este campo es requerido</span>
+          }
+          @if(phone.getError("pattern")){
+            <span class="invalid-feedback">El numero de telefono no es valido</span>
+          }
+        </div>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="flexCheckDefault" formControlName="active">
+        <label class="form-check-label" for="flexCheckDefault">
+          Cuenta Activa
+        </label>
+        <p class="form-text">Esta opción permite dejar las cuentas activadas o no de los usuarios</p>
+      </div>
+      <div class="mb-3 col">
+        <label for="passwordInput" class="form-label">Contraseña</label>
+        <input type="password" class="form-control form__input" id="passwordInput" formControlName="password" [ngClass]="{
+          'is-invalid': password.invalid && (password.dirty || password.touched) || createUserForm.hasError('passordsDontMatch')
+        }">
+        @if(password.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(password.getError("minlength")){
+          <span class="invalid-feedback">Tiene que se minimo 6 caracteres</span>
+        }
+        @if(password.getError("maxlength")){
+          <span class="invalid-feedback">Tiene que tener un maximo de 50 caracteres</span>
+        }
+      </div>
+      <div class="mb-3 col">
+        <label for="rePasswordInput" class="form-label">Confirmar Contraseña</label>
+        <input type="password" class="form-control form__input" id="rePasswordInput" formControlName="rePassword" [ngClass]="{
+          'is-invalid': rePassword.invalid && (rePassword.dirty || rePassword.touched) || createUserForm.hasError('passordsDontMatch')
+        }">
+        @if(rePassword.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(rePassword.getError("minlength")){
+          <span class="invalid-feedback">Tiene que se minimo 6 caracteres</span>
+        }
+        @if(rePassword.getError("maxlength")){
+          <span class="invalid-feedback">Tiene que tener un maximo de 50 caracteres</span>
+        }
+        @if(createUserForm.hasError('passordsDontMatch')) {
+          <span class="invalid-feedback">Las contraseñas no coinciden</span>
+        }
+      </div>
+      <button type="submit" class="form__btn-create btn btn-success" [disabled]="createUserForm.invalid">
+        Guardar
+      </button>
+    </div>
+  </form>
+</div>

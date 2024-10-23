@@ -4,7 +4,7 @@
 </div>
 
 <div class="container__container-form">
-  <form action="" class="container-form__form" [formGroup]="formUpdateCategory" (ngSubmit)="updateCategory()">
+  <form novalidate class="container-form__form" [formGroup]="formUpdateCategory" (ngSubmit)="updateCategory()">
     <div class="mb-3">
       <label for="nameInput" class="form-label">Nombre Categoria</label>
       <input type="text" class="form-control form__input" id="nameInput" formControlName="name" [ngClass]="{

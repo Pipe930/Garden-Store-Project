@@ -28,7 +28,6 @@ import { HeaderComponent } from '../shared/header/header.component';
         height: 100%;
         min-height: 100vh;
         margin-left: 5rem;
-        z-index: 0;
         position: relative;
         top: 0;
         transition: all .3s ease;

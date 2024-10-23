@@ -7,7 +7,7 @@
 </div>
 
 <div class="container__container-form">
-  <form action="" class="container-form__form" [formGroup]="updateProductForm" (ngSubmit)="updateProduct()">
+  <form novalidate class="container-form__form" [formGroup]="updateProductForm" (ngSubmit)="updateProduct()">
     <div class="mb-3">
       <label for="titleInput" class="form-label">Titulo</label>
       <input type="text" class="form-control form__input" id="titleInput" formControlName="title" [ngClass]="{

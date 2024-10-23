@@ -1,0 +1,145 @@
+@let userVar = user();
+
+<div class="container__container-title">
+  <h2 class="container__container-title">Actualizar Usuario</h2>
+  <button class="container__btn btn btn-primary" [routerLink]="['/admin/users/list']">Volver</button>
+</div>
+
+<div class="container__container-form">
+  <form novalidate class="container-form__form" [formGroup]="updateUserForm" (ngSubmit)="updateUser()">
+
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="mb-3 col">
+          <label for="firstNameInput" class="form-label">Nombre</label>
+          <input type="text" class="form-control form__input" id="firstNameInput" formControlName="firstName" [ngClass]="{
+            'is-invalid': firstName.invalid && (firstName.dirty || firstName.touched)
+          }">
+          @if(firstName.getError("required")){
+            <span class="invalid-feedback">Este campo es requerido</span>
+          }
+          @if(firstName.getError("minlength")){
+            <span class="invalid-feedback">Tiene que tener un minimo de 3 caracteres</span>
+          }
+          @if(firstName.getError("maxlength")){
+            <span class="invalid-feedback">Tiene que tener un maximo de 20 caracteres</span>
+          }
+        </div>
+        <div class="mb-3 col">
+          <label for="lastNameInput" class="form-label">Apellido</label>
+          <input type="text" class="form-control form__input" id="lastNameInput" formControlName="lastName" [ngClass]="{
+            'is-invalid': lastName.invalid && (lastName.dirty || lastName.touched)
+          }">
+          @if(lastName.getError("required")){
+            <span class="invalid-feedback">Este campo es requerido</span>
+          }
+          @if(lastName.getError("minlength")){
+            <span class="invalid-feedback">Tiene que tener un minimo de 3 caracteres</span>
+          }
+          @if(lastName.getError("maxlength")){
+            <span class="invalid-feedback">Tiene que tener un maximo de 20 caracteres</span>
+          }
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="emailInput" class="form-label">Email</label>
+        <input type="email" class="form-control form__input" id="emailInput" formControlName="email" [ngClass]="{
+          'is-invalid': email.invalid && (email.dirty || email.touched)
+        }">
+        @if(email.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(email.getError("email")){
+          <span class="invalid-feedback">Tiene que ingresar un correo valido</span>
+        }
+        @if(email.getError("maxlength")){
+          <span class="invalid-feedback">Tiene que tener un maximo de 20 caracteres</span>
+        }
+      </div>
+      <div class="mb-3">
+        <label for="phoneInput" class="form-label">Telefono</label>
+        <div class="input-group">
+          <span class="input-group-text">+569</span>
+          <input type="text" class="form-control form__input" id="phoneInput" formControlName="phone" [ngClass]="{
+            'is-invalid': phone.invalid && (phone.dirty || phone.touched)
+          }">
+          @if(phone.getError("required")){
+            <span class="invalid-feedback">Este campo es requerido</span>
+          }
+          @if(phone.getError("pattern")){
+            <span class="invalid-feedback">El numero de telefono no es valido</span>
+          }
+        </div>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="flexCheckDefault" formControlName="active">
+        <label class="form-check-label" for="flexCheckDefault">
+          Cuenta Activa
+        </label>
+        <p class="form-text">Esta opción permite dejar las cuentas activadas o no de los usuarios</p>
+      </div>
+
+      <div class="mb-3">
+        <h5>Roles del usuario</h5>
+        <ul class="list-group">
+          @for (role of userVar.rolesUser; track $index) {
+            <li class="list-group-item">{{role.name | titlecase}}</li>
+          } @empty {
+            <li class="list-group-item">No tiene roles asignados</li>
+          }
+        </ul>
+      </div>
+      <button type="submit" class="form__btn-create btn btn-success" [disabled]="updateUserForm.invalid">
+        Guardar
+      </button>
+    </div>
+  </form>
+
+  <div class="container-fluid information-aditional">
+
+    <header class="container__header">
+
+      <h4 class="header__title">Información Adicional</h4>
+    </header>
+
+    <section class="container__content">
+
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Ultima Sesión</div>
+
+            @if(userVar.lastLogin){
+              {{userVar.lastLogin | date: 'dd/MM/yyyy HH:mm'}}
+            } @else {
+              No ha iniciado sesión
+            }
+          </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Fecha Creación</div>
+            {{userVar.createdAt | date: 'dd/MM/yyyy HH:mm'}}
+          </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Fecha Actualización</div>
+            {{userVar.updatedAt | date: 'dd/MM/yyyy HH:mm'}}
+          </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Suscripción</div>
+            @if(userVar.subscription){
+              {{userVar.subscription.status}}
+            } @else {
+              No tiene ninguna suscripción
+            }
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
+</div>

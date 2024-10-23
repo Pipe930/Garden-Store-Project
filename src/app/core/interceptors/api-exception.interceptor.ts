@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { catchError, EMPTY, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { Router } from '@angular/router';
-import { urlsAuthorization, validUrl } from '../utils/urls-api';
+import { validUrl } from '../utils/urls-api';
 
 export const apiExceptionInterceptor: HttpInterceptorFn = (req, next) => {
 
