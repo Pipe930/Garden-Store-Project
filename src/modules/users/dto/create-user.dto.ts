@@ -1,22 +1,25 @@
 import { Transform } from "class-transformer";
-import { IsEmail, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 
 export class CreateUserDto {
 
     @IsString()
     @IsOptional()
-    readonly first_name?: string;
+    readonly firstName?: string;
 
     @IsString()
     @IsOptional()
-    readonly last_name?: string;
+    readonly lastName?: string;
 
     @IsString()
     @IsEmail()
     @MaxLength(255)
     @IsNotEmpty()
     readonly email: string;
+
+    @IsBoolean()
+    readonly active: boolean;
 
     @IsString()
     @MaxLength(255)

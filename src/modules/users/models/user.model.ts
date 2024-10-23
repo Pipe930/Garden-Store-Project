@@ -4,13 +4,13 @@ import { RefreshToken } from "./token.model";
 import { Address, AddressUser } from "src/modules/address/models/address.model";
 import { Subscription } from "src/modules/subscriptions/models/subscription.model";
 import { UserOPTVerification } from "./userOPTVerification";
+import { Sale } from "src/modules/sales/models/sale.model";
 
 @Table({
     tableName: "users",
     modelName: "User",
     timestamps: true,
-    paranoid: true,
-    deletedAt: true
+    paranoid: true
 })
 export class User extends Model {
 
@@ -106,6 +106,9 @@ export class User extends Model {
 
     @HasOne(() => UserOPTVerification)
     declare userOPTVerification: UserOPTVerification;
+
+    @HasMany(() => Sale)
+    declare sales: Sale[];
 
     @HasMany(() => AddressUser)
     declare addresses: Address[];
