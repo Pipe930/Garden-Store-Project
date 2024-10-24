@@ -11,8 +11,8 @@ export class LoginUserDto {
     readonly email: string;
 
     @IsString()
-    @MaxLength(255)
-    @MinLength(8)
+    @MaxLength(50)
+    @MinLength(6)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
     readonly password: string;

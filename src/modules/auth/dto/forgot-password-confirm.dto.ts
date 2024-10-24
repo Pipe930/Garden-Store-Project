@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsNotEmpty, IsString, IsUUID, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
 
 export class ConfirmForgotPasswordDto {
 
@@ -15,15 +15,15 @@ export class ConfirmForgotPasswordDto {
     readonly uuid: string;
 
     @IsString()
-    @MinLength(8)
-    @MaxLength(255)
+    @MinLength(6)
+    @MaxLength(50)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
     readonly newPassword: string;
 
     @IsString()
-    @MinLength(8)
-    @MaxLength(255)
+    @MinLength(6)
+    @MaxLength(50)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
     readonly newRePassword: string;

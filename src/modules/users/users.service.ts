@@ -78,7 +78,6 @@ export class UsersService {
       where: {
         email
       },
-      attributes: ["idUser", "firstName", "lastName", "email", "phone", "createdAt", "updatedAt", "lastLogin", "active"],
       include: [{
         model: Role,
         attributes: ["idRole", "name"]

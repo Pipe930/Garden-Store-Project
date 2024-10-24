@@ -69,7 +69,7 @@ export class AuthController {
 
     @Post('verifyOTP')
     verifyOPT(@Body() verifyOTP: VerifyOtpDto){
-        return this.authService.verifyOPT(verifyOTP);
+        return this.authService.verifyOTP(verifyOTP);
     }
 
     @Post('resendOTP')

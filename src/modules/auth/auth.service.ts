@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
@@ -116,12 +116,12 @@ export class AuthService {
 
         if(!user || !this.passwordService.checkPassword(password, user.password)) throw new UnauthorizedException("Las credeciales no son validas");
         if(!user.active) throw new UnauthorizedException("La cuenta no esta activada");
-        if(!this.userRoleValid(user, "administrador")) throw new UnauthorizedException("El usuario no tiene permisos de administrador");
+        if(!this.userRoleValid(user, "administrador")) throw new ForbiddenException("El usuario no tiene permisos de administrador");
 
         return this.verifyOPTVerifyEmail(user);
     }
 
-    async verifyOPT(verifyOTP: VerifyOtpDto): Promise<ResponseData>{
+    async verifyOTP(verifyOTP: VerifyOtpDto): Promise<ResponseData>{
         
         const { otp, idUser } = verifyOTP;
 
@@ -137,7 +137,14 @@ export class AuthService {
 
         await OTPfind.destroy();
 
-        const user = await User.findByPk<User>(idUser);
+        const user = await User.findByPk<User>(idUser, {
+            include: [
+                {
+                    model: Role,
+                    attributes: ["name"]
+                }
+            ]
+        });
 
         user.lastLogin = new Date();
         await user.save();
@@ -361,8 +368,6 @@ export class AuthService {
     
             await this.sendEmailService.sendEmailOTP(user.email, otp);    
         } catch (error) {
-
-            console.log(error);
             throw new InternalServerErrorException("Error al enviar el correo");
         }
         return {
