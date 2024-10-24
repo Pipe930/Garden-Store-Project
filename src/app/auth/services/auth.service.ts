@@ -3,9 +3,10 @@ import { inject, Injectable } from '@angular/core';
 import { FormRegister, RegisterResponse } from '@auth/interfaces/register';
 import { map, Observable } from 'rxjs';
 import { environment } from '@env/environment.development';
-import { FormLogin, LoginResponse } from '@auth/interfaces/login';
+import { FormLogin, LoginAdminResponse, LoginResponse } from '@auth/interfaces/login';
 import { ForgotPasswordResponse, FormForgotPassword, FormForgotPasswordConfirm } from '@auth/interfaces/forgot-password';
 import { ActivateAccountInterface, ResponseActivateAccount } from '@auth/interfaces/activate';
+import { VerifyOTPInterface } from '@admin/interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,14 @@ export class AuthService {
         return response;
       })
     );
+  }
+
+  public loginAdmin(formLogin: FormLogin): Observable<LoginAdminResponse>{
+    return this._http.post<LoginAdminResponse>(`${this.urlApi}/loginAdmin`, formLogin);
+  }
+
+  public verifyOTP(verifyOtp: VerifyOTPInterface):Observable<any>{
+    return this._http.post<any>(`${this.urlApi}/verifyOTP`, verifyOtp);
   }
 
   public forgotPassword(formForgotPassword: FormForgotPassword): Observable<ForgotPasswordResponse>{

@@ -13,5 +13,9 @@ export const routes: Routes = [
   {
     path: "admin",
     loadChildren: () => import("./admin/admin.routes").then(m => m.routesAdmin)
+  },
+  {
+    path: "admin/loginAdmin",
+    loadComponent: () => import("./admin/components/login-admin/login-admin.component").then(c => c.LoginAdminComponent)
   }
 ];

@@ -40,6 +40,12 @@ export interface CreateUserForm {
   rePassword: string;
 }
 
+export interface VerifyOTPInterface {
+
+  otp: string;
+  idUser: number;
+}
+
 export interface UpdateUserForm {
   firstName: string;
   lastName: string;
