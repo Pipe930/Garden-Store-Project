@@ -190,11 +190,18 @@ export class ProductsService {
     if(!title) title = "";
     if(!category) category = 0;
 
+    const whereCondition: any = {};
+
+    if (title !== "") {
+      whereCondition.title = { [Op.iLike]: `%${title}%` };
+    }
+
+    if (category !== 0) {
+      whereCondition.idCategory = category;
+    }
+
     const products = await Product.findAll<Product>(
-      { where: { [Op.or]: {
-        title: { [Op.iLike]: `%${title}%` },
-        idCategory: category
-      } },
+      { where: whereCondition,
       include: [
         {
           model: ImagesProduct,

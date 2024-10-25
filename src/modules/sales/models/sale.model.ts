@@ -3,12 +3,7 @@ import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table 
 import { Product } from "src/modules/products/models/product.model";
 import { User } from "src/modules/users/models/user.model";
 import { Shipping } from "src/modules/shippings/models/shipping.model";
-
-export enum TypeStatus {
-    PENDING = 'PENDIENTE',
-    PAID = 'PAGADO',
-    CANCELED = 'CANCELADO'
-}
+import { StatusSaleEnum } from "src/core/enums/statusSale.enum";
 
 @Table({
     tableName: 'sales',
@@ -76,7 +71,7 @@ export class Sale extends Model {
     declare productsQuantity: number;
 
     @Column({
-        type: DataType.ENUM(TypeStatus.PENDING, TypeStatus.PAID, TypeStatus.CANCELED),
+        type: DataType.ENUM(...Object.values(StatusSaleEnum)),
         allowNull: false
     })
     declare status: string;

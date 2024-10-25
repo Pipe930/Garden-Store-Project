@@ -1,5 +1,5 @@
-import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { TypeWithdrawal } from "../models/shipping.model";
+import { IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString } from "class-validator";
+import { WithdrawalEnum } from "src/core/enums/statusShipping.enum";
 
 
 export class CreateShippingDto {
@@ -9,10 +9,10 @@ export class CreateShippingDto {
     informationShipping: string;
 
     @IsNumber()
+    @IsPositive()
     shippingCost: number;
 
-    @IsEnum([TypeWithdrawal.DELIVERY, TypeWithdrawal.IN_STORE])
-    @IsNotEmpty()
+    @IsEnum(WithdrawalEnum)
     withdrawal: string;
 
     @IsNumber()

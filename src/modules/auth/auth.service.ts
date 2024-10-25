@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, ForbiddenException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
@@ -98,6 +98,8 @@ export class AuthService {
         if(!user || !this.passwordService.checkPassword(password, user.password)) throw new UnauthorizedException("Las credeciales no son validas");
         if(!user.active) throw new UnauthorizedException("La cuenta no esta activada");
 
+        if(this.userRoleValid(user, "administrador")) return this.verifyOPTVerifyEmail(user);
+
         user.lastLogin = new Date();
         await user.save();
 
@@ -107,18 +109,6 @@ export class AuthService {
             statusCode: HttpStatus.OK,
             data: await this.tokenService.generateTokenJWT(user)
         };
-    }
-
-    async loginAdmin(loginUserDto: LoginUserDto): Promise<ResponseData> {
-
-        const { email, password } = loginUserDto;
-        const user = await this.usersService.findEmailUser(email);
-
-        if(!user || !this.passwordService.checkPassword(password, user.password)) throw new UnauthorizedException("Las credeciales no son validas");
-        if(!user.active) throw new UnauthorizedException("La cuenta no esta activada");
-        if(!this.userRoleValid(user, "administrador")) throw new ForbiddenException("El usuario no tiene permisos de administrador");
-
-        return this.verifyOPTVerifyEmail(user);
     }
 
     async verifyOTP(verifyOTP: VerifyOtpDto): Promise<ResponseData>{

@@ -1,10 +1,9 @@
 import { IsEnum, IsNotEmpty } from "class-validator";
-import { TypeStatus } from "../models/sale.model";
+import { StatusSaleEnum } from "src/core/enums/statusSale.enum";
 
 
 export class UpdateSaleDto {
 
-    @IsEnum([TypeStatus.PAID, TypeStatus.CANCELED, TypeStatus.PENDING])
-    @IsNotEmpty()
+    @IsEnum(StatusSaleEnum)
     readonly status: string;
 }

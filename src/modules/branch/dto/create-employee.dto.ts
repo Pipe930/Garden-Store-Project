@@ -1,5 +1,6 @@
-import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString, MaxLength, Min, MinLength } from "class-validator";
-import { TypeGender } from "../models/employee.model";
+import { Transform } from "class-transformer";
+import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString, Matches, MaxLength, Min, MinLength } from "class-validator";
+import { GenderEnum } from "src/core/enums/gender.enum";
 
 export class CreateEmployeeDto {
 
@@ -23,11 +24,13 @@ export class CreateEmployeeDto {
 
     @IsString()
     @IsNotEmpty()
+    @Transform(({value}) => value.trim())
+    @Matches(/^\+56\d{9}$/, { message: "El numero de telefono no es valido" })
     @MinLength(12)
     @MaxLength(12)
     readonly phone: string;
 
-    @IsEnum([TypeGender.FEMALE, TypeGender.MALE, TypeGender.OTHER])
+    @IsEnum(GenderEnum)
     @IsNotEmpty()
     readonly gender: string;
 

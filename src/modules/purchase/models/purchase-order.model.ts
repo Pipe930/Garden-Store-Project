@@ -1,13 +1,7 @@
 import { Column, CreatedAt, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Purchase } from "./purchase.model";
 import { Branch } from "src/modules/branch/models/branch.model";
-
-export enum TypeStatusOrder {
-    PREPARATION = 'en preparacion',
-    DELIVERED = 'entregado',
-    CANCELED = 'cancelado',
-    SHIPPING = 'en envio'
-}
+import { StatusOrderEnum } from "src/core/enums/statusOrder.enum";
 
 @Table({
     tableName: 'purchase_orders',
@@ -28,9 +22,9 @@ export class PurchaseOrder extends Model {
     declare createdAt: Date;
 
     @Column({
-        type: DataType.ENUM(TypeStatusOrder.PREPARATION, TypeStatusOrder.DELIVERED, TypeStatusOrder.CANCELED, TypeStatusOrder.SHIPPING),
+        type: DataType.ENUM(...Object.values(StatusOrderEnum)),
         allowNull: false,
-        defaultValue: TypeStatusOrder.PREPARATION
+        defaultValue: StatusOrderEnum.PREPARATION
     })
     declare status: string;
 

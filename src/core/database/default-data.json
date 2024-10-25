@@ -44,286 +44,192 @@
     ],
     "roles": [
         {
-            "name": "cliente",
-            "description": "rol para todos los usuarios que deseen comprar productos"
+            "name": "cliente"
         },
         {
-            "name": "administrador",
-            "description": "rol para todos los usuarios que deseen administrar la tienda"
+            "name": "administrador"
         },
         {
-            "name": "vendedor",
-            "description": "rol para todos los usuarios que deseen vender productos"
+            "name": "vendedor"
         },
         {
-            "name": "empleado",
-            "description": "rol para todos los usuarios que esten asignados a un area de trabajo"
+            "name": "empleado"
         },
         {
-            "name": "proveedor",
-            "description": "rol para todos los usuarios que deseen vender productos a las sucursales"
+            "name": "proveedor"
         },
         {
-            "name": "staff",
-            "description": "rol para todos los usuarios que deseen administrar la tienda"
+            "name": "staff"
         }
     ],
     "permissions": [
 
         {
-            "name": "crear categorias",
-            "recourse": "categoria",
-            "actions": "CREATE"
+            "name": "gestionar categorias",
+            "resource": "categoria",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+            ]
         },
         {
-            "name": "leer categorias",
-            "recourse": "categoria",
-            "actions": "READ"
+            "name": "gestionar roles",
+            "resource": "rol",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+            ]
         },
         {
-            "name": "actualizar categorias",
-            "recourse": "categoria",
-            "actions": "UPDATE"
+            "name": "getionar permisos",
+            "resource": "permiso",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+            ]
         },
         {
-            "name": "eliminar categorias",
-            "recourse": "categoria",
-            "actions": "DELETE"
+            "name": "gestionar usuarios",
+            "resource": "usuario",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+            ]
         },
         {
-            "name": "crear roles",
-            "recourse": "rol",
-            "actions": "CREATE"
+            "name": "gestionar productos",
+            "resource": "producto",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+            ]
         },
         {
-            "name": "leer roles",
-            "recourse": "rol",
-            "actions": "READ"
+            "name": "gestionar ventas",
+            "resource": "venta",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE"
+            ]
         },
         {
-            "name": "actualizar roles",
-            "recourse": "rol",
-            "actions": "UPDATE"
+            "name": "gestionar compras clientes",
+            "resource": "compra",
+            "actions": [
+                "CREATE",
+                "READ"
+            ]
         },
         {
-            "name": "eliminar roles",
-            "recourse": "rol",
-            "actions": "DELETE"
+            "name": "gestionar compras",
+            "resource": "compra",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE"
+            ]
         },
         {
-            "name": "crear permisos",
-            "recourse": "permiso",
-            "actions": "CREATE"
+            "name": "gestionar proveedores",
+            "resource": "proveedor",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+            ]
         },
         {
-            "name": "leer permisos",
-            "recourse": "permiso",
-            "actions": "READ"
+            "name": "gestionar comentarios",
+            "resource": "comentario",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+            ]
         },
         {
-            "name": "actualizar permisos",
-            "recourse": "permiso",
-            "actions": "UPDATE"
+            "name": "gestionar comentarios clientes",
+            "resource": "comentario",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE"
+            ]
         },
         {
-            "name": "eliminar permisos",
-            "recourse": "permiso",
-            "actions": "DELETE"
+            "name": "gestionar sucursales",
+            "resource": "sucursal",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE"
+            ]
         },
         {
-            "name": "crear usuarios",
-            "recourse": "usuario",
-            "actions": "CREATE"
+            "name": "gestionar empleados",
+            "resource": "empleado",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+            ]
         },
         {
-            "name": "leer usuarios",
-            "recourse": "usuario",
-            "actions": "READ"
+            "name": "gestionar reseñas",
+            "resource": "resenas",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+            ]
         },
         {
-            "name": "actualizar usuarios",
-            "recourse": "usuario",
-            "actions": "UPDATE"
+            "name": "gestionar reseñas clientes",
+            "resource": "resenas",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE"
+            ]
         },
         {
-            "name": "eliminar usuarios",
-            "recourse": "usuario",
-            "actions": "DELETE"
+            "name": "gestionar publicaciones",
+            "resource": "publicacion",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+            ]
+        }
+    ],
+    "rolePermission": [
+        {
+            "idRole": 1,
+            "idPermission": 7
         },
         {
-            "name": "crear productos",
-            "recourse": "producto",
-            "actions": "CREATE"
+            "idRole": 1,
+            "idPermission": 11
         },
         {
-            "name": "leer productos",
-            "recourse": "producto",
-            "actions": "READ"
-        },
-        {
-            "name": "actualizar productos",
-            "recourse": "producto",
-            "actions": "UPDATE"
-        },
-        {
-            "name": "eliminar productos",
-            "recourse": "producto",
-            "actions": "DELETE"
-        },
-        {
-            "name": "crear ventas",
-            "recourse": "venta",
-            "actions": "CREATE"
-        },
-        {
-            "name": "leer ventas",
-            "recourse": "venta",
-            "actions": "READ"
-        },
-        {
-            "name": "actualizar ventas",
-            "recourse": "venta",
-            "actions": "UPDATE"
-        },
-        {
-            "name": "eliminar ventas",
-            "recourse": "venta",
-            "actions": "DELETE"
-        },
-        {
-            "name": "crear compras",
-            "recourse": "compra",
-            "actions": "CREATE"
-        },
-        {
-            "name": "leer compras",
-            "recourse": "compra",
-            "actions": "READ"
-        },
-        {
-            "name": "actualizar compras",
-            "recourse": "compra",
-            "actions": "UPDATE"
-        },
-        {
-            "name": "eliminar compras",
-            "recourse": "compra",
-            "actions": "DELETE"
-        },
-        {
-            "name": "crear proveedores",
-            "recourse": "proveedor",
-            "actions": "CREATE"
-        },
-        {
-            "name": "leer proveedores",
-            "recourse": "proveedor",
-            "actions": "READ"
-        },
-        {
-            "name": "actualizar proveedores",
-            "recourse": "proveedor",
-            "actions": "UPDATE"
-        },
-        {
-            "name": "eliminar proveedores",
-            "recourse": "proveedor",
-            "actions": "DELETE"
-        },
-        {
-            "name": "crear comentarios",
-            "recourse": "comentario",
-            "actions": "CREATE"
-        },
-        {
-            "name": "leer comentarios",
-            "recourse": "comentario",
-            "actions": "READ"
-        },
-        {
-            "name": "actualizar comentarios",
-            "recourse": "comentario",
-            "actions": "UPDATE"
-        },
-        {
-            "name": "eliminar comentarios",
-            "recourse": "comentario",
-            "actions": "DELETE"
-        },
-        {
-            "name": "crear sucursales",
-            "recourse": "sucursal",
-            "actions": "CREATE"
-        },
-        {
-            "name": "leer sucursales",
-            "recourse": "sucursal",
-            "actions": "READ"
-        },
-        {
-            "name": "actualizar sucursales",
-            "recourse": "sucursal",
-            "actions": "UPDATE"
-        },
-        {
-            "name": "crear empleados",
-            "recourse": "empleado",
-            "actions": "CREATE"
-        },
-        {
-            "name": "leer empleados",
-            "recourse": "empleado",
-            "actions": "READ"
-        },
-        {
-            "name": "actualizar empleados",
-            "recourse": "empleado",
-            "actions": "UPDATE"
-        },
-        {
-            "name": "eliminar empleados",
-            "recourse": "empleado",
-            "actions": "DELETE"
-        },
-        {
-            "name": "leer reseñas",
-            "recourse": "resenas",
-            "actions": "READ"
-        },
-        {
-            "name": "actualizar reseñas",
-            "recourse": "resenas",
-            "actions": "UPDATE"
-        },
-        {
-            "name": "eliminar reseñas",
-            "recourse": "resenas",
-            "actions": "DELETE"
-        },
-        {
-            "name": "crear reseñas",
-            "recourse": "resenas",
-            "actions": "CREATE"
-        },
-        {
-            "name": "leer publicaciones",
-            "recourse": "posts",
-            "actions": "READ"
-        },
-        {
-            "name": "actualizar publicaciones",
-            "recourse": "posts",
-            "actions": "UPDATE"
-        },
-        {
-            "name": "eliminar publicaciones",
-            "recourse": "posts",
-            "actions": "DELETE"
-        },
-        {
-            "name": "crear publicaciones",
-            "recourse": "posts",
-            "actions": "CREATE"
+            "idRole": 1,
+            "idPermission": 15
         }
     ]
 }

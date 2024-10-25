@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, Min } from "class-validator";
+import { IsNumber, IsPositive, Min } from "class-validator";
 
 
 export class CreateSaleDto {
@@ -12,6 +12,6 @@ export class CreateSaleDto {
     declare discountApplied: number;
 
     @IsNumber()
-    @Min(1)
+    @IsPositive()
     declare productsQuantity: number;
 }

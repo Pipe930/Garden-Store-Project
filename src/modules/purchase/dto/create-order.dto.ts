@@ -1,5 +1,5 @@
 import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, Min } from "class-validator";
-import { TypeStatusOrder } from "../models/purchase-order.model";
+import { StatusOrderEnum } from "src/core/enums/statusOrder.enum";
 
 
 export class CreateOrderDto {
@@ -8,8 +8,7 @@ export class CreateOrderDto {
     @IsNotEmpty()
     readonly idPurchaseOrder: string;
 
-    @IsEnum(TypeStatusOrder)
-    @IsNotEmpty()
+    @IsEnum(StatusOrderEnum)
     readonly status: string;
 
     @IsDate()

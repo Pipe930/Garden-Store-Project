@@ -68,8 +68,7 @@ export class TokenService {
 
         try {
 
-            const arrayRoles: string[] = user.rolesUser.map(roles => roles.name);
-            const payload = { idUser: user.idUser, roles: arrayRoles };
+            const payload = { idUser: user.idUser };
             const accessToken = this.jwtService.sign(payload);
             const refreshToken = this.jwtService.sign(payload, { expiresIn: "1d" });
     

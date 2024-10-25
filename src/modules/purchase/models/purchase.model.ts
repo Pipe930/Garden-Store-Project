@@ -1,27 +1,10 @@
-import { BelongsTo, BelongsToMany, Column, CreatedAt, DataType, ForeignKey, HasOne, Model, Table } from "sequelize-typescript";
+import { BelongsToMany, Column, CreatedAt, DataType, ForeignKey, HasOne, Model, Table } from "sequelize-typescript";
 import { Supplier } from "./supplier.model";
 import { Employee } from "src/modules/branch/models/employee.model";
 import { Product } from "src/modules/products/models/product.model";
 import { randomUUID } from "crypto";
 import { PurchaseOrder } from "./purchase-order.model";
-
-
-export enum StatusPurchase {
-
-    PENDING = 'PENDING',
-    PAID = 'PAID',
-    CANCELED = 'CANCELED'
-}
-
-export enum MethodPayment {
-
-    CREDIT_CARD = 'Tarjeta de crédito',
-    DEBIT_CARD = 'Tarjeta de débito',
-    PAYPAL = 'Paypal',
-    MERCADO_PAGO = 'Mercado Pago',
-    TRANSFER = 'Transferencia',
-    CASH = 'Efectivo'
-}
+import { MethodPaymentEnum, StatusPurchaseEnum } from "src/core/enums/statusPurchase.enum";
 
 @Table({
     tableName: 'purchases',
@@ -72,9 +55,9 @@ export class Purchase extends Model {
     declare ivaPrice: number;
 
     @Column({
-        type: DataType.ENUM(StatusPurchase.PENDING, StatusPurchase.PAID, StatusPurchase.CANCELED),
+        type: DataType.ENUM(...Object.values(StatusPurchaseEnum)),
         allowNull: false,
-        defaultValue: StatusPurchase.PENDING
+        defaultValue: StatusPurchaseEnum.PENDING
     })
     declare status: string;
 
@@ -89,7 +72,7 @@ export class Purchase extends Model {
     declare discountsAplicated: number;
 
     @Column({
-        type: DataType.ENUM(MethodPayment.CASH, MethodPayment.CREDIT_CARD, MethodPayment.DEBIT_CARD, MethodPayment.MERCADO_PAGO, MethodPayment.PAYPAL, MethodPayment.TRANSFER),
+        type: DataType.ENUM(...Object.values(MethodPaymentEnum)),
         allowNull: false,
         field: 'method_payment'
     })

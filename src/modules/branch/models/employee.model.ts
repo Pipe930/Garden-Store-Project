@@ -1,13 +1,7 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
+import { Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { Branch } from "./branch.model";
 import { Purchase } from "src/modules/purchase/models/purchase.model";
-
-export enum TypeGender {
-
-    MALE = 'M',
-    FEMALE = 'F',
-    OTHER = 'O'
-}
+import { GenderEnum } from "src/core/enums/gender.enum";
 
 @Table({
     tableName: 'employees',
@@ -63,7 +57,7 @@ export class Employee extends Model {
     declare phone: string;
 
     @Column({
-        type: DataType.ENUM(TypeGender.FEMALE, TypeGender.MALE, TypeGender.OTHER),
+        type: DataType.ENUM(...Object.values(GenderEnum)),
         allowNull: false
     })
     declare gender: string;

@@ -1,6 +1,5 @@
 import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from "class-validator";
-import { MethodPayment, StatusPurchase } from "../models/purchase.model";
-
+import { MethodPaymentEnum, StatusPurchaseEnum } from "src/core/enums/statusPurchase.enum";
 
 interface listProductsPurchase {
     idProduct: number;
@@ -22,7 +21,7 @@ export class CreatePurchaseDto {
     readonly ivaPrice: number;
 
     @IsOptional()
-    @IsEnum(StatusPurchase)
+    @IsEnum(StatusPurchaseEnum)
     @IsNotEmpty()
     readonly status: string;
 
@@ -30,8 +29,7 @@ export class CreatePurchaseDto {
     @Min(0)
     readonly discountsAplicated: number;
 
-    @IsEnum(MethodPayment)
-    @IsNotEmpty()
+    @IsEnum(MethodPaymentEnum)
     readonly methodPayment: string;
 
     @IsString()

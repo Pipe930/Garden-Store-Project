@@ -1,12 +1,7 @@
-import { Column, DataType, Table, Model, BelongsToMany, ForeignKey } from "sequelize-typescript";
+import { Column, DataType, Table, Model, BelongsToMany, ForeignKey, Sequelize } from "sequelize-typescript";
 import { Role } from "./rol.model";
-
-enum TypeActions {
-    CREATE = "CREATE",
-    READ = "READ",
-    UPDATE = "UPDATE",
-    DELETE = "DELETE"
-}
+import { ActionsEnum } from "../../../core/enums/actions.enum";
+import { ResourcesEnum } from "src/core/enums/resourses.enum";
 
 @Table({
     tableName: "permissions",
@@ -34,22 +29,16 @@ export class Permission extends Model {
     declare name: string;
 
     @Column({
-        type: DataType.STRING(100),
+        type: DataType.ENUM(...Object.values(ResourcesEnum)),
         allowNull: false
     })
-    declare recourse: string;
+    declare resource: string;
 
     @Column({
-        type: DataType.ENUM(TypeActions.CREATE, TypeActions.READ, TypeActions.UPDATE, TypeActions.DELETE),
+        type: DataType.ARRAY(DataType.ENUM(...Object.values(ActionsEnum))),
         allowNull: false
     })
-    declare actions: string;
-
-    @Column({
-        type: DataType.TEXT,
-        allowNull: true
-    })
-    declare description: string;
+    declare actions: ActionsEnum[];
 
     @BelongsToMany(() => Role, () => RolePermission)
     declare Roles: Role[];
@@ -73,7 +62,9 @@ export class RolePermission extends Model {
 
     @Column({
         type: DataType.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        field: "date_designed"
     })
     declare dateDesigned: Date;
 

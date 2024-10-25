@@ -1,9 +1,9 @@
 import { IsEnum, IsNotEmpty } from "class-validator";
-import { ShippingStatus } from "../models/shipping.model";
+import { ShippingStatusEnum } from "src/core/enums/statusShipping.enum";
 
 export class UpdateShippingDto{
 
     @IsNotEmpty()
-    @IsEnum([ShippingStatus.PREPARING, ShippingStatus.SHIPPED, ShippingStatus.DELIVERED, ShippingStatus.PENDING])
+    @IsEnum(ShippingStatusEnum)
     readonly status: string;
 }

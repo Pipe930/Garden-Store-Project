@@ -7,6 +7,7 @@ import { Role } from '../access-control/models/rol.model';
 import { Op } from 'sequelize';
 import { PasswordService } from 'src/core/services/password.service';
 import { Subscription } from '../subscriptions/models/subscription.model';
+import { Permission } from '../access-control/models/permission.model';
 
 @Injectable()
 export class UsersService {
@@ -136,5 +137,24 @@ export class UsersService {
       statusCode: HttpStatus.OK,
       message: "Usuario actualizado con exito"
     };
+  }
+
+  async getUserPermissions(idUser: number): Promise<Role[]>{
+
+    const roles = await Role.findAll<Role>({
+      include: [
+        {
+          model: User,
+          where: {
+            idUser
+          }
+        },
+        {
+          model: Permission
+        }
+      ]
+    });
+    
+    return roles;
   }
 }

@@ -1,10 +1,9 @@
 import { IsEnum, IsNotEmpty } from "class-validator";
-import { StatusPurchase } from "../models/purchase.model";
+import { StatusPurchaseEnum } from "src/core/enums/statusPurchase.enum";
 
 
 export class UpdatePurchaseDto {
 
-    @IsEnum(StatusPurchase)
-    @IsNotEmpty()
+    @IsEnum(StatusPurchaseEnum)
     readonly status: string;
 }
