@@ -1,10 +1,4 @@
-export enum DataType {
-  STRING = 'string',
-  NUMBER = 'number',
-  DATE = 'date',
-  BOOLEAN = 'boolean',
-  ACTION = 'action'
-}
+import { DataType } from "@core/enums/dataType.enum";
 
 export interface TableColumns {
 

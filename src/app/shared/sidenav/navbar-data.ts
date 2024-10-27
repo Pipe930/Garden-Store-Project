@@ -68,6 +68,25 @@ export const navbarData: Array<Sidenav> = [
     ]
   },
   {
+    routerLink: "access-control",
+    icon: "bx bxs-shield",
+    label: "Roles & Permisos",
+    items: [
+      {
+        routerLink: "access-control/list",
+        label: "Lista Roles & Permisos"
+      },
+      {
+        routerLink: "access-control/role/create",
+        label: "Crear Rol"
+      },
+      {
+        routerLink: "access-control/permission/create",
+        label: "Crear Permiso",
+      }
+    ]
+  },
+  {
     routerLink: "branchs",
     icon: "bx bxs-store-alt",
     label: "Sucursales",

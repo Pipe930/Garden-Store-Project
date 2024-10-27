@@ -26,6 +26,10 @@ export const routesAdmin: Routes = [
       {
         path: "users",
         loadChildren: () => import('./components/users/users.routes').then(m => m.routesUsers)
+      },
+      {
+        path: "access-control",
+        loadChildren: () => import('./components/access-control/access-control.routes').then(m => m.routesAccessControl)
       }
     ]
   }

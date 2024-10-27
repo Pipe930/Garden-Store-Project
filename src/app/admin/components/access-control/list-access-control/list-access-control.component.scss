@@ -1,0 +1,13 @@
+.container__container-title{
+
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  margin: 2rem 0;
+
+  .container__btn{
+
+    padding: .6rem 1.4rem;
+    transition: background .3s ease-in-out;
+  }
+}

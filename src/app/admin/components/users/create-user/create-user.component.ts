@@ -1,3 +1,4 @@
+import { CreateUserForm } from '@admin/interfaces/user';
 import { UserService } from '@admin/services/user.service';
 import { NgClass } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
@@ -24,6 +25,7 @@ export class CreateUserComponent {
   private readonly _validatorService = inject(ValidatorService);
 
   public alerMessage = signal<boolean>(false);
+  public selectOptionCreatedCartUser = false;
 
   public createUserForm: FormGroup = this._builder.group({
 
@@ -33,6 +35,7 @@ export class CreateUserComponent {
     password: this._builder.control('', [Validators.minLength(6), Validators.maxLength(50), Validators.required]),
     rePassword: this._builder.control('', [Validators.minLength(6), Validators.maxLength(50), Validators.required]),
     phone: this._builder.control('', [Validators.required, Validators.pattern(/^[0-9]{8}$/)]),
+    createdCart: this._builder.control(false, [Validators.required]),
     active: this._builder.control(false, [Validators.required])
   }, {
     validators: [this._validatorService.comparePasswords("password", "rePassword")]
@@ -47,7 +50,12 @@ export class CreateUserComponent {
 
     if(this.createUserForm.value.phone.length === 8) this.createUserForm.value.phone = `+569${this.createUserForm.value.phone}`;
 
-    this._userService.createUser(this.createUserForm.value).pipe(
+    const userJson: CreateUserForm = {
+      ...this.createUserForm.value,
+      createdCart: this.selectOptionCreatedCartUser
+    }
+
+    this._userService.createUser(userJson).pipe(
       catchError((error) => {
 
         if(error.error.statusCode === HttpStatusCode.Conflict){
@@ -66,6 +74,13 @@ export class CreateUserComponent {
       this._alerService.success("Usuario creado exitosamente", "Usuario");
       this._router.navigate(['/admin/users/list']);
     });
+  }
+
+  public changeOptionCreateCartUser(event: Event): void{
+
+    const element = event.target as HTMLInputElement;
+
+    this.selectOptionCreatedCartUser = element.value === "true" ? true : false;
   }
 
   get firstName() {

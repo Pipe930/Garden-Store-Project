@@ -1,0 +1,33 @@
+@let listRolesVar = listRoles();
+@let listPermissionsVar = listPermission();
+@let columnsRoleVar = columnsRole();
+@let columnsPermissionVar = columnsPermission();
+
+<ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="roles-tab" data-bs-toggle="pill" data-bs-target="#roles" type="button" role="tab" aria-controls="roles" aria-selected="true">Roles</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="permisos-tab" data-bs-toggle="pill" data-bs-target="#permisos" type="button" role="tab" aria-controls="permisos" aria-selected="false">Permisos</button>
+  </li>
+</ul>
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="roles" role="tabpanel" aria-labelledby="roles-tab" tabindex="0">
+    <div class="container__container-title">
+      <h2 class="container__title">Lista Roles</h2>
+      <button class="container__btn btn btn-success" [routerLink]="['/admin/access-control/role/create']">
+        Crear Role
+      </button>
+    </div>
+    <app-table [messageNoContent]="'roles'" [dataRows]="listRolesVar" [tableColumns]="columnsRoleVar" [showActionButton]="true" (eventEdit)="editRole($event)"></app-table>
+  </div>
+  <div class="tab-pane fade" id="permisos" role="tabpanel" aria-labelledby="permisos-tab" tabindex="0">
+    <div class="container__container-title">
+      <h2 class="container__title">Lista Permisos</h2>
+      <button class="container__btn btn btn-success" [routerLink]="['/admin/access-control/permission/create']">
+        Crear Permiso
+      </button>
+    </div>
+    <app-table [messageNoContent]="'permisos'" [dataRows]="listPermissionsVar" [tableColumns]="columnsPermissionVar" [showActionButton]="true" (eventEdit)="editPermission($event)"></app-table>
+  </div>
+</div>

@@ -38,6 +38,7 @@ export interface CreateUserForm {
   active: boolean;
   password: string;
   rePassword: string;
+  createdCart: boolean;
 }
 
 export interface VerifyOTPInterface {

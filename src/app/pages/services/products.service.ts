@@ -45,7 +45,6 @@ export class ProductsService {
       }
     }).pipe(
       catchError(error => {
-
       if(error.status === HttpStatusCode.NotFound) this.products.next([]);
       return of();
     }

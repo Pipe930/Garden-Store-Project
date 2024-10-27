@@ -1,4 +1,5 @@
-import { DataType, TableColumns } from "@core/interfaces/table";
+import { DataType } from "@core/enums/dataType.enum";
+import { TableColumns } from "@core/interfaces/table";
 import { Product } from "@pages/interfaces/product";
 
 export interface ProductsResponse {

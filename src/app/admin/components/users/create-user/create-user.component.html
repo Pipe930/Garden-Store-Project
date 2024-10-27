@@ -85,6 +85,21 @@
         </label>
         <p class="form-text">Esta opción permite dejar las cuentas activadas o no de los usuarios</p>
       </div>
+      <div class="mb-3">
+        <label for="phoneInput" class="form-label">¿Deseas crear un carrito a este usuario?</label>
+        <div class="form-check">
+          <input class="form-check-input" (change)="changeOptionCreateCartUser($event)" [value]="false" type="radio" name="createCart" id="createCartFalse" checked>
+          <label class="form-check-label" for="createCartFalse">
+            No
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" (change)="changeOptionCreateCartUser($event)" [value]="true" type="radio" name="createCart" id="createCartTrue">
+          <label class="form-check-label" for="createCartTrue">
+            Si
+          </label>
+        </div>
+      </div>
       <div class="mb-3 col">
         <label for="passwordInput" class="form-label">Contraseña</label>
         <input type="password" class="form-control form__input" id="passwordInput" formControlName="password" [ngClass]="{

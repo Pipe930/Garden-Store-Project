@@ -3,7 +3,7 @@ export interface Sidenav {
   icon?: string;
   expanded?: boolean;
   label: string;
-  items?: Array<Sidenav>;
+  items?: Sidenav[];
 }
 
 export interface SidenavToggle {
