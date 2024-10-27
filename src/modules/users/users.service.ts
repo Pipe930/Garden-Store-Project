@@ -8,6 +8,7 @@ import { Op } from 'sequelize';
 import { PasswordService } from 'src/core/services/password.service';
 import { Subscription } from '../subscriptions/models/subscription.model';
 import { Permission } from '../access-control/models/permission.model';
+import { Cart } from '../cart/models/cart.model';
 
 @Injectable()
 export class UsersService {
@@ -16,7 +17,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
 
-    const { firstName, lastName, email, phone, password, active } = createUserDto;
+    const { firstName, lastName, email, phone, password, active, createdCart } = createUserDto;
 
     const user = await User.findOne<User>({
       where: {
@@ -31,7 +32,7 @@ export class UsersService {
     if(password !== createUserDto.rePassword) throw new BadRequestException("Las contraseñas no coinciden");
 
     try {      
-      await User.create<User>({
+      const newUser = await User.create<User>({
         firstName,
         lastName,
         email,
@@ -39,9 +40,14 @@ export class UsersService {
         password: this._passwordService.passwordEncrypted(password),
         active
       });
+
+      if(createdCart) {
+        await Cart.create<Cart>({
+          idCartUser: newUser.idUser
+        });
+      }
     } catch (error) {
 
-      console.error(error);
       throw new InternalServerErrorException("Error al crear el usuario");
     }
 

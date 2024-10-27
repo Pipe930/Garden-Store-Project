@@ -1,19 +1,20 @@
 
 export enum ResourcesEnum {
 
-    ROLES = "rol",
-    PERMISSIONS = "permiso",
-    EMPLOYEES = "empleado",
-    USERS = "usuario",
-    PRODUCTS = "producto",
-    SALES = "venta",
-    SUBSCRIPTIONS = "suscripcion",
-    PURCHASES = "compra",
-    COMMENTS = "comentario",
-    CATEGORIES = "categoria",
+    ROLES = "roles",
+    PERMISSIONS = "permisos",
+    EMPLOYEES = "empleados",
+    USERS = "usuarios",
+    PRODUCTS = "productos",
+    SALES = "ventas",
+    SUBSCRIPTIONS = "suscripciones",
+    PURCHASES = "compras",
+    COMMENTS = "comentarios",
+    CATEGORIES = "categorias",
     REVIEWS = "resenas",
-    POSTS = "publicacion",
-    PROVIDERS = "proveedor",
-    BRANCHS = "sucursal",
-    OFFERS = "oferta"
+    POSTS = "publicaciones",
+    PROVIDERS = "proveedores",
+    BRANCHS = "sucursales",
+    OFFERS = "ofertas",
+    WARRANTIES = "garantias"
 }

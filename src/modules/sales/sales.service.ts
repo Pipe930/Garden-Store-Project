@@ -1,6 +1,6 @@
 import { BadRequestException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateSaleDto } from './dto/create-sale.dto';
-import { Sale, SaleProduct, TypeStatus } from './models/sale.model';
+import { Sale, SaleProduct } from './models/sale.model';
 import { Cart } from '../cart/models/cart.model';
 import { Item } from '../cart/models/item.model';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
@@ -10,6 +10,7 @@ import { CreateTransbankDto } from './dto/create-transbank.dto';
 import { AvailabilityStatus, Product } from '../products/models/product.model';
 import { UpdateSaleDto } from './dto/update-status-sale.dto';
 import { Shipping } from '../shippings/models/shipping.model';
+import { StatusSaleEnum } from 'src/core/enums/statusSale.enum';
 
 @Injectable()
 export class SalesService {
@@ -43,7 +44,7 @@ export class SalesService {
         priceTotal,
         productsQuantity,
         discountApplied,
-        status: TypeStatus.PENDING,
+        status: StatusSaleEnum.PENDING,
         idUser
       });
 
@@ -102,7 +103,7 @@ export class SalesService {
     const sale = await Sale.findByPk(idSale);
 
     if(!sale) throw new NotFoundException('No se encontro la venta');
-    if(sale.status === TypeStatus.PAID) throw new BadRequestException('La venta ya se encuentra pagada');
+    if(sale.status === StatusSaleEnum.PAID) throw new BadRequestException('La venta ya se encuentra pagada');
 
     sale.status = updateSaleDto.status;
     await sale.save();
@@ -183,7 +184,7 @@ export class SalesService {
 
   private async validateStatusSale(status: string, sale: Sale): Promise<void> {
 
-    if(status !== TypeStatus.PAID) return;
+    if(status !== StatusSaleEnum.PAID) return;
 
     const products = await SaleProduct.findAll({
       where: {

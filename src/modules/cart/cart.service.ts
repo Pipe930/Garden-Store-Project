@@ -39,12 +39,12 @@ export class CartService {
             ]
         });
 
+        if(!cart) throw new NotFoundException("Carrito no encontrado");
+
         cart.priceTotal = this.cartTotal(cart);
         cart.quantityTotal = this.cartQuantity(cart);
         cart.productsTotal = this.cartProducts(cart);
         cart.priceTotalDiscount = this.cartPriceDiscount(cart);
-
-        if(!cart) throw new NotFoundException("Carrito no encontrado");
 
         return {
             statusCode: HttpStatus.OK,

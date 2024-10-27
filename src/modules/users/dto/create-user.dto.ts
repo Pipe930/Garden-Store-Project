@@ -21,6 +21,9 @@ export class CreateUserDto {
     @IsBoolean()
     readonly active: boolean;
 
+    @IsBoolean()
+    readonly createdCart: boolean;
+
     @IsString()
     @MaxLength(255)
     @MinLength(8)

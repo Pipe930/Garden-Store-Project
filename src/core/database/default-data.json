@@ -66,7 +66,7 @@
 
         {
             "name": "gestionar categorias",
-            "resource": "categoria",
+            "resource": "categorias",
             "actions": [
                 "CREATE",
                 "READ",
@@ -76,7 +76,7 @@
         },
         {
             "name": "gestionar roles",
-            "resource": "rol",
+            "resource": "roles",
             "actions": [
                 "CREATE",
                 "READ",
@@ -86,7 +86,7 @@
         },
         {
             "name": "getionar permisos",
-            "resource": "permiso",
+            "resource": "permisos",
             "actions": [
                 "CREATE",
                 "READ",
@@ -96,7 +96,7 @@
         },
         {
             "name": "gestionar usuarios",
-            "resource": "usuario",
+            "resource": "usuarios",
             "actions": [
                 "CREATE",
                 "READ",
@@ -106,7 +106,7 @@
         },
         {
             "name": "gestionar productos",
-            "resource": "producto",
+            "resource": "productos",
             "actions": [
                 "CREATE",
                 "READ",
@@ -116,7 +116,7 @@
         },
         {
             "name": "gestionar ventas",
-            "resource": "venta",
+            "resource": "ventas",
             "actions": [
                 "CREATE",
                 "READ",
@@ -125,7 +125,7 @@
         },
         {
             "name": "gestionar compras clientes",
-            "resource": "compra",
+            "resource": "compras",
             "actions": [
                 "CREATE",
                 "READ"
@@ -133,7 +133,7 @@
         },
         {
             "name": "gestionar compras",
-            "resource": "compra",
+            "resource": "compras",
             "actions": [
                 "CREATE",
                 "READ",
@@ -142,7 +142,7 @@
         },
         {
             "name": "gestionar proveedores",
-            "resource": "proveedor",
+            "resource": "proveedores",
             "actions": [
                 "CREATE",
                 "READ",
@@ -152,7 +152,7 @@
         },
         {
             "name": "gestionar comentarios",
-            "resource": "comentario",
+            "resource": "comentarios",
             "actions": [
                 "CREATE",
                 "READ",
@@ -162,7 +162,7 @@
         },
         {
             "name": "gestionar comentarios clientes",
-            "resource": "comentario",
+            "resource": "comentarios",
             "actions": [
                 "CREATE",
                 "READ",
@@ -171,7 +171,7 @@
         },
         {
             "name": "gestionar sucursales",
-            "resource": "sucursal",
+            "resource": "sucursales",
             "actions": [
                 "CREATE",
                 "READ",
@@ -180,7 +180,7 @@
         },
         {
             "name": "gestionar empleados",
-            "resource": "empleado",
+            "resource": "empleados",
             "actions": [
                 "CREATE",
                 "READ",
@@ -209,7 +209,7 @@
         },
         {
             "name": "gestionar publicaciones",
-            "resource": "publicacion",
+            "resource": "publicaciones",
             "actions": [
                 "CREATE",
                 "READ",

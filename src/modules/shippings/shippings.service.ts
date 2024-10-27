@@ -2,7 +2,8 @@ import { BadRequestException, HttpStatus, Injectable, InternalServerErrorExcepti
 import { CreateShippingDto } from './dto/create-shipping.dto';
 import { UpdateShippingDto } from './dto/update-shipping.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
-import { Shipping, ShippingStatus } from './models/shipping.model';
+import { Shipping } from './models/shipping.model';
+import { ShippingStatusEnum } from 'src/core/enums/statusShipping.enum';
 
 @Injectable()
 export class ShippingsService {
@@ -15,7 +16,7 @@ export class ShippingsService {
       const newShipping = await Shipping.create({
         informationShipping,
         shippingCost,
-        status: ShippingStatus.PREPARING,
+        status: ShippingStatusEnum.PREPARING,
         withdrawal,
         idAddress
       })
@@ -38,12 +39,12 @@ export class ShippingsService {
       const shipping = await Shipping.findByPk(idShipping);
 
       if(!shipping) throw new NotFoundException("No se encontro el envio");
-      if(shipping.status === ShippingStatus.DELIVERED) throw new BadRequestException("El envio ya fue entregado");
+      if(shipping.status === ShippingStatusEnum.DELIVERED) throw new BadRequestException("El envio ya fue entregado");
 
       shipping.status = shippingStatusDto.status;
 
-      if(shipping.status === ShippingStatus.DELIVERED) shipping.deliveryDate = new Date();
-      if(shipping.status === ShippingStatus.SHIPPED) shipping.shippingDate = new Date();
+      if(shipping.status === ShippingStatusEnum.DELIVERED) shipping.deliveryDate = new Date();
+      if(shipping.status === ShippingStatusEnum.SHIPPED) shipping.shippingDate = new Date();
 
       await shipping.save();
 
