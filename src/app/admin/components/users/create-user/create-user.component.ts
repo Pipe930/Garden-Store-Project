@@ -1,8 +1,10 @@
+import { Role } from '@admin/interfaces/role';
 import { CreateUserForm } from '@admin/interfaces/user';
+import { AccessControlService } from '@admin/services/access-control.service';
 import { UserService } from '@admin/services/user.service';
 import { NgClass } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AlertService } from '@core/services/alert.service';
@@ -16,15 +18,18 @@ import { catchError, of } from 'rxjs';
   templateUrl: './create-user.component.html',
   styleUrl: './create-user.component.scss'
 })
-export class CreateUserComponent {
+export class CreateUserComponent implements OnInit {
 
   private readonly _userService = inject(UserService);
   private readonly _router = inject(Router);
   private readonly _builder = inject(FormBuilder);
   private readonly _alerService = inject(AlertService);
   private readonly _validatorService = inject(ValidatorService);
+  private readonly _accessControlService = inject(AccessControlService);
 
   public alerMessage = signal<boolean>(false);
+  public listRoles = signal<Role[]>([]);
+  public selectedRoles = signal<Role[]>([]);
   public selectOptionCreatedCartUser = false;
 
   public createUserForm: FormGroup = this._builder.group({
@@ -41,6 +46,13 @@ export class CreateUserComponent {
     validators: [this._validatorService.comparePasswords("password", "rePassword")]
   });
 
+  ngOnInit(): void {
+
+    this._accessControlService.getAllRoles().subscribe((response) => {
+      this.listRoles.set(response.data);
+    });
+  }
+
   public createUser(): void {
 
     if(this.createUserForm.invalid){
@@ -52,7 +64,8 @@ export class CreateUserComponent {
 
     const userJson: CreateUserForm = {
       ...this.createUserForm.value,
-      createdCart: this.selectOptionCreatedCartUser
+      createdCart: this.selectOptionCreatedCartUser,
+      roles: this.selectedRoles()
     }
 
     this._userService.createUser(userJson).pipe(
@@ -81,6 +94,45 @@ export class CreateUserComponent {
     const element = event.target as HTMLInputElement;
 
     this.selectOptionCreatedCartUser = element.value === "true" ? true : false;
+  }
+
+  moveRight(selectedOptions: HTMLCollection) {
+
+    if(selectedOptions.length === 0) return;
+
+    const selectedIds = Array.from(selectedOptions).map((option: any) => parseInt(option.value, 10));
+
+    this.listRoles().filter(role => {
+      if (selectedIds.includes(role.idRole)) {
+        this.selectedRoles().push(role);
+        this.listRoles().splice(this.listRoles().indexOf(role), 1);
+      }
+    });
+  }
+
+  moveLeft(selectedOptions: HTMLCollection) {
+
+    if(selectedOptions.length === 0) return;
+
+    const selectedIds = Array.from(selectedOptions).map((option: any) => parseInt(option.value, 10));
+
+    this.selectedRoles().filter(role => {
+      if (selectedIds.includes(role.idRole)) {
+        this.listRoles().push(role);
+        this.selectedRoles().splice(this.selectedRoles().indexOf(role), 1);
+      }
+    });
+  }
+
+  selectAll() {
+
+    this.selectedRoles.set(this.selectedRoles().concat(this.listRoles()))
+    this.listRoles.set([]);
+  }
+
+  removeAll() {
+    this.listRoles.set(this.listRoles().concat(this.selectedRoles()));
+    this.selectedRoles.set([]);
   }
 
   get firstName() {

@@ -1,5 +1,5 @@
 
-type rolesUserType = {
+export type RolesUserType = {
 
   idRole: number;
   name: string;
@@ -22,7 +22,7 @@ export interface UserInterface {
   lastLogin: Date;
   createdAt: Date;
   updatedAt: Date;
-  rolesUser: rolesUserType[];
+  rolesUser: RolesUserType[];
 }
 
 export interface UserInterfaceSubscription extends UserInterface {
@@ -39,6 +39,7 @@ export interface CreateUserForm {
   password: string;
   rePassword: string;
   createdCart: boolean;
+  roles: RolesUserType[];
 }
 
 export interface VerifyOTPInterface {
@@ -53,6 +54,7 @@ export interface UpdateUserForm {
   email: string;
   phone: string;
   active: boolean;
+  roles: RolesUserType[];
 }
 
 export interface UserListResponse {

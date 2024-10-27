@@ -1,4 +1,6 @@
 @let userVar = user();
+@let listRolesVar = listRoles();
+@let selectedRolesVar = selectedRoles();
 
 <div class="container__container-title">
   <h2 class="container__container-title">Actualizar Usuario</h2>
@@ -79,16 +81,41 @@
         </label>
         <p class="form-text">Esta opción permite dejar las cuentas activadas o no de los usuarios</p>
       </div>
+      <div class="container my-5">
+        <h2 class="mb-4">Roles</h2>
+        <div class="row">
+            <div class="col-md-5">
+                <h5>Roles Disponibles</h5>
+                <select #availableOptions class="form-select" multiple size="10">
+                  @for (role of listRolesVar; track $index) {
+                    <option [value]="role.idRole">{{role.name}}</option>
+                  }
+                </select>
+            </div>
 
-      <div class="mb-3">
-        <h5>Roles del usuario</h5>
-        <ul class="list-group">
-          @for (role of userVar.rolesUser; track $index) {
-            <li class="list-group-item">{{role.name | titlecase}}</li>
-          } @empty {
-            <li class="list-group-item">No tiene roles asignados</li>
-          }
-        </ul>
+            <div class="col-md-2 d-flex flex-column align-items-center justify-content-center">
+                <button id="moveRight" (click)="moveRight(availableOptions.selectedOptions)" type="button" class="btn btn-primary my-2">&gt;</button>
+                <button id="moveLeft" (click)="moveLeft(selectedOptions.selectedOptions)" type="button" class="btn btn-primary my-2">&lt;</button>
+            </div>
+
+            <div class="col-md-5">
+                <h5>Roles Seleccionados</h5>
+                <select #selectedOptions class="form-select" size="10">
+                  @for (role of selectedRolesVar; track $index) {
+                    <option [value]="role.idRole">{{role.name}}</option>
+                  }
+                </select>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-5">
+                <button id="selectAll" (click)="selectAll()" type="button" class="btn btn-secondary w-100">Choose all</button>
+            </div>
+            <div class="col-md-5 offset-md-2">
+                <button id="removeAll" (click)="removeAll()" type="button" class="btn btn-secondary w-100">Remove all</button>
+            </div>
+        </div>
       </div>
       <button type="submit" class="form__btn-create btn btn-success" [disabled]="updateUserForm.invalid">
         Guardar
