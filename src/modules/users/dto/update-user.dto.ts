@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
-import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { CreateUserDto, RoleUser } from './create-user.dto';
+import { IsArray, IsBoolean, IsEmail, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
 
@@ -28,4 +28,9 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     @Transform(({value}) => value.trim())
     @Matches(/^\+56\d{9}$/, { message: "El numero de telefono no es valido" })
     readonly phone: string;
+
+    @IsOptional()
+    @IsArray()
+    @Type(() => RoleUser)
+    readonly roles: RoleUser[];
 }
