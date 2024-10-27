@@ -1,4 +1,4 @@
-import { ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Role } from './models/rol.model';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { CreateRoleDto } from './dto/create-role.dto';
@@ -27,7 +27,7 @@ export class AccessControlService {
             include: [
                 {
                     model: Permission,
-                    attributes: ["idPermission", "resource", "actions"],
+                    attributes: ["idPermission", "name"],
                     through: {
                         attributes: []
                     }
@@ -45,7 +45,7 @@ export class AccessControlService {
 
     async createRole(createRoleDto: CreateRoleDto): Promise<ResponseData>{
 
-        const { name } = createRoleDto;
+        const { name, permissions } = createRoleDto;
 
         const roleExists = await Role.findOne<Role>({
             where: {
@@ -60,6 +60,15 @@ export class AccessControlService {
                 name: name.toLowerCase()
             });
 
+            if(permissions.length > 0){
+                permissions.forEach(async permission => {
+                    await RolePermission.create<RolePermission>({
+                        idRole: roleCreated.idRole,
+                        idPermission: permission.idPermission
+                    });
+                })
+            }
+
             return {
                 statusCode: HttpStatus.CREATED,
                 message: "Rol creado exitosamente",
@@ -72,15 +81,53 @@ export class AccessControlService {
 
     async updateRole(idRole: number, createRoleDto: CreateRoleDto): Promise<ResponseData>{
         
-        const { name } = createRoleDto;
+        const { name, permissions } = createRoleDto;
 
-        const role = await Role.findByPk<Role>(idRole);
+        const role = await Role.findByPk<Role>(idRole, {
+            include: [
+                {
+                    model: Permission,
+                    attributes: ["idPermission"],
+                    through: {
+                        attributes: []
+                    }
+                }
+            ]
+        });
 
         if(!role) throw new NotFoundException("El rol no existe");
 
         role.name = name.toLowerCase();
 
         await role.save();
+
+        const currentPermissionIds = role.permissions.map(p => p.idPermission);
+        const newPermissionIds = permissions.map(p => p.idPermission);
+
+        const arePermissionsEqual = currentPermissionIds.length === newPermissionIds.length &&
+        currentPermissionIds.every(id => newPermissionIds.includes(id));
+
+        if (!arePermissionsEqual) {
+            
+            const permissionsToAdd = newPermissionIds.filter(id => !currentPermissionIds.includes(id));
+            const permissionsToRemove = currentPermissionIds.filter(id => !newPermissionIds.includes(id));
+        
+            for (let idPermission of permissionsToAdd) {
+                await RolePermission.create<RolePermission>({
+                    idRole: role.idRole,
+                    idPermission
+                });
+            }
+    
+            for (let idPermission of permissionsToRemove) {
+                await RolePermission.destroy({
+                    where: {
+                        idRole: role.idRole,
+                        idPermission
+                    }
+                });
+            }
+        }
 
         return {
             statusCode: HttpStatus.OK,
@@ -123,7 +170,7 @@ export class AccessControlService {
         });
 
         if(permissionExists) throw new ConflictException("El nombre del permiso ya existe");
-        if(!this.validateUniqueActions(actions)) throw new ConflictException("Solo debe haber una accion por permiso");
+        if(!this.validateUniqueActions(actions)) throw new BadRequestException("Solo debe haber una accion por permiso");
 
         try {
             const permissionCreated = await Permission.create<Permission>({
@@ -149,7 +196,7 @@ export class AccessControlService {
         const permission = await Permission.findByPk<Permission>(idPermission);
 
         if(!permission) throw new NotFoundException("El permiso no existe");
-        if(!this.validateUniqueActions(actions)) throw new ConflictException("Solo debe haber una accion por permiso");
+        if(!this.validateUniqueActions(actions)) throw new BadRequestException("Solo debe haber una accion por permiso");
 
         permission.name = name;
         permission.resource = resource;
