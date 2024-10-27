@@ -3,6 +3,7 @@ import { ListAccessControlComponent } from './list-access-control/list-access-co
 import { CreateRoleComponent } from './create-role/create-role.component';
 import { CreatePermissionComponent } from './create-permission/create-permission.component';
 import { UpdatePermissionComponent } from './update-permission/update-permission.component';
+import { UpdateRoleComponent } from './update-role/update-role.component';
 
 export const routesAccessControl: Routes = [
 
@@ -21,5 +22,9 @@ export const routesAccessControl: Routes = [
   {
     path: "permission/edit/:id",
     component: UpdatePermissionComponent
+  },
+  {
+    path: "role/edit/:id",
+    component: UpdateRoleComponent
   }
 ];

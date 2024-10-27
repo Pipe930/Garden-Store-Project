@@ -1,59 +1,76 @@
-import { Permission } from '@admin/interfaces/permission';
-import { CreateRole, PermissionType } from '@admin/interfaces/role';
+import { CreateRole, PermissionType, Role } from '@admin/interfaces/role';
 import { AccessControlService } from '@admin/services/access-control.service';
 import { NgClass } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AlertService } from '@core/services/alert.service';
 
 @Component({
-  selector: 'app-create-role',
+  selector: 'app-update-role',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, NgClass],
-  templateUrl: './create-role.component.html',
-  styleUrl: './create-role.component.scss'
+  imports: [RouterLink, NgClass, ReactiveFormsModule],
+  templateUrl: './update-role.component.html',
+  styleUrl: './update-role.component.scss'
 })
-export class CreateRoleComponent implements OnInit {
+export class UpdateRoleComponent implements OnInit {
 
+  private readonly _activatedRoute = inject(ActivatedRoute);
+  private readonly _router = inject(Router);
+  private readonly _alertService = inject(AlertService);
   private readonly _accessControlService = inject(AccessControlService);
   private readonly _builder = inject(FormBuilder);
-  private readonly _router = inject(Router);
-  private readonly _alertService = inject(AlertService)
+
+  private idRole = this._activatedRoute.snapshot.params["id"];
+  private role: Role | null = null;
 
   public listPermissions = signal<PermissionType[]>([]);
   public selectedPermissions = signal<PermissionType[]>([]);
 
-  public createRoleForm: FormGroup = this._builder.group({
+  public updateFormRole: FormGroup = this._builder.group({
     name: this._builder.control("", [Validators.required, Validators.maxLength(40)])
   });
 
-  public createRole(): void {
+  ngOnInit(): void {
 
-    if(this.createRoleForm.invalid) {
-      this.createRoleForm.markAllAsTouched();
+    this._accessControlService.getRole(this.idRole).subscribe(response => {
+
+      this.role = response.data;
+      this.selectedPermissions.set(this.role.permissions);
+
+      this.updateFormRole.get("name")?.setValue(response.data.name);
+      this.updateFormRole.updateValueAndValidity();
+    });
+
+    this._accessControlService.getAllPermissions().subscribe(response => {
+
+      this.listPermissions.set(response.data.filter(
+        permission => !this.selectedPermissions().some(selected => selected.idPermission === permission.idPermission)
+      ));
+    });
+
+  }
+
+  public updateRole(): void {
+
+    if(this.updateFormRole.invalid){
+      this.updateFormRole.markAllAsTouched();
       return;
     }
 
     const roleJson: CreateRole = {
-      name: this.createRoleForm.value.name,
+      name: this.updateFormRole.value.name,
       permissions: this.selectedPermissions()
     }
 
-    this._accessControlService.createRole(roleJson).subscribe(() => {
-      this._alertService.success("Rol Creado", "El rol ha sido creado correctamente");
+    this._accessControlService.updateRole(this.idRole, roleJson).subscribe(() => {
+      this._alertService.success("Rol actualizado", "El rol se ha actualizado correctamente");
       this._router.navigate(["/admin/access-control/list"]);
     })
   }
 
-  ngOnInit(): void {
-    this._accessControlService.getAllPermissions().subscribe(permissions => {
-      this.listPermissions.set(permissions.data);
-    })
-  }
-
   get name() {
-    return this.createRoleForm.controls["name"];
+    return this.updateFormRole.controls["name"];
   }
 
   moveRight(selectedOptions: HTMLCollection) {

@@ -1,11 +1,11 @@
 <div class="container__container-title">
-  <h2 class="container__container-title">Crear Rol</h2>
+  <h2 class="container__container-title">Actualizar Rol</h2>
   <button class="container__btn btn btn-primary" [routerLink]="['/admin/access-control/list']">Volver</button>
 </div>
 
 <div class="container__container-form">
 
-  <form novalidate class="container-form__form" [formGroup]="createRoleForm" (ngSubmit)="createRole()">
+  <form novalidate class="container-form__form" [formGroup]="updateFormRole" (ngSubmit)="updateRole()">
 
     <div class="mb-3">
       <label for="nameInput" class="form-label">Nombre Rol</label>
@@ -55,7 +55,7 @@
           </div>
       </div>
     </div>
-    <button type="submit" class="form__btn-create btn btn-success" [disabled]="createRoleForm.invalid">
+    <button type="submit" class="form__btn-create btn btn-success" [disabled]="updateFormRole.invalid">
       Guardar
     </button>
   </form>

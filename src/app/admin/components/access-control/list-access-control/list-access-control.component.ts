@@ -26,6 +26,7 @@ export class ListAccessControlComponent implements OnInit {
   private readonly _accessControlService = inject(AccessControlService)
 
   ngOnInit(): void {
+
     this._accessControlService.getAllRoles().subscribe((response) => {
       this.listRoles.set(response.data);
     });
@@ -36,8 +37,7 @@ export class ListAccessControlComponent implements OnInit {
   }
 
   public editRole(role: Role): void {
-
-
+    this._router.navigate(["admin/access-control/role/edit", role.idRole]);
   }
 
   public editPermission(permission: Permission): void {

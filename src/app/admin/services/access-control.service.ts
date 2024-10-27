@@ -1,5 +1,5 @@
 import { CreatePermission, ListPermissionResponse, PermissionResponse } from '@admin/interfaces/permission';
-import { ListRoleResponse } from '@admin/interfaces/role';
+import { CreateRole, ListRoleResponse, ResponseRole } from '@admin/interfaces/role';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
@@ -22,14 +22,26 @@ export class AccessControlService {
   }
 
   public createPermission(formPermission: CreatePermission): Observable<any>{
-    return this._http.post<any>(`${this.urlApi}/permissions`, formPermission);
+    return this._http.post(`${this.urlApi}/permissions`, formPermission);
+  }
+
+  public createRole(formRole: CreateRole): Observable<any>{
+    return this._http.post(`${this.urlApi}/roles`, formRole);
   }
 
   public getPermission(id:number): Observable<PermissionResponse>{
     return this._http.get<PermissionResponse>(`${this.urlApi}/permissions/${id}`);
   }
 
+  public getRole(id:number): Observable<ResponseRole>{
+    return this._http.get<ResponseRole>(`${this.urlApi}/roles/${id}`);
+  }
+
   public updatePermission(id:number, formPermission: CreatePermission): Observable<any>{
-    return this._http.put<any>(`${this.urlApi}/permissions/${id}`, formPermission);
+    return this._http.put(`${this.urlApi}/permissions/${id}`, formPermission);
+  }
+
+  public updateRole(id:number, formRole: CreateRole): Observable<any>{
+    return this._http.put(`${this.urlApi}/roles/${id}`, formRole);
   }
 }
