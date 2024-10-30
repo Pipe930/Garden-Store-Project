@@ -1,0 +1,116 @@
+@let listAddressVar = listAddress();
+
+<div class="container__container-title">
+  <h2 class="container__container-title">Crear Sucursal</h2>
+  <button class="container__btn btn btn-primary" [routerLink]="['/admin/branchs/list']">Volver</button>
+</div>
+
+<div class="container__container-form">
+  <form novalidate class="container-form__form" [formGroup]="createBranchForm" (ngSubmit)="createBranch()">
+
+    <div class="mb-3">
+      <label for="nameInput" class="form-label">Nombre Sucursal</label>
+      <input type="text" class="form-control form__input" id="nameInput" formControlName="name" [ngClass]="{
+        'is-invalid': name.invalid && (name.dirty || name.touched)
+      }">
+      @if(name.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(name.getError("minlength")){
+        <span class="invalid-feedback">Tiene que tener un minimo de 4 caracteres</span>
+      }
+      @if(name.getError("maxlength")){
+        <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="tradeNameInput" class="form-label">Nombre Comercial</label>
+      <input type="text" class="form-control form__input" id="tradeNameInput" formControlName="tradeName" [ngClass]="{
+        'is-invalid': tradeName.invalid && (tradeName.dirty || tradeName.touched)
+      }">
+      @if(tradeName.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(tradeName.getError("minlength")){
+        <span class="invalid-feedback">Tiene que tener un minimo de 4 caracteres</span>
+      }
+      @if(tradeName.getError("maxlength")){
+        <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="postalCodeInput" class="form-label">Codigo Postal</label>
+      <input type="text" class="form-control form__input" id="postalCodeInput" formControlName="postalCode" [ngClass]="{
+        'is-invalid': postalCode.invalid && (postalCode.dirty || postalCode.touched)
+      }">
+      @if(postalCode.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(postalCode.getError("pattern")){
+        <span class="invalid-feedback">Tiene que ingresar un codigo postal valido</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="emailInput" class="form-label">Correo</label>
+      <input type="email" class="form-control form__input" id="emailInput" formControlName="email" [ngClass]="{
+        'is-invalid': email.invalid && (email.dirty || email.touched)
+      }">
+      @if(email.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(email.getError("email")){
+        <span class="invalid-feedback">Tiene que ingresar un correo valido</span>
+      }
+      @if(email.getError("maxlength")){
+        <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="phone" class="form-label">Telefono</label>
+      <div class="input-group">
+        <span class="input-group-text form__input" id="basic-addon3">+569</span>
+        <input type="text" class="form-control form__input" id="phone" aria-describedby="basic-addon3 basic-addon4" formControlName="phone" [ngClass]="{
+          'is-invalid': phone.invalid && (phone.dirty || phone.touched)
+        }">
+        @if (phone.getError("required")) {
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(phone.getError("pattern")){
+          <span class="invalid-feedback">Tiene que ingresar un numero de telefono valido</span>
+        }
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="openingDateInput" class="form-label">Fecha Apertura</label>
+      <input type="date" class="form-control form__input" id="openingDateInput" formControlName="openingDate" [ngClass]="{
+        'is-invalid': openingDate.invalid && (openingDate.dirty || openingDate.touched)
+      }">
+      @if(openingDate.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="capacityInput" class="form-label">Capacidad de Almacenamiento</label>
+      <input type="number" class="form-control form__input" id="capacityInput" formControlName="capacity" [ngClass]="{
+        'is-invalid': capacity.invalid && (capacity.dirty || capacity.touched)
+      }">
+      @if(capacity.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(capacity.getError("min")){
+        <span class="invalid-feedback">Tiene que ser minimo 100</span>
+      }
+    </div>
+    <div class="input-group mb-3">
+      <label for="description" class="input-group-text">Direccion</label>
+      <select class="form-select" formControlName="idAddress">
+        @for (address of listAddressVar; track $index) {
+          <option [value]="address.idAddress">{{address.addressName}}</option>
+        }
+      </select>
+    </div>
+    <button type="submit" class="form__btn-create btn btn-success" [disabled]="createBranchForm.invalid">
+      Guardar
+    </button>
+  </form>
+</div>

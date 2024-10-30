@@ -21,11 +21,13 @@ export class ListProductsComponent {
 
   public listProducts = signal<Product[]>([]);
   public columns = signal<TableColumns[]>(productColumns);
+  public isLoading = signal<boolean>(false);
 
   ngOnInit(): void {
 
     this._productService.getAllProducts().subscribe(result => {
       if(result.statusCode === HttpStatusCode.Ok) this.listProducts.set(result.data);
+      this.isLoading.set(true);
     })
   }
 

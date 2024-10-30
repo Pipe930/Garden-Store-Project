@@ -2,6 +2,9 @@
 @let listPermissionsVar = listPermission();
 @let columnsRoleVar = columnsRole();
 @let columnsPermissionVar = columnsPermission();
+@let isLoadingRolesVar = isLoadingRole();
+@let isLoadingPermissionsVar = isLoadingPermission();
+
 
 <ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
   <li class="nav-item" role="presentation">
@@ -19,7 +22,7 @@
         Crear Role
       </button>
     </div>
-    <app-table [messageNoContent]="'roles'" [dataRows]="listRolesVar" [tableColumns]="columnsRoleVar" [showActionButton]="true" (eventEdit)="editRole($event)"></app-table>
+    <app-table [messageNoContent]="'roles'" [dataRows]="listRolesVar" [tableColumns]="columnsRoleVar" [showActionButton]="true" (eventEdit)="editRole($event)" [isLoading]="isLoadingRolesVar"></app-table>
   </div>
   <div class="tab-pane fade" id="permisos" role="tabpanel" aria-labelledby="permisos-tab" tabindex="0">
     <div class="container__container-title">
@@ -28,6 +31,6 @@
         Crear Permiso
       </button>
     </div>
-    <app-table [messageNoContent]="'permisos'" [dataRows]="listPermissionsVar" [tableColumns]="columnsPermissionVar" [showActionButton]="true" (eventEdit)="editPermission($event)"></app-table>
+    <app-table [messageNoContent]="'permisos'" [dataRows]="listPermissionsVar" [tableColumns]="columnsPermissionVar" [showActionButton]="true" (eventEdit)="editPermission($event)" [isLoading]="isLoadingPermissionsVar"></app-table>
   </div>
 </div>

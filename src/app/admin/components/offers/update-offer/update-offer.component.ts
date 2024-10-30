@@ -22,7 +22,7 @@ export class UpdateOfferComponent implements OnInit {
   private readonly _activatedRoute = inject(ActivatedRoute);
 
   public offer = signal<Offer>(offerJson);
-  private idOffer = 0;
+  private idOffer = this._activatedRoute.snapshot.params["id"];
   public dateTomorrow = signal<string>("");
 
   public updateOfferForm: FormGroup = this._builder.group({
@@ -39,8 +39,6 @@ export class UpdateOfferComponent implements OnInit {
     tomorrow.setDate(today + 1);
     let tomorrowFormatted = tomorrow.toISOString().split('T')[0];
     this.dateTomorrow.set(tomorrowFormatted);
-
-    this.idOffer = Number(this._activatedRoute.snapshot.paramMap.get("id"))
 
     this._offerService.getOffer(this.idOffer).subscribe(response => {
 

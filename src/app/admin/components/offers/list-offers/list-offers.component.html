@@ -1,5 +1,6 @@
 @let listOffersVar = listOffers();
 @let columnsVar = columns();
+@let isLoadingVar = isLoading();
 
 <div class="container__container-title">
   <h2 class="container__title">Ofertas</h2>
@@ -7,4 +8,4 @@
     Crear Oferta
   </button>
 </div>
-<app-table [messageNoContent]="'ofertas'" [dataRows]="listOffersVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editOffer($event)"></app-table>
+<app-table [messageNoContent]="'ofertas'" [dataRows]="listOffersVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editOffer($event)" [isLoading]="isLoadingVar"></app-table>

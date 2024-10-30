@@ -17,6 +17,7 @@ export class TableComponent {
   public messageNoContent = input<string>("");
   public eventPages = output<boolean>();
   public eventEdit = output<any>();
+  public isLoading = input.required<boolean>();
 
   public onEdit(object: any):void{
 

@@ -44,10 +44,12 @@ export class LoginComponent {
 
           this.activateMessage.set(true);
 
-          setTimeout(() => {
+          const timer = setTimeout(() => {
             this.activateMessage.set(false);
           }, 5000);
-          return of()
+          clearTimeout(timer);
+
+          return of();
         }
 
         return of()

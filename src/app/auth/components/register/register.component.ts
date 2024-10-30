@@ -56,9 +56,10 @@ export class RegisterComponent {
           this.activateMessage.set(true);
           this.message.set(error.error.message);
 
-          setTimeout(() => {
+          const timer = setTimeout(() => {
             this.activateMessage.set(false);
           }, 5000);
+          clearTimeout(timer);
 
           return of();
         }

@@ -21,11 +21,13 @@ export class ListUsersComponent implements OnInit {
 
   public columns = signal<TableColumns[]>(userColumns);
   public listUsers = signal<UserInterface[]>([]);
+  public isLoading = signal<boolean>(false);
 
   ngOnInit(): void {
 
     this._userService.getAllUsers().subscribe(result => {
       if(result.statusCode === HttpStatusCode.Ok) this.listUsers.set(result.data);
+      this.isLoading.set(true);
     });
   }
 

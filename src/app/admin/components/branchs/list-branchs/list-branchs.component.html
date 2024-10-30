@@ -1,0 +1,11 @@
+@let listBranchsVar = listBranchs();
+@let columnsBranchVar = columnsBranch();
+@let isLoadingVar = isLoading();
+
+<div class="container__container-title">
+  <h2 class="container__title">Sucursales</h2>
+  <button class="container__btn btn btn-success" [routerLink]="['/admin/branchs/create']">
+    Crear Sucursal
+  </button>
+</div>
+<app-table [messageNoContent]="'sucursales'" [dataRows]="listBranchsVar" [tableColumns]="columnsBranchVar" [showActionButton]="true" (eventEdit)="editBranch($event)" [isLoading]="isLoadingVar"></app-table>

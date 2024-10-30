@@ -1,0 +1,131 @@
+@let branchVar = branch();
+@let addressVar = address();
+@let listProductVar = listProducts();
+
+<div class="container__container-title">
+  <h2 class="container__container-title">Detalle Sucursal</h2>
+  <button class="container__btn btn btn-primary" [routerLink]="['/admin/branchs/list']">Volver</button>
+</div>
+
+<div class="container__container-information">
+  <section class="container-information__container-card">
+    <article class="card border-secondary">
+      <div class="card-header">
+        <h5 class="card-title">Información Sucrusal</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Nombre Sucursal: {{branchVar.name | titlecase}}</li>
+        <li class="list-group-item">Nombre Comercial: {{branchVar.tradeName | titlecase}}</li>
+        <li class="list-group-item">Capacidad de Productos: {{branchVar.capacity}}</li>
+        <li class="list-group-item">Capacidad Ocupada: {{branchVar.capacityOccupied}}</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="container-information__container-card">
+    <article class="card border-secondary">
+      <div class="card-header">
+        <h5 class="card-title">Información de Contacto</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Correo: {{branchVar.email}}</li>
+        <li class="list-group-item">Telefono: {{branchVar.phone}}</li>
+        <li class="list-group-item">Codigo Postal: {{branchVar.postalCode}}</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="container-information__container-card">
+    <article class="card border-secondary">
+      <div class="card-header">
+        <h5 class="card-title">Dirección</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Dirección: {{addressVar.addressName}}</li>
+        <li class="list-group-item">Ciudad: {{addressVar.city}}</li>
+        <li class="list-group-item">Codigo Postal: {{branchVar.postalCode}}</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="container-information__container-card">
+    <article class="card border-secondary">
+      <div class="card-header d-flex justify-content-between align-content-center">
+        <h5 class="card-title">Productos</h5>
+        <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#formAddProduct">Agregar Producto</button>
+      </div>
+      <div class="list-group">
+        @for (product of branchVar.products; track $index) {
+          <a class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{product.title}}</h5>
+              <small>ID: {{product.idProduct}}</small>
+            </div>
+            <p class="mb-1">Cantidad {{product.ProductBranch.quantity}} Unid.</p>
+          </a>
+        } @empty {
+          <p class="list-group-item">No tenemos productos en esta sucursal</p>
+        }
+      </div>
+    </article>
+  </section>
+</div>
+
+<div class="modal fade" id="formAddProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Producto</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form novalidate [formGroup]="createProductBranchForm" (ngSubmit)="createProductBranch()">
+
+          <div formArrayName="products">
+
+            @for (control of productsArray.controls; track $index) {
+              <div class="row" [formGroupName]="$index">
+                <div class="col align-content-center">
+                  <select class="form-select" formControlName="idProduct" [ngClass]="{
+                    'is-invalid': control.get('idProduct')?.invalid && control.get('idProduct')?.touched
+                  }">
+                    @for (product of listProductVar; track $index) {
+                      <option value="{{product.idProduct}}">{{product.title}}</option>
+                    }
+                  </select>
+                  @if(control.get('idProduct')?.invalid && control.get('idProduct')?.touched){
+                    <span class="invalid-feedback">Este campo es requerido</span>
+                  }
+                </div>
+                <div class="col">
+                  <div class="form-floating mb-3">
+                    <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com" formControlName="quantity" [ngClass]="{
+                      'is-invalid': control.get('quantity')?.invalid && control.get('quantity')?.touched
+                    }">
+                    <label for="floatingInput">Cantidad</label>
+
+                    @if(control.get('quantity')?.getError('required')){
+                      <span class="invalid-feedback">Este campo es requerido</span>
+                    }
+                    @if(control.get('quantity')?.getError('min')){
+                      <span class="invalid-feedback">Tiene que ser un valor positivo</span>
+                    }
+                  </div>
+                </div>
+                <div class="col-auto align-content-center">
+                  <button type="button" class="btn btn-danger" (click)="removeProductForm($index)">
+                    <i class='bx bxs-trash'></i>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+          <div class="d-flex justify-content-between">
+            <button (click)="addProductForm()" type="button" class="btn btn-primary">Añadir Producto</button>
+            <button class="btn btn-success" type="submit" aria-label="Close" [disabled]="createProductBranchForm.invalid">Guardar Productos</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

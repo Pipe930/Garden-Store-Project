@@ -1,6 +1,7 @@
 import { columnsPermission, Permission } from '@admin/interfaces/permission';
 import { columnsRole, Role } from '@admin/interfaces/role';
 import { AccessControlService } from '@admin/services/access-control.service';
+import { HttpStatusCode } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TableColumns } from '@core/interfaces/table';
@@ -22,17 +23,21 @@ export class ListAccessControlComponent implements OnInit {
 
   public columnsRole = signal<TableColumns[]>(columnsRole);
   public columnsPermission = signal<TableColumns[]>(columnsPermission);
+  public isLoadingRole = signal<boolean>(false);
+  public isLoadingPermission = signal<boolean>(false);
 
   private readonly _accessControlService = inject(AccessControlService)
 
   ngOnInit(): void {
 
     this._accessControlService.getAllRoles().subscribe((response) => {
-      this.listRoles.set(response.data);
+      if(response.statusCode === HttpStatusCode.Ok) this.listRoles.set(response.data);
+      this.isLoadingRole.set(true);
     });
 
     this._accessControlService.getAllPermissions().subscribe((response) => {
-      this.listPermission.set(response.data);
+      if(response.statusCode === HttpStatusCode.Ok) this.listPermission.set(response.data);
+      this.isLoadingPermission.set(true);
     });
   }
 

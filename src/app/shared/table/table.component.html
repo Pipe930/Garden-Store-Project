@@ -18,47 +18,57 @@
 
   <tbody class="table__body">
 
-    @if (dataRowsVar.length == 0) {
+    @defer (when isLoading()) {
+      @for (object of dataRowsVar; track $index) {
+        <tr>
+          <td class="table__body-text">
+            {{$index+1}}
+          </td>
+
+          @for (column of tableColumnsVar; track $index) {
+            <td class="table__body-text">
+
+              @if(column.fieldName == 'action' && showActionButtonVar) {
+                <button class="table__btn-detail btn btn-primary" (click)="onEdit(object)">
+                  Detalle
+                </button>
+              }
+
+              @if(column.dataType == 'boolean'){
+                @if(object[column.fieldName]){
+                  <i class='bx bxs-check-circle table__icon text-success'></i>
+                } @else {
+                  <i class='bx bxs-x-circle table__icon text-danger'></i>
+                }
+              }
+
+              @if(column.dataType == 'date'){
+                <p>{{object[column.fieldName] | date:'dd/MM/YYYY'}}</p>
+              }
+
+              @if(column.fieldName !== 'action' && column.dataType !== 'boolean' && column.dataType !== 'date'){
+
+                {{object[column.fieldName]}}
+              }
+            </td>
+          }
+        </tr>
+      } @empty {
+        <tr>
+          <td [colSpan]="tableColumnsVar.length + 1">
+            <p class="table__message">No tenemos {{messageNoContentVar}} registrados</p>
+          </td>
+        </tr>
+      }
+    } @placeholder {
       <tr>
         <td [colSpan]="tableColumnsVar.length + 1">
-          <p class="table__message">No tenemos {{messageNoContentVar}} registrados</p>
+          <div class="d-flex justify-content-center py-lg-5">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
         </td>
-      </tr>
-    }
-
-    @for (object of dataRowsVar; track $index) {
-      <tr>
-        <td class="table__body-text">
-          {{$index+1}}
-        </td>
-
-        @for (column of tableColumnsVar; track $index) {
-          <td class="table__body-text">
-
-            @if(column.fieldName == 'action' && showActionButtonVar) {
-              <button class="table__btn-detail btn btn-primary" (click)="onEdit(object)">
-                Detalle
-              </button>
-            }
-
-            @if(column.dataType == 'boolean'){
-              @if(object[column.fieldName]){
-                <i class='bx bxs-check-circle table__icon text-success'></i>
-              } @else {
-                <i class='bx bxs-x-circle table__icon text-danger'></i>
-              }
-            }
-
-            @if(column.dataType == 'date'){
-              <p>{{object[column.fieldName] | date:'dd/MM/YYYY'}}</p>
-            }
-
-            @if(column.fieldName !== 'action' && column.dataType !== 'boolean' && column.dataType !== 'date'){
-
-              {{object[column.fieldName]}}
-            }
-          </td>
-        }
       </tr>
     }
   </tbody>

@@ -1,5 +1,6 @@
 @let listCategoriesVar = listCategories();
 @let columnsVar = columns();
+@let isLoadingVar = isLoading();
 
 <div class="container__container-title">
   <h2 class="container__title">Categorias</h2>
@@ -7,4 +8,4 @@
     Crear Categoria
   </button>
 </div>
-<app-table [messageNoContent]="'categorias'" [dataRows]="listCategoriesVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editCategory($event)"></app-table>
+<app-table [messageNoContent]="'categorias'" [dataRows]="listCategoriesVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editCategory($event)" [isLoading]="isLoadingVar"></app-table>

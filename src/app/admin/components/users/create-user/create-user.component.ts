@@ -74,9 +74,10 @@ export class CreateUserComponent implements OnInit {
         if(error.error.statusCode === HttpStatusCode.Conflict){
           this.alerMessage.set(true);
 
-          setTimeout(() => {
+          const timer = setTimeout(() => {
             this.alerMessage.set(false);
           }, 5000);
+          clearTimeout(timer);
           return of();
         }
 

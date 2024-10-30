@@ -71,9 +71,10 @@ export class CreateProductComponent implements OnInit {
       catchError(error => {
         if(error.status === HttpStatusCode.Conflict){
           this.alertMessage.set(true);
-          setTimeout(() => {
+          const timer = setTimeout(() => {
             this.alertMessage.set(false);
-          }, 10000);
+          }, 5000);
+          clearTimeout(timer);
         }
         this._alertService.error("Error al crear el producto", "No se pudo crear el producto");
         return of();
@@ -88,9 +89,7 @@ export class CreateProductComponent implements OnInit {
           type: "cover",
           idProduct: result.data.idProduct
         }
-      ).pipe(
-
-      ).subscribe(result => {
+      ).subscribe(() => {
         this._alertService.success("Carga Imagenes", "Las imagenes se guardaron correctamente");
       });
       this._router.navigate(['/admin/products/list']);

@@ -21,10 +21,12 @@ export class ListCategoriesComponent {
 
   public listCategories = signal<Category[]>([]);
   public columns = signal<TableColumns[]>(categoryColumns);
+  public isLoading = signal<boolean>(false);
 
   ngOnInit(): void {
     this._categoryService.getAllCategories().subscribe(result => {
       if(result.statusCode === HttpStatusCode.Ok) this.listCategories.set(result.data);
+      this.isLoading.set(true);
     })
   }
 

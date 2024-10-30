@@ -7,4 +7,4 @@
     Crear Producto
   </button>
 </div>
-<app-table [messageNoContent]="'productos'" [dataRows]="listProductsVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editProduct($event)"></app-table>
+<app-table [messageNoContent]="'productos'" [dataRows]="listProductsVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editProduct($event)" [isLoading]="isLoading()"></app-table>

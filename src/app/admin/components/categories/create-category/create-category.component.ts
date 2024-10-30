@@ -42,9 +42,10 @@ export class CreateCategoryComponent {
         if(error.status === HttpStatusCode.Conflict) {
 
           this.alertMessage.set(true);
-          setTimeout(() => {
+          const timer = setTimeout(() => {
             this.alertMessage.set(false);
-          }, 5000)
+          }, 5000);
+          clearTimeout(timer);
           return of();
         }
 

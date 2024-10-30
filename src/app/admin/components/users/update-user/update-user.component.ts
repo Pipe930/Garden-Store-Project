@@ -45,11 +45,10 @@ export class UpdateUserComponent implements OnInit {
       this.user.set(response.data);
       this.selectedRoles.set(response.data.rolesUser);
 
-      const phone = response.data.phone.split("+569")[1];
       this.updateUserForm.get("firstName")?.setValue(response.data.firstName);
       this.updateUserForm.get("lastName")?.setValue(response.data.lastName);
       this.updateUserForm.get("email")?.setValue(response.data.email);
-      this.updateUserForm.get("phone")?.setValue(phone);
+      this.updateUserForm.get("phone")?.setValue(response.data.phone.split("+569")[1]);
       this.updateUserForm.get("active")?.setValue(response.data.active);
       this.updateUserForm.updateValueAndValidity();
     });

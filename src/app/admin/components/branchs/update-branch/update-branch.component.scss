@@ -1,0 +1,20 @@
+.container__container-title{
+
+  display: flex;
+  justify-content: space-between;
+
+  .container__btn{
+
+    padding: .6rem 1.4rem;
+    transition: background .3s ease-in-out;
+
+  }
+}
+
+.container__container-information{
+
+  .container-information__container-card{
+
+    margin: 1rem 0;
+  }
+}

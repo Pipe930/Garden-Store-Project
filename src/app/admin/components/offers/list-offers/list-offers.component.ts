@@ -20,10 +20,12 @@ export class ListOffersComponent implements OnInit {
   private readonly _offerService = inject(OfferService);
   public listOffers = signal<Offer[]>([]);
   public columns = signal<TableColumns[]>(offerColumns);
+  public isLoading = signal<boolean>(false);
 
   ngOnInit(): void {
     this._offerService.getAllOffers().subscribe(response => {
       if(response.statusCode === HttpStatusCode.Ok) this.listOffers.set(response.data);
+      this.isLoading.set(true);
     })
   }
 
