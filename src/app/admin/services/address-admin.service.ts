@@ -25,6 +25,6 @@ export class AddressAdminService {
   }
 
   public getAddress(id: number): Observable<AddressAdminResponse> {
-    return this._http.get<AddressAdminResponse>(`${this.urlApi}/${id}`);
+    return this._http.get<AddressAdminResponse>(`${this.urlApi}/admin/${id}`);
   }
 }

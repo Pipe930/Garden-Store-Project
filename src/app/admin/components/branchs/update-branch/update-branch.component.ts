@@ -85,9 +85,8 @@ export class UpdateBranchComponent implements OnInit {
       products: this.createProductBranchForm.value.products
     }
 
-    this._branchService.createStockBranch(productBranchJson).subscribe(response => {
+    this._branchService.createStockBranch(productBranchJson).subscribe(() => {
       this._alertService.success("Productos Añadidos", "Los productos han sido añadidos correctamente");
-      this._router.navigate(['/admin/branchs']);
     });
   }
 

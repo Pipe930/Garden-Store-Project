@@ -52,3 +52,27 @@
     </form>
   </div>
 </div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" #OPTModal data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Ingrese el código</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form novalidate>
+          <div class="otp-container">
+            <div class="otp-input">
+              @for (item of otpArray(); track $index) {
+                <input type="text" maxlength="1" class="otp-digit" #otpDigit
+                (input)="onInput($event, $index)" (keydown)="onKeydown($event, $index)" [autofocus]="$index === 0">
+              }
+            </div>
+          </div>
+          <button type="button" (click)="sendOTP()" class="btn btn-primary" data-bs-dismiss="modal">Enviar Codigo</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

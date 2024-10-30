@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, inject, Renderer2, signal, viewChild, viewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@auth/services/auth.service';
@@ -6,6 +6,7 @@ import { NgClass } from '@angular/common';
 import { AlertService } from '@core/services/alert.service';
 import { catchError, of } from 'rxjs';
 import { HttpStatusCode } from '@angular/common/http';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -20,8 +21,13 @@ export class LoginComponent {
   private readonly _builder = inject(FormBuilder);
   private readonly _authService = inject(AuthService);
   private readonly _alertService = inject(AlertService);
+  private readonly _renderer = inject(Renderer2);
 
   public activateMessage = signal<boolean>(false);
+  public otpArray = signal<string[]>(new Array(6).fill(''));
+  public inputsList = viewChildren<ElementRef>('otpDigit');
+  public modalOPT = viewChild.required<ElementRef>('OPTModal');
+  private idUser = 0;
 
   public formLogin: FormGroup = this._builder.group({
     email: this._builder.control("", [Validators.required, Validators.email, Validators.maxLength(255)]),
@@ -56,9 +62,94 @@ export class LoginComponent {
       })
     ).subscribe(result => {
 
+      if("idUser" in result.data){
+        this.idUser = result.data.idUser;
+        this._alertService.info("Verificación de cuenta", "Como eres usuario administrador, te enviamos un correo con un codigo de verificación a tu correo");
+        this.openModal();
+        return;
+      }
+
       this._alertService.success("Inicio de sesion exitoso", "Bienvenido");
       this._router.navigate(['/']);
     })
+  }
+
+  public sendOTP(): void {
+
+    const otp = this.otpArray().join('');
+
+    if(otp.length < 6) {
+
+      this._alertService.error('Error al verificar', 'El código debe tener 6 dígitos');
+      return;
+    }
+
+    const verifyOtp = { otp, idUser: this.idUser };
+
+    this._authService.verifyOTP(verifyOtp).pipe(
+      catchError((error) => {
+
+        this._alertService.error("Error al verificar", error.error.message);
+
+        return of();
+      })
+    ).subscribe(() => {
+
+      this._alertService.success("Verificación exitosa", "La verifucación ha sido exitosa");
+      this._router.navigate(['/admin/dashboard']);
+    });
+  }
+
+  onInput(event: Event, index: number) {
+    const target = event.target as HTMLInputElement;
+
+    this.otpArray.update(value => {
+      value[index] = target.value;
+      return value;
+    });
+
+    if (target.value.length === 1 && index < this.otpArray().length - 1) {
+      this.moveToNextInput(index);
+    }
+  }
+
+  onKeydown(event: KeyboardEvent, index: number) {
+    const key = event.key;
+
+    if (key === 'Backspace' && index > 0) {
+      setTimeout(() => this.moveToPreviousInput(index), 10)
+    } else if (key !== 'Backspace' && (key < '0' || key > '9')) {
+      event.preventDefault();
+    }
+  }
+
+  moveToNextInput(index: number) {
+
+    const nextInput = this.inputsList()[index + 1].nativeElement;
+    if (nextInput) {
+      nextInput.focus();
+    }
+  }
+
+  moveToPreviousInput(index: number) {
+
+    const previousInput = this.inputsList()[index - 1].nativeElement;
+    if (previousInput) {
+      previousInput.focus();
+    }
+  }
+
+  openModal() {
+    const modalElement = this.modalOPT().nativeElement;
+    this._renderer.addClass(modalElement, 'show');
+    this._renderer.setStyle(modalElement, 'display', 'block');
+    this._renderer.setStyle(modalElement, 'backgroundColor', 'rgba(0, 0, 0, 0.5)');
+  }
+
+  closeModal() {
+    const modalElement = this.modalOPT().nativeElement;
+    this._renderer.removeClass(modalElement, 'show');
+    this._renderer.setStyle(modalElement, 'display', 'none');
   }
 
   get email(){

@@ -4,17 +4,22 @@ export interface FormLogin {
     password: string;
 }
 
-type tokenResponse = {
+type TokenResponse = {
 
     accessToken: string;
     refreshToken: string;
+}
+
+type OPTResponse = {
+  email: string;
+  idUser: number;
 }
 
 export interface LoginResponse {
 
     statusCode: number;
     message: string;
-    data: tokenResponse;
+    data: TokenResponse | OPTResponse;
 }
 
 type ResponseLoginAdminType = {

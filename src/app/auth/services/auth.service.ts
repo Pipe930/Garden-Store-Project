@@ -25,11 +25,10 @@ export class AuthService {
     .pipe(
       map((response) => {
 
-        if(response && response.data.accessToken){
+        if(response && 'accessToken' in response.data && 'refreshToken' in response.data){
           sessionStorage.setItem('accessToken', response.data.accessToken);
           sessionStorage.setItem('refreshToken', response.data.refreshToken);
         }
-
         return response;
       })
     );
