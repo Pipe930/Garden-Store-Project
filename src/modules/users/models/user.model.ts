@@ -78,7 +78,7 @@ export class User extends Model {
         allowNull: false,
         unique: true,
         validate: {
-            is: /^\+56\d{9}$/,
+            is: /^\+569\d{8}$/,
             notEmpty: true,
             len: [12, 12]
         }

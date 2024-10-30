@@ -44,7 +44,6 @@ export class Branch extends Model {
         unique: true,
         validate: {
             is: /^[0-9]{7}$/i,
-            len: [7, 7],
             notEmpty: true
         }
     })
@@ -66,8 +65,7 @@ export class Branch extends Model {
         allowNull: false,
         unique: true,
         validate: {
-            is: /^[0-9]{12}$/i,
-            len: [12, 12],
+            is: /^\+569\d{8}$/,
             notEmpty: true
         }
     })
@@ -91,6 +89,7 @@ export class Branch extends Model {
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
+        defaultValue: 0,
         validate: {
             min: 0
         }
@@ -110,13 +109,13 @@ export class Branch extends Model {
         allowNull: false
     })
     declare idAddress: number;
-
+    
     @HasMany(() => Employee)
     declare employees: Employee[];
-
+    
     @HasMany(() => PurchaseOrder)
     declare purchaseOrders: PurchaseOrder[];
-
+    
     @BelongsToMany(() => Product, () => ProductBranch)
     declare products: Product[];
 }

@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { Commune, Province, Region } from './models/locates.model';
-import { CreateAddressDto } from './dto/create-address.dto';
+import { CreateAddressDto, CreateAddressUserDto } from './dto/create-address.dto';
 import { Address, AddressUser } from './models/address.model';
 
 @Injectable()
@@ -78,43 +78,104 @@ export class AddressService {
         };
     }
 
-    async createAddressUser(createAddressUserDto: CreateAddressDto, idUser: number) {   
+    async findAllAddress(): Promise<ResponseData> {
 
-        const { name, addressName, numDepartment, city, description, idCommune } = createAddressUserDto;
+        const addressList = await Address.findAll<Address>();
+
+        if (addressList.length === 0) return { message: "No tenemos direcciones registradas", statusCode: HttpStatus.NO_CONTENT }
+
+        return {
+            statusCode: HttpStatus.OK,
+            data: addressList
+        }
+    }
+
+    async findOneAddress(idAddress: number): Promise<ResponseData> {
+
+        const address = await Address.findByPk<Address>(idAddress);
+
+        if (!address) throw new NotFoundException("No tenemos una dirección con ese id");
+        
+        return {
+            statusCode: HttpStatus.OK,
+            data: address
+        }
+    }
+
+    async createAddress(createAddressDto: CreateAddressDto): Promise<ResponseData> {
+
+        const { addressName, numDepartment, city, description, idCommune } = createAddressDto;
 
         const commune = await Commune.findByPk<Commune>(idCommune);
 
-        if(!commune) throw new NotFoundException("No tenemos una comuna con ese id");
+        if(!commune) throw new NotFoundException("La comuna no exite");
 
         try {
-
-            const address = await Address.create<Address>({
-                name,
+            await Address.create<Address>({
                 addressName,
                 numDepartment,
                 city,
                 description,
                 idCommune
             });
+        } catch (error) {
+            throw new InternalServerErrorException("Error no se pudo crear la dirección");
+        }
+
+        return {
+            statusCode: HttpStatus.CREATED,
+            message: "La dirección se creo con exito"
+        }
+    }
+
+    async createAddressUser(createAddressUserDto: CreateAddressUserDto, idUser: number): Promise<ResponseData> {   
+
+        const { name, addressName, numDepartment, city, description, idCommune } = createAddressUserDto;
+
+        const commune = await Commune.findByPk<Commune>(idCommune);
+
+        if(!commune) throw new NotFoundException("La comuna no exite");
+
+        const addressFind = await Address.findOne<Address>({
+            where: {
+                addressName
+            }
+        });
+
+        try {
+
+            let idAddress: number;
+
+            if(!addressFind) {
+                const newAddress = await Address.create<Address>({
+                    addressName,
+                    numDepartment,
+                    city,
+                    description,
+                    idCommune
+                });
+
+                idAddress = newAddress.idAddress;
+            } else {
+                idAddress = addressFind.idAddress;
+            }
     
             await AddressUser.create<AddressUser>({
-                idAddress: address.idAddress,
+                name,
+                idAddress,
                 idUser
             });
     
             return {
                 statusCode: HttpStatus.CREATED,
-                message: "La direccion se creo con exito",
-                data: address
+                message: "La direccion se creo con exito"
             }
         } catch (error) {
-
-            console.log(error);
             throw new InternalServerErrorException("Error no se pudo crear la dirección");
         }
     }
 
-    async findAllAddressUser(idUser: number) {
+    async findAllAddressUser(idUser: number): Promise<ResponseData> {
 
         const addressUser = await AddressUser.findAll<AddressUser>({
             where: {
@@ -143,7 +204,7 @@ export class AddressService {
         };
     }
 
-    async updateAddressUser(idAddress: number, idUser: number, createAddressUserDto: CreateAddressDto) {
+    async updateAddressUser(idAddress: number, idUser: number, createAddressUserDto: CreateAddressUserDto): Promise<ResponseData> {
 
         const { name, addressName, numDepartment, city, description, idCommune } = createAddressUserDto;
 
@@ -160,7 +221,7 @@ export class AddressService {
         if(!commune) throw new NotFoundException("No tenemos una comuna con ese id");
         if (!addressUser) throw new NotFoundException("No tenemos una dirección con ese id");
 
-        address.name = name;
+        addressUser.name = name;
         address.addressName = addressName;
         address.numDepartment = numDepartment;
         address.city = city;
@@ -168,6 +229,7 @@ export class AddressService {
         address.idCommune = idCommune;
 
         await address.save();
+        await addressUser.save();
 
         return {
             statusCode: HttpStatus.OK,
@@ -176,7 +238,7 @@ export class AddressService {
         };
     }
 
-    async deleteAddressUser(idAddress: number, idUser: number) {
+    async deleteAddressUser(idAddress: number, idUser: number): Promise<ResponseData> {
 
         const addressUser = await AddressUser.findOne<AddressUser>({
             where: {
@@ -185,15 +247,12 @@ export class AddressService {
             }
         });
 
-        const address = await Address.findByPk<Address>(idAddress);
-
         if (!addressUser) throw new NotFoundException("No tenemos una dirección con ese id");
 
         await addressUser.destroy();
-        await address.destroy();
 
         return {
-            statusCode: HttpStatus.OK,
+            statusCode: HttpStatus.NO_CONTENT,
             message: "La dirección se elimino con exito"
         };
     }

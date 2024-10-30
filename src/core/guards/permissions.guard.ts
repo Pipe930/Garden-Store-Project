@@ -27,18 +27,25 @@ export class PermissionsGuard implements CanActivate {
     try {
       const rolesUser = await this.userService.getUserPermissions(request.user.idUser);
 
+      let hasPermission = false;
       for(const role of rolesUser){
         for(const routePermission of permissionsReflect){
 
           const userPermission = role.permissions.find(
             (permission) => permission.resource === routePermission.resource,
           );
-
+          
+          if(!userPermission) continue;
+          
           const allActionsAviable = routePermission.action.every((requieredAction) => userPermission.actions.includes(requieredAction));
+          
+          if(!allActionsAviable) continue;
 
-          if(!allActionsAviable) throw new ForbiddenException("No tienes permisos para realizar esta accion");
+          hasPermission = true;
         }
       }
+
+      if(!hasPermission) throw new ForbiddenException("No tienes permisos para realizar esta accion");
 
       return true;
     } catch (error) {

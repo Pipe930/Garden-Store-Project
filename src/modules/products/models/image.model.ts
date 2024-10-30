@@ -1,10 +1,6 @@
 import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Product } from "./product.model";
-
-export enum ImageType {
-    COVER_IMAGE = "cover",
-    GALLERY_IMAGE = "gallery"
-}
+import { TypeImagesEnum } from "src/core/enums/typeImages.enum";
 
 @Table({
     tableName: "imagesProduct",
@@ -29,7 +25,7 @@ export class ImagesProduct extends Model {
     declare urlImage: string;
 
     @Column({
-        type: DataType.ENUM(ImageType.COVER_IMAGE, ImageType.GALLERY_IMAGE),
+        type: DataType.ENUM(...Object.values(TypeImagesEnum)),
         allowNull: false,
     })
     declare type: string;

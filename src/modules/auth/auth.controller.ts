@@ -33,7 +33,10 @@ export class AuthController {
     }
 
     @Get('profile')
-    @Permissions([{resource: ResourcesEnum.REVIEWS, action: [ActionsEnum.DELETE]}])
+    @Permissions([
+        { resource: ResourcesEnum.USERS, action: [ActionsEnum.READ, ActionsEnum.CREATE, ActionsEnum.DELETE, ActionsEnum.UPDATE] },
+        { resource: ResourcesEnum.ROLES, action: [ActionsEnum.READ] }
+    ])
     @UseGuards(AuthGuard, PermissionsGuard)
     profile(@Req() request: RequestJwt){
 

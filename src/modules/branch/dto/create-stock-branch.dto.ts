@@ -1,4 +1,5 @@
-import { IsNumber, Min } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsNumber, Min } from "class-validator";
 
 
 export class CreateStockBranchDto {
@@ -6,10 +7,16 @@ export class CreateStockBranchDto {
     @IsNumber()
     readonly idBranch: number;
 
-    @IsNumber()
+    @IsArray()
+    @Type(() => ProductBranch)
+    readonly products: ProductBranch[];
+}
+
+class ProductBranch {
+
     readonly idProduct: number;
 
-    @IsNumber()
-    @Min(1)
+    readonly title: string;
+
     readonly quantity: number;
 }

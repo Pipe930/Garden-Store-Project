@@ -50,7 +50,7 @@ export class ProductsController {
     return this.productsService.update(id, updateProductDto);
   }
 
-  @Delete('product:id')
+  @Delete('product/:id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.remove(id);
   }

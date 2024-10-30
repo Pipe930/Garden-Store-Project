@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { AddressService } from './address.service';
 import { AuthGuard } from 'src/core/guards/auth.guard';
-import { CreateAddressDto } from './dto/create-address.dto';
+import { CreateAddressDto, CreateAddressUserDto } from './dto/create-address.dto';
 import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
 
 @Controller('address')
@@ -33,9 +33,24 @@ export class AddressController {
         return this.addressService.findCommunesByProvince(idProvince);
     }
 
+    @Post()
+    createAddress(@Body() createAddressDto: CreateAddressDto) {
+        return this.addressService.createAddress(createAddressDto);
+    }
+
+    @Get()
+    findAllAddresses() {
+        return this.addressService.findAllAddress();
+    }
+
+    @Get(':idAddress')
+    findOneAddress(@Param('idAddress', ParseIntPipe) idAddress: number) {
+        return this.addressService.findOneAddress(idAddress);
+    }
+
     @Post('user')
     @UseGuards(AuthGuard)
-    createAddress(@Body() createAddressDto: CreateAddressDto, @Req() request: RequestJwt) {
+    createAddressUser(@Body() createAddressDto: CreateAddressUserDto, @Req() request: RequestJwt) {
         return this.addressService.createAddressUser(createAddressDto, request.user.idUser);
     }
 
@@ -47,7 +62,7 @@ export class AddressController {
 
     @Put('user/:idAddressUser')
     @UseGuards(AuthGuard)
-    updateAddressUser(@Body() createAddressDto: CreateAddressDto, @Param('idAddressUser', ParseIntPipe) idAddressUser: number, @Req() request: RequestJwt) {
+    updateAddressUser(@Body() createAddressDto: CreateAddressUserDto, @Param('idAddressUser', ParseIntPipe) idAddressUser: number, @Req() request: RequestJwt) {
         return this.addressService.updateAddressUser( idAddressUser, request.user.idUser, createAddressDto);
     }
 

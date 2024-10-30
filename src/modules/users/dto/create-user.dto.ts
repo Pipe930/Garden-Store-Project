@@ -39,8 +39,6 @@ export class CreateUserDto {
     readonly rePassword: string;
 
     @IsString()
-    @MaxLength(12)
-    @MinLength(12)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
     @Matches(/^\+56\d{9}$/, { message: "El numero de telefono no es valido" })

@@ -1,4 +1,5 @@
 import { IsBase64, IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString } from "class-validator";
+import { TypeImagesEnum } from "src/core/enums/typeImages.enum";
 
 export class FileUploadDto {
 
@@ -14,8 +15,7 @@ export class FileUploadDto {
     @IsNotEmpty()
     readonly typeFormat: string;
 
-    @IsEnum(["cover", "gallery"])
-    @IsNotEmpty()
+    @IsEnum(TypeImagesEnum)
     readonly type: string;
 
     @IsNumber()

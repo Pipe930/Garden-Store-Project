@@ -21,15 +21,6 @@ export class Address extends Model<Address> {
     @Column({
         type: DataType.STRING(255),
         allowNull: false,
-        validate: {
-            notEmpty: true
-        }
-    })
-    declare name: string;
-
-    @Column({
-        type: DataType.STRING(255),
-        allowNull: false,
         field: "address_name",
         validate: {
             notEmpty: true
@@ -92,6 +83,15 @@ export class AddressUser extends Model {
     })
     declare idAddressUser: number;
 
+    @Column({
+        type: DataType.STRING(255),
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
+    })
+    declare name: string;
+
     @ForeignKey(() => Address)
     @Column({
         type: DataType.INTEGER,
@@ -99,10 +99,7 @@ export class AddressUser extends Model {
         field: "id_address"
     })
     declare idAddress: number;
-
-    @BelongsTo(() => Address)
-    declare address: Address;
-
+    
     @ForeignKey(() => User)
     @Column({
         type: DataType.INTEGER,
@@ -110,4 +107,7 @@ export class AddressUser extends Model {
         field: "id_user"
     })
     declare idUser: number;
+
+    @BelongsTo(() => Address)
+    declare address: Address;
 }

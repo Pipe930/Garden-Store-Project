@@ -3,6 +3,7 @@ import { BranchService } from './branch.service';
 import { CreateStockBranchDto } from './dto/create-stock-branch.dto';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { CreateBranchDto } from './dto/create-branch.dto';
 
 @Controller('branchs')
 export class BranchController {
@@ -14,11 +15,21 @@ export class BranchController {
   }
 
   @Post()
+  createBranch(@Body() createBranchDto: CreateBranchDto) {
+    return this.branchService.createBranch(createBranchDto);
+  }
+
+  @Get(':id')
+  getBranch(@Param('id', ParseIntPipe) id: number) {
+    return this.branchService.getBranch(id);
+  }
+
+  @Post('stock')
   create(@Body() createStockBranchDto: CreateStockBranchDto) {
     return this.branchService.createStockBranch(createStockBranchDto);
   }
 
-  @Get('stock/:idBranch/:idProduct')
+  @Get('stock/:idBranch')
   branchStock(@Param('idBranch', ParseIntPipe) idBranch: number, @Param('idProduct', ParseIntPipe) idProduct: number) {
     return this.branchService.getStockBranch(idBranch, idProduct);
   }
