@@ -6,6 +6,7 @@ import { CartComponent } from './components/cart/cart.component';
 import { authenticationGuard } from '../core/guards/authentication.guard';
 import { PurchaseComponent } from './components/purchase/purchase.component';
 import { PurchaseConfirmComponent } from './components/purchase-confirm/purchase-confirm.component';
+import { AccountComponent } from './components/account/account.component';
 
 export const routesPages: Routes = [
 
@@ -39,6 +40,11 @@ export const routesPages: Routes = [
       {
         path: "purchase-confirm",
         component: PurchaseConfirmComponent,
+        canActivate: [authenticationGuard]
+      },
+      {
+        path: "account",
+        component: AccountComponent,
         canActivate: [authenticationGuard]
       }
     ]

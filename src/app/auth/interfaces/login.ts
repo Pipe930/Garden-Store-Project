@@ -22,6 +22,13 @@ export interface LoginResponse {
     data: TokenResponse | OPTResponse;
 }
 
+export interface RefreshTokenResponse {
+
+    statusCode: number;
+    message: string;
+    data: TokenResponse;
+}
+
 type ResponseLoginAdminType = {
   idUser: number;
   email: string;

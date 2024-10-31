@@ -57,8 +57,8 @@
               <label class="accordion-left__label">Seleccione una Sucursal</label>
               <select class="accordion-left__select" (change)="selectBranch($event)">
                 <option value="" class="accordion-left__option">Sucursal</option>
-                @for (branch of listBranchs; track $index) {
-                  <option [value]="branch.id_branch" class="accordion-left__option">{{branch.name_branch | titlecase}}</option>
+                @for (branch of listBranchs(); track $index) {
+                  <option [value]="branch.idBranch" class="accordion-left__option">{{branch.name | titlecase}}</option>
                 }
               </select>
             </div>

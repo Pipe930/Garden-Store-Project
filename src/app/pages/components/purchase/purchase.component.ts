@@ -11,6 +11,7 @@ import { RouterLink } from '@angular/router';
 import { CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common';
 import { SessionService } from '@core/services/session.service';
 import { TransbankService } from '@pages/services/transbank.service';
+import { Branch } from '@admin/interfaces/branch';
 
 @Component({
   selector: 'app-purchase',
@@ -54,11 +55,11 @@ export class PurchaseComponent implements OnInit {
   public retirementStorePickup: string = TypeRetirementEnum.STORE_PICKUP;
   public retirementHomeDelivery: string = TypeRetirementEnum.HOME_DELIVERY;
 
-  public listAddress = signal<Array<Address>>([]);
-  public listBranchs: Array<any> = [];
-  public listRegions = signal<Array<Region>>([]);
-  public listProvince = signal<Array<Province>>([]);
-  public listCommune = signal<Array<Commune>>([]);
+  public listAddress = signal<Address[]>([]);
+  public listBranchs = signal<Branch[]>([]);
+  public listRegions = signal<Region[]>([]);
+  public listProvince = signal<Province[]>([]);
+  public listCommune = signal<Commune[]>([]);
   public cart = signal<Cart>(cartJson);
 
   public voucher: Voucher = VoucherObject;
@@ -93,7 +94,7 @@ export class PurchaseComponent implements OnInit {
     const element = event.target as HTMLSelectElement;
 
     if(element.value != ""){
-      this._addressService.getProvinceRegion(element.value).subscribe(result => {
+      this._addressService.getProvinceRegion(parseInt(element.value)).subscribe(result => {
 
         this.listProvince.set(result.data);
         this.formCreateAddress.get("province")?.enable();
@@ -111,7 +112,7 @@ export class PurchaseComponent implements OnInit {
     const element = event.target as HTMLSelectElement;
 
     if(element.value != ""){
-      this._addressService.getProvinceCommune(element.value).subscribe(result => {
+      this._addressService.getProvinceCommune(parseInt(element.value)).subscribe(result => {
 
         this.listCommune.set(result.data);
         this.formCreateAddress.get("commune")?.enable();
@@ -144,8 +145,6 @@ export class PurchaseComponent implements OnInit {
         description: form.description,
         idCommune: parseInt(form.commune)
       }
-
-      console.log(json);
 
       this._addressService.createAddress(json).subscribe(result => {
         this._alertService.toastSuccess("La dirección se registro con exito");

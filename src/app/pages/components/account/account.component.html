@@ -1,0 +1,426 @@
+@let userVar = user();
+
+<div class="profile">
+  <h2 class="profile__title">Mi Cuenta</h2>
+  <div class="profile__container">
+
+    <div class="profile__tab">
+      <div class="list-group list-group-flush" id="list-tab" role="tablist">
+        <a class="list-group-item list-group-item-action active d-flex align-items-center" id="profile-information-list" data-bs-toggle="list" role="tab" href="#profile-information" aria-controls="profile-information">
+          <i class='bx bx-user-circle bx-sm'></i>
+          <span class="px-2">
+            Mis Datos
+          </span>
+        </a>
+        <a class="list-group-item list-group-item-action d-flex align-items-center" id="list-tickets-list" data-bs-toggle="list" role="tab" href="#list-tickets" aria-controls="list-tickets">
+          <i class='bx bx-purchase-tag bx-sm'></i>
+          <span class="px-2">
+            Boletas
+          </span>
+        </a>
+        <a class="list-group-item list-group-item-action d-flex align-items-center" id="list-address-list" data-bs-toggle="list" role="tab" href="#list-address" aria-controls="list-address">
+          <i class='bx bx-directions bx-sm'></i>
+          <span class="px-2">
+            Direcciones
+          </span>
+        </a>
+        <a class="list-group-item list-group-item-action d-flex align-items-center" id="list-orders-list" data-bs-toggle="list" role="tab" href="#list-orders" aria-controls="list-orders">
+          <i class='bx bx-box bx-sm'></i>
+          <span class="px-2">
+            Mis Pedidos
+          </span>
+        </a>
+        <a class="list-group-item list-group-item-action d-flex align-items-center" (click)="logout()" href="">
+          <i class='bx bx-log-out bx-sm'></i>
+          <span class="px-2">
+            Cerrar Sesión
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <div class="profile__content">
+
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="profile-information" role="tabpanel" aria-labelledby="profile-information-list">
+          <div class="profile__container-information">
+            <h3 class="profile__title-content">Mis Datos</h3>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Editar Datos</button>
+          </div>
+
+          <ul class="list-group mb-4">
+            <li class="list-group-item py-3">
+              <span>Nombre: {{userVar.firstName}}</span>
+            </li>
+            <li class="list-group-item py-3">
+              <span>Apellido: {{userVar.lastName}}</span>
+            </li>
+            <li class="list-group-item py-3">
+              <span>Telefono: {{userVar.phone}}</span>
+            </li>
+            <li class="list-group-item py-3">
+              <span>Correo: {{userVar.email}}</span>
+            </li>
+          </ul>
+
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar Datos</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+
+                  <form class="modal-update-profile__form" [formGroup]="updateFormUser" (ngSubmit)="updateProfile()">
+                    <fieldset class="form__control py-2">
+                      <label for="first_name" class="form-label">Nombre</label>
+                      <input type="text" id="first_name" class="form-control" formControlName="firstName" [ngClass]="{
+                        'is-invalid': firstName.invalid && (firstName.dirty || firstName.touched)
+                      }">
+                    </fieldset>
+                    <fieldset class="form__control py-2">
+                      <label for="last_name" class="form-label">Apellido</label>
+                      <input type="text" id="last_name" class="form-control" formControlName="lastName" [ngClass]="{
+                        'is-invalid': lastName.invalid && (lastName.dirty || lastName.touched)
+                      }">
+                    </fieldset>
+                    <fieldset class="form__control py-2">
+                      <label for="phoneInput" class="form-label">Telefono</label>
+                      <div class="input-group">
+                        <span class="input-group-text">+569</span>
+                        <input type="text" class="form-control form__input" id="phoneInput" formControlName="phone" [ngClass]="{
+                          'is-invalid': phone.invalid && (phone.dirty || phone.touched)
+                        }">
+                        @if(phone.getError("required")){
+                          <span class="invalid-feedback">Este campo es requerido</span>
+                        }
+                        @if(phone.getError("pattern")){
+                          <span class="invalid-feedback">El numero de telefono no es valido</span>
+                        }
+                      </div>
+                    </fieldset>
+                    <fieldset class="form__control py-2">
+                      <label for="email" class="form-label">Correo</label>
+                      <input type="email" id="email" class="form-control" formControlName="email" [ngClass]="{
+                        'is-invalid': email.invalid && (email.dirty || email.touched)
+                      }">
+                    </fieldset>
+
+                    <div class="d-grid gap-2 pt-2">
+                      <button class="btn btn-primary" type="submit" data-bs-dismiss="modal">Cambiar Datos</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="profile__title-content">Cambiar Contraseña</h3>
+          <form action="" class="profile__form" [formGroup]="changePasswordForm" (ngSubmit)="changePassword()">
+            <fieldset class="form__control">
+              <label for="current_password" class="form__text form-label">Contraseña Actual</label>
+              <input type="password" id="current_password" class="form-control" formControlName="currentPassword" [ngClass]="{
+                'is-invalid': currentPassword.invalid && (currentPassword.dirty || currentPassword.touched)
+              }">
+
+              @if (currentPassword.getError('required')){
+                <span class="invalid-feedback">Este campo es requerido</span>
+              }
+              @if (currentPassword.getError('minlength')){
+                <span class="invalid-feedback">Tiene que tener minimo 8 caracteres</span>
+              }
+              @if (currentPassword.getError('maxlength')){
+                <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+              }
+            </fieldset>
+            <fieldset class="form__control">
+              <label for="new_password" class="form__text form-label">Nueva Contraseña</label>
+              <input type="password" id="new_password" class="form-control" formControlName="newPassword" [ngClass]="{
+                'is-invalid': newPassword.invalid && (newPassword.dirty || newPassword.touched)
+              }">
+
+              @if (newPassword.getError('required')){
+                <span class="invalid-feedback">Este campo es requerido</span>
+              }
+              @if (newPassword.getError('minlength')){
+                <span class="invalid-feedback">Tiene que tener minimo 8 caracteres</span>
+              }
+              @if (newPassword.getError('maxlength')){
+                <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+              }
+            </fieldset>
+            <fieldset class="form__control">
+              <label for="re_new_password" class="form__text form-label">Confirmar Contraseña</label>
+              <input type="password" id="re_new_password" class="form-control" formControlName="reNewPassword" [ngClass]="{
+                'is-invalid': reNewPassword.invalid && (reNewPassword.dirty || reNewPassword.touched)
+              }">
+              @if (reNewPassword.getError('required')){
+                <span class="invalid-feedback">Este campo es requerido</span>
+              }
+              @if (reNewPassword.getError('minlength')){
+                <span class="invalid-feedback">Tiene que tener minimo 8 caracteres</span>
+              }
+              @if (reNewPassword.getError('maxlength')){
+                <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+              }
+            </fieldset>
+            <button class="btn btn-success" type="submit">Cambiar Contraseña</button>
+          </form>
+        </div>
+        <div class="tab-pane fade" id="list-tickets" role="tabpanel" aria-labelledby="list-tickets-list">
+          <h3 class="shipment__title-content">Mis Compras</h3>
+
+          <div class="container-fluid py-5">
+
+            @for (purchase of listPurchase(); track $index) {
+
+
+              <div class="card">
+                <div class="card-header py-3">
+                  <div class="row text-center align-items-center">
+                    <div class="col">
+                      <strong>Estado: {{purchase.status}}</strong>
+                    </div>
+                    <div class="col">
+                      <strong>Total: ${{purchase.priceTotal | number}}</strong>
+                    </div>
+                    <div class="col">
+                      <button class="btn btn-primary px-4 py-2">Boleta</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+
+                  <p class="card-text">
+                    <strong>Fecha de Compra: {{purchase.createdAt | date: 'dd/MM/yyyy'}}</strong>
+                  </p>
+                  @for (product of purchase.saleProducts; track $index) {
+                    <div class="row">
+                      <div class="col">
+                        <p class="card-text"><strong>Producto:</strong> {{product.product.title}}</p>
+                      </div>
+                      <div class="col">
+                        <p class="card-text"><strong>Cantidad:</strong> {{product.quantity}}</p>
+                      </div>
+                      <div class="col">
+                        <p class="card-text"><strong>Precio Unitario:</strong> ${{product.product.price | number}}</p>
+                      </div>
+                    </div>
+                  }
+                </div>
+                <div class="card-footer text-lg-end p-3">
+                  <a class="icon-link text-decoration-none" href="#">
+                    <i class='bx bxs-info-circle'></i>
+                    Problemas con mi compra
+                  </a>
+                </div>
+              </div>
+            }
+
+          </div>
+        </div>
+        <div class="tab-pane fade" id="list-address" role="tabpanel" aria-labelledby="list-address-list">
+          <div class="address__container-header">
+            <h3 class="address__title-content">Mis Direcciones</h3>
+            <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#createAddressModal">Agregar Dirección</button>
+          </div>
+
+          <div class="address__container-list">
+
+            <ul class="address__list">
+              @for (address of listAddress(); track $index) {
+                <div class="card my-5">
+                  <div class="card-body">
+                    <h5 class="card-title">{{address.name | titlecase}}</h5>
+                    <p class="card-text">{{address.address.description}}</p>
+                  </div>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                      {{address.address.addressName}}, {{address.address.commune.name}}, {{address.address.city}}
+                    </li>
+                  </ul>
+                  <div class="card-footer d-flex justify-content-between">
+                    <button class="btn btn-primary" (click)="getAddress(address.idAddress)" data-bs-toggle="modal" data-bs-target="#updateAddressModal">Editar</button>
+                    <button class="btn btn-danger" (click)="deleteAddress(address.idAddress)">Eliminar</button>
+                  </div>
+                </div>
+              } @empty {
+                <li>
+                  <p class="address__message">No tienes ninguna direccion registrada</p>
+                </li>
+              }
+            </ul>
+          </div>
+
+          <div class="modal fade" id="updateAddressModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Modificar Dirección <i class='bx bxs-plus-square'></i></h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="" [formGroup]="updateFormAddress" (ngSubmit)="updateAddress()" class="address__form">
+
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Nombre Dirección</label>
+                      <input type="text" formControlName="name" class="form-control">
+                      <!-- <div class="form__container-errors" *ngIf="name_address.invalid && (name_address.dirty || name_address.touched)">
+                        <span class="form__errors" *ngIf="name_address.getError('required')">Este campo es requerido</span>
+                        <span class="form__errors" *ngIf="name_address.getError('maxlength')">Tiene que tener maximo 100 caracteres</span>
+                      </div> -->
+                    </fieldset>
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Calle y Número</label>
+                      <input type="text" placeholder="Ej: Pepipo 1234" formControlName="addressName" class="form-control">
+                      <!-- <div class="form__container-errors" *ngIf="street_number.invalid && (street_number.dirty || street_number.touched)">
+                        <span class="form__errors" *ngIf="street_number.getError('required')">Este campo es requerido</span>
+                        <span class="form__errors" *ngIf="street_number.getError('maxlength')">Tiene que tener maximo 60 caracteres</span>
+                      </div> -->
+                    </fieldset>
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Ciudad</label>
+                      <input type="text" placeholder="Ej: Santiago" formControlName="city" class="form-control">
+                      <!-- <div class="form__container-errors" *ngIf="street_number.invalid && (street_number.dirty || street_number.touched)">
+                        <span class="form__errors" *ngIf="street_number.getError('required')">Este campo es requerido</span>
+                        <span class="form__errors" *ngIf="street_number.getError('maxlength')">Tiene que tener maximo 60 caracteres</span>
+                      </div> -->
+                    </fieldset>
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Piso / Oficina / Apto / Depto</label>
+                      <textarea formControlName="description" class="form-control" placeholder="Descripción de la ubicación. Ej: departamento, torre, oficina" rows="2"></textarea>
+                    </fieldset>
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Region</label>
+                      <select formControlName="region" class="form-select" (change)="updateChangeRegion($event)">
+                        <option value="">Region</option>
+                        @for (region of listRegions(); track $index) {
+                          <option [value]="region.idRegion">{{region.name}}</option>
+                        }
+                      </select>
+                    </fieldset>
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Provincias</label>
+                      <select formControlName="province" class="form-select" (change)="updateChangeProvince($event)">
+                        <option value="">Provincia</option>
+                        @for (province of listProvinceUpdate(); track $index) {
+                          <option [value]="province.idProvince">{{province.name}}</option>
+                        }
+                      </select>
+                    </fieldset>
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Comuna</label>
+                      <select formControlName="commune" class="form-select">
+                        <option value="">Comuna</option>
+                        @for (commune of listCommuneUpdate(); track $index) {
+                          <option [value]="commune.idCommune">{{commune.name}}</option>
+                        }
+                      </select>
+                    </fieldset>
+                    <div class="d-grid gap-2 pt-2 pt-3">
+                      <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Actualizar Dirección</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="createAddressModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Dirección <i class='bx bxs-plus-square'></i></h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                  <form action="" [formGroup]="createFormAddress" (ngSubmit)="createAddress()" class="address__form">
+
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Nombre Dirección</label>
+                      <input type="text" formControlName="name" class="form-control" [ngClass]="{
+                        'is-invalid': name.invalid && (name.dirty || name.touched)
+                      }">
+
+                      @if (name.getError('required')){
+                        <span class="invalid-feedback">Este campo es requerido</span>
+                      }
+                      @if (name.getError('maxlength')){
+                        <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                      }
+                    </fieldset>
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Calle y Número</label>
+                      <input type="text" placeholder="Ej: Pepipo 1234" formControlName="addressName" class="form-control" [ngClass]="{
+                        'is-invalid': addressName.invalid && (addressName.dirty || addressName.touched)
+                      }">
+
+                      @if (addressName.getError('required')){
+                        <span class="invalid-feedback">Este campo es requerido</span>
+                      }
+                      @if (addressName.getError('maxlength')){
+                        <span class="invalid-feedback">Tiene que tener maximo 60 caracteres</span>
+                      }
+                    </fieldset>
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Ciudad</label>
+                      <input type="text" placeholder="Ej: Santiago" formControlName="city" class="form-control" [ngClass]="{
+                        'is-invalid': city.invalid && (city.dirty || city.touched)
+                      }">
+
+                      @if (city.getError('required')){
+                        <span class="invalid-feedback">Este campo es requerido</span>
+                      }
+                      @if (city.getError('maxlength')){
+                        <span class="invalid-feedback">Tiene que tener maximo 60 caracteres</span>
+                      }
+                    </fieldset>
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Piso / Oficina / Apto / Depto</label>
+                      <textarea formControlName="description" class="form-control" placeholder="Descripción de la ubicación. Ej: departamento, torre, oficina" rows="2"></textarea>
+                    </fieldset>
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Region</label>
+                      <select formControlName="region" class="form-select" (change)="changeRegion($event)">
+                        <option value="">Region</option>
+                        @for (region of listRegions(); track $index) {
+                          <option [value]="region.idRegion" >{{region.name}}</option>
+                        }
+                      </select>
+                    </fieldset>
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Provincias</label>
+                      <select formControlName="province" class="form-select" (change)="changeProvince($event)">
+                        <option value="">Provincia</option>
+                        @for (province of listProvince(); track $index) {
+                          <option [value]="province.idProvince">{{province.name}}</option>
+                        }
+                      </select>
+                    </fieldset>
+                    <fieldset class="address__form-control py-2">
+                      <label for="" class="form-label">Comuna</label>
+                      <select formControlName="commune" class="form-select">
+                        <option value="">Comuna</option>
+                        @for (commune of listCommune(); track $index) {
+                          <option [value]="commune.idCommune">{{commune.name}}</option>
+                        }
+                      </select>
+                    </fieldset>
+                    <div class="d-grid gap-2 pt-2 pt-3">
+                      <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Agregar Dirección</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="list-orders" role="tabpanel" aria-labelledby="list-orders-list">
+          hola mundo 4
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

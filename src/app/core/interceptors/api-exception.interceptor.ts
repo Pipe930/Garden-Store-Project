@@ -1,9 +1,12 @@
 import { HttpErrorResponse, HttpInterceptorFn, HttpStatusCode } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, EMPTY, switchMap, throwError } from 'rxjs';
+import { catchError, concatMap, EMPTY, Subject, throwError } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { Router } from '@angular/router';
 import { validUrl } from '../utils/urls-api';
+
+let refreshTokenInProgress = false;
+let refreshTokenSubject: Subject<string | null> = new Subject<string | null>();
 
 export const apiExceptionInterceptor: HttpInterceptorFn = (req, next) => {
 
@@ -14,32 +17,55 @@ export const apiExceptionInterceptor: HttpInterceptorFn = (req, next) => {
 
     catchError((error: HttpErrorResponse) => {
 
-      if(!validUrl(req)) return next(req);
+      if (!validUrl(req)) return next(req);
 
-      if(error.status === HttpStatusCode.Unauthorized){
+      if (error.status === HttpStatusCode.Unauthorized) {
 
-        return authService.refreshToken().pipe(
+        if (!refreshTokenInProgress) {
 
-          switchMap((result: any) => {
+          refreshTokenInProgress = true;
+          return authService.refreshToken().pipe(
+            concatMap((response) => {
 
-            sessionStorage.setItem('accessToken', result.data.accessToken);
-            sessionStorage.setItem('refreshToken', result.data.refreshToken);
+              sessionStorage.setItem('accessToken', response.data.accessToken);
+              sessionStorage.setItem('refreshToken', response.data.refreshToken);
 
-            return next(req.clone({
+              refreshTokenSubject.next(response.data.accessToken);
 
-              setHeaders: {
-                Authorization: "Bearer " + result.data.accessToken
-              }
+              refreshTokenInProgress = false;
+              refreshTokenSubject = new Subject<string | null>();
+
+              return next(req.clone({
+                setHeaders: {
+                  Authorization: "Bearer " + response.data.accessToken
+                }
+              }));
+            }),
+            catchError(() => {
+
+              refreshTokenInProgress = false;
+              refreshTokenSubject = new Subject<string | null>();
+              sessionStorage.clear();
+              router.navigate(["auth/login"]);
+              return EMPTY;
             })
-          )
-          }),
-          catchError(() => {
+          );
+        }
 
-            sessionStorage.clear();
-            router.navigate(["auth/login"]);
-            return EMPTY;
+        return refreshTokenSubject.pipe(
+          concatMap((newToken) => {
+            if (newToken) {
+
+              return next(req.clone({
+                setHeaders: {
+                  Authorization: "Bearer " + newToken
+                }
+              }));
+            }
+
+            return throwError(() => error);
           })
-        )
+        );
       }
 
       return throwError(() => error);

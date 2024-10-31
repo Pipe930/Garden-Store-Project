@@ -31,7 +31,7 @@ export class PurchaseConfirmComponent {
 
           const voucherObject: Voucher = JSON.parse(localStorage.getItem("voucher")!);
 
-          if(voucherObject.typeRetirement === TypeRetirementEnum.HOME_DELIVERY && voucherObject.address.address.name !== ""){
+          if(voucherObject.typeRetirement === TypeRetirementEnum.HOME_DELIVERY && voucherObject.address.name !== ""){
 
             this.voucher = {
               priceTotal: voucherObject.totalPrice,

@@ -5,7 +5,8 @@ export const urlsAuthorization: Array<string> = [
   "logout",
   "user",
   "transbank",
-  "sales"
+  "sales",
+  "profile"
 ]
 
 export function validUrl(req: HttpRequest<unknown>): boolean {

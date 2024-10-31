@@ -1,22 +1,22 @@
 export interface Region {
 
-  idRegion: string;
+  idRegion: number;
   name: string;
   code: string;
 }
 
 export interface Province {
 
-  idProvince: string;
+  idProvince: number;
   name: string;
-  idRegion: string;
+  idRegion: number;
 }
 
 export interface Commune {
 
-  idCommune: string;
+  idCommune: number;
   name: string;
-  idProvince: string;
+  idProvince: number;
 }
 
 export interface ListResponseRegion {

@@ -2,23 +2,41 @@ import { Address } from "./address";
 
 export interface Purchase {
 
-  createAt: Date;
-  updateAt: Date;
+  idSale: string;
   priceNet: number;
   priceIva: number;
   priceTotal: number;
   discountApplied: number;
   productsQuantity: number;
   status: string;
-  withdrawal: string;
-  user: number;
+  idUser: number;
+  createdAt: Date;
+  updatedAt: Date;
+  saleProducts: PurchaseProduct[];
+  shipping: null;
+}
+
+interface ProductPurchase {
+
+  title: string;
+  price: number;
+}
+
+export interface PurchaseProduct {
+  product: ProductPurchase;
+  quantity: number;
+}
+
+export interface ResponseListUserPurchase {
+  status: number;
+  data: Purchase[];
 }
 
 export interface ResponseListPurchase {
 
   status: string;
   count: number;
-  data: Array<Purchase>;
+  data: Purchase[];
 }
 
 export enum TypeStatusEnum {
@@ -115,7 +133,6 @@ export const VoucherObject: Voucher = {
   address: {
     address: {
       idAddress: 0,
-      name: "",
       addressName: "",
       city: "",
       description: "",
@@ -124,6 +141,7 @@ export const VoucherObject: Voucher = {
         name: ""
       }
     },
+    name: "",
     idAddress: 0,
     idAddressUser: 0,
     idUser: 0

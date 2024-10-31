@@ -1,6 +1,5 @@
 type TypeAddress = {
   idAddress: number;
-  name: string;
   addressName: string;
   numDepartment?: string;
   city: string;
@@ -10,6 +9,8 @@ type TypeAddress = {
 
 export interface Address {
 
+
+  name: string;
   address: TypeAddress;
   idAddress: number;
   idAddressUser: number;
@@ -44,9 +45,9 @@ export interface ResponseAddress{
 
 export const addressObject: Address = {
 
+  name: "",
   address: {
     idAddress: 0,
-    name: "",
     addressName: "",
     city: "",
     description: "",
