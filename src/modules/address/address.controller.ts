@@ -23,6 +23,21 @@ export class AddressController {
         return this.addressService.findAllCommunes();
     }
 
+    @Get('region/:idRegion')
+    findRegionById(@Param('idRegion', ParseIntPipe) idRegion: number) {
+        return this.addressService.findRegionById(idRegion);
+    }
+
+    @Get('province/:idProvince')
+    findProvinceById(@Param('idProvince', ParseIntPipe) idProvince: number) {
+        return this.addressService.findProvinceById(idProvince);
+    }
+
+    @Get('commune/:idCommune')
+    findCommuneById(@Param('idCommune', ParseIntPipe) idCommune: number) {
+        return this.addressService.findCommuneById(idCommune);
+    }
+
     @Get('provinces/:idRegion')
     findProvincesByRegion(@Param('idRegion', ParseIntPipe) idRegion: number) {
         return this.addressService.findProvincesByRegion(idRegion);
@@ -43,7 +58,7 @@ export class AddressController {
         return this.addressService.findAllAddress();
     }
 
-    @Get(':idAddress')
+    @Get('admin/:idAddress')
     findOneAddress(@Param('idAddress', ParseIntPipe) idAddress: number) {
         return this.addressService.findOneAddress(idAddress);
     }
@@ -58,6 +73,12 @@ export class AddressController {
     @UseGuards(AuthGuard)
     findAllAddressesUser(@Req() request: RequestJwt) {
         return this.addressService.findAllAddressUser(request.user.idUser);
+    }
+
+    @Get('user/:idAddressUser')
+    @UseGuards(AuthGuard)
+    findOneAddressUser(@Param('idAddressUser', ParseIntPipe) idAddressUser: number, @Req() request: RequestJwt) {
+        return this.addressService.findOneAddressUser(idAddressUser, request.user.idUser);
     }
 
     @Put('user/:idAddressUser')

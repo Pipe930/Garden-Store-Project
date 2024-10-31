@@ -99,15 +99,18 @@ export class CartService {
         const cart = await this.getCartUser(idUser);
 
         if(!item) throw new NotFoundException("Item no encontrado");
-        if(item.quantity === 1) await item.destroy();
-
-        item.quantity -= 1;
-        item.priceUnit = item.quantity * item.product.price;
-        await item.save();
+        if(item.quantity === 1){
+            await item.destroy()
+        } else {
+            item.quantity -= 1;
+            item.priceUnit = item.quantity * item.product.price;
+            await item.save();
+        }
 
         cart.priceTotal = this.cartTotal(cart);
         cart.quantityTotal = this.cartQuantity(cart);
         cart.productsTotal = this.cartProducts(cart);
+
 
         return {
             statusCode: HttpStatus.OK,

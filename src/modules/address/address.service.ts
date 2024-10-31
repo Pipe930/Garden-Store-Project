@@ -20,7 +20,7 @@ export class AddressService {
         };
     }
 
-    async findAllProvinces() {
+    async findAllProvinces(): Promise<ResponseData> {
 
         const provinces = await Province.findAll<Province>();
 
@@ -33,7 +33,7 @@ export class AddressService {
         };
     }
 
-    async findAllCommunes() {
+    async findAllCommunes(): Promise<ResponseData> {
 
         const communes = await Commune.findAll<Commune>();
 
@@ -46,7 +46,7 @@ export class AddressService {
         };
     }
 
-    async findProvincesByRegion(idRegion: number) {
+    async findProvincesByRegion(idRegion: number): Promise<ResponseData> {
 
         const provinces = await Province.findAll<Province>({
             where: {
@@ -62,7 +62,7 @@ export class AddressService {
         };
     }
 
-    async findCommunesByProvince(idProvince: number) {
+    async findCommunesByProvince(idProvince: number): Promise<ResponseData> {
 
         const communes = await Commune.findAll<Commune>({
             where: {
@@ -75,6 +75,42 @@ export class AddressService {
         return {
             statusCode: HttpStatus.OK,
             data: communes
+        };
+    }
+
+    async findRegionById(idRegion: number): Promise<ResponseData> {
+
+        const region = await Region.findByPk<Region>(idRegion);
+
+        if (!region) throw new NotFoundException("No tenemos una región con ese id");
+
+        return {
+            statusCode: HttpStatus.OK,
+            data: region
+        };
+    }
+
+    async findProvinceById(idProvince: number): Promise<ResponseData> {
+
+        const province = await Province.findByPk<Province>(idProvince);
+
+        if (!province) throw new NotFoundException("No tenemos una provincia con ese id");
+
+        return {
+            statusCode: HttpStatus.OK,
+            data: province
+        };
+    }
+
+    async findCommuneById(idCommune: number): Promise<ResponseData> {
+
+        const commune = await Commune.findByPk<Commune>(idCommune);
+
+        if (!commune) throw new NotFoundException("No tenemos una comuna con ese id");
+
+        return {
+            statusCode: HttpStatus.OK,
+            data: commune
         };
     }
 
@@ -197,6 +233,35 @@ export class AddressService {
         });
 
         if (addressUser.length === 0) throw new NotFoundException("No tenemos direcciones registradas con este usuario");
+
+        return {
+            statusCode: HttpStatus.OK,
+            data: addressUser
+        };
+    }
+
+    async findOneAddressUser(idAddress: number, idUser: number): Promise<ResponseData> {
+
+        const addressUser = await AddressUser.findOne<AddressUser>({
+            where: {
+                idAddress,
+                idUser
+            },
+            include: [
+                {
+                    model: Address,
+
+                    include: [
+                        {
+                            model: Commune,
+                            attributes: ['idCommune', 'name']
+                        }
+                    ]
+                }
+            ]
+        });
+
+        if (!addressUser) throw new NotFoundException("No tenemos una dirección con ese id");
 
         return {
             statusCode: HttpStatus.OK,

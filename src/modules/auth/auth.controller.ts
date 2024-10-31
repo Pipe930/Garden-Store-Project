@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, UseGuards, Req } from '@nestjs/common';
+import { Body, Controller, Post, Get, UseGuards, Req, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthGuard } from 'src/core/guards/auth.guard';
@@ -12,10 +12,7 @@ import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
 import { DeleteAccountDto } from './dto/delete-account.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { ResendOTPDto } from './dto/resend-otp.dto';
-import { Permissions } from 'src/core/decorators/permissions.decorator';
-import { ResourcesEnum } from 'src/core/enums/resourses.enum';
-import { ActionsEnum } from 'src/core/enums/actions.enum';
-import { PermissionsGuard } from 'src/core/guards/permissions.guard';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -33,15 +30,15 @@ export class AuthController {
     }
 
     @Get('profile')
-    @Permissions([
-        { resource: ResourcesEnum.USERS, action: [ActionsEnum.READ, ActionsEnum.CREATE, ActionsEnum.DELETE, ActionsEnum.UPDATE] },
-        { resource: ResourcesEnum.ROLES, action: [ActionsEnum.READ] }
-    ])
-    @UseGuards(AuthGuard, PermissionsGuard)
+    @UseGuards(AuthGuard)
     profile(@Req() request: RequestJwt){
+        return this.authService.profile(request.user.idUser);
+    }
 
-        console.log(request.user);
-        return 'profile';
+    @Put('profile')
+    @UseGuards(AuthGuard)
+    updateProfile(@Req() request: RequestJwt, @Body() updateProfileDto: UpdateProfileDto){
+        return this.authService.updateProfile(request.user.idUser, updateProfileDto);
     }
 
     @Post('activate/account')

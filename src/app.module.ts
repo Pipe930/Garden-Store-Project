@@ -35,7 +35,7 @@ import { PurchaseModule } from './modules/purchase/purchase.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('keyJwt'),
-        signOptions: {  expiresIn: '60m' }
+        signOptions: {  expiresIn: '30m' }
       }),
       inject: [ConfigService],
       global: true

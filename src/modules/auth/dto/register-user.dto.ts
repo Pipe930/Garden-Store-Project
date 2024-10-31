@@ -16,6 +16,7 @@ export class RegisterUserDto {
     @IsEmail()
     @MaxLength(255)
     @IsNotEmpty()
+    @Transform(({value}) => value.trim())
     readonly email: string;
 
     @IsString()
@@ -33,10 +34,8 @@ export class RegisterUserDto {
     readonly rePassword: string;
 
     @IsString()
-    @MaxLength(12)
-    @MinLength(12)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
-    @Matches(/^\+56\d{9}$/, { message: "El numero de telefono no es valido" })
+    @Matches(/^\+569\d{8}$/, { message: "El numero de telefono no es valido" })
     readonly phone: string;
 }

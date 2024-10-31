@@ -19,6 +19,7 @@ import { Cart } from '../cart/models/cart.model';
 import { UserOPTVerification } from '../users/models/userOPTVerification';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { ResendOTPDto } from './dto/resend-otp.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class AuthService {
@@ -336,6 +337,45 @@ export class AuthService {
 
         return {
             message: "La cuenta a sido eliminada con exito",
+            statusCode: HttpStatus.OK
+        }
+    }
+
+    async profile(idUser: number): Promise<ResponseData>{
+
+        const userProfile = await User.findByPk<User>(idUser, {
+            attributes: [
+                "firstName",
+                "lastName",
+                "email",
+                "phone"
+            ]
+        });
+
+        return {
+            message: "Perfil de usuario",
+            statusCode: HttpStatus.OK,
+            data: userProfile
+        }
+    }
+
+    async updateProfile(idUser: number, updateProfileDto: UpdateProfileDto): Promise<ResponseData>{
+
+        const { firstName, lastName, email, phone } = updateProfileDto;
+
+        const user = await User.findByPk<User>(idUser);
+
+        if(!user) throw new NotFoundException("Usuario no encontrado");
+
+        user.firstName = firstName;
+        user.lastName = lastName;
+        user.email = email;
+        user.phone = phone;
+
+        await user.save();
+
+        return {
+            message: "Perfil actualizado con exito",
             statusCode: HttpStatus.OK
         }
     }

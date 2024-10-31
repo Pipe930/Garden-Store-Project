@@ -79,7 +79,6 @@ export class TokenService {
                 refreshToken
             };
         } catch (error) {
-            console.log(error);
             throw new BadRequestException("Error al generar el token");
         }
         

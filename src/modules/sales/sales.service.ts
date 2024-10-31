@@ -38,9 +38,9 @@ export class SalesService {
     try {
       
       const sale = await Sale.create({
-        
+
         priceIva: this.calculateIvaPrice(priceTotal),
-        priceNet: this.calculateIvaPrice(priceTotal),
+        priceNet: this.calculateNetPrice(priceTotal),
         priceTotal,
         productsQuantity,
         discountApplied,
@@ -82,7 +82,14 @@ export class SalesService {
       },
       include: [
         {
-          model: SaleProduct
+          model: SaleProduct,
+          include: [
+            {
+              model: Product,
+              attributes: ['title', 'price']
+            }
+          ],
+          attributes: ['quantity']
         },
         {
           model: Shipping
