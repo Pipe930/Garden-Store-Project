@@ -1,15 +1,17 @@
-import { BelongsToMany, Column, CreatedAt, DataType, ForeignKey, HasOne, Model, Table } from "sequelize-typescript";
-import { Supplier } from "./supplier.model";
-import { Employee } from "src/modules/branch/models/employee.model";
-import { Product } from "src/modules/products/models/product.model";
+import { BelongsToMany, Column, DataType, ForeignKey, HasOne, Model, Table } from "sequelize-typescript";
+import { Supplier } from "../../suppliers/models/supplier.model";
+import { Employee } from "../../branch/models/employee.model";
+import { Product } from "../../products/models/product.model";
 import { randomUUID } from "crypto";
 import { PurchaseOrder } from "./purchase-order.model";
-import { MethodPaymentEnum, StatusPurchaseEnum } from "src/core/enums/statusPurchase.enum";
+import { MethodPaymentEnum, StatusPurchaseEnum } from "../../../core/enums/statusPurchase.enum";
 
 @Table({
     tableName: 'purchases',
     modelName: 'Purchase',
-    timestamps: true
+    timestamps: true,
+    createdAt: true,
+    updatedAt: false
 })
 export class Purchase extends Model {
 
@@ -20,9 +22,6 @@ export class Purchase extends Model {
         field: 'id_purchase'
     })
     declare idPurchase: number;
-
-    @CreatedAt
-    declare createAt: Date;
 
     @Column({
         type: DataType.INTEGER,

@@ -1,8 +1,3 @@
-import { IsNumber, Min } from "class-validator";
+import { CreateSubscriptionDto } from "./create-subscription.dto";
 
-export class UpdateSubscriptionDto {
-
-    @IsNumber()
-    @Min(1000)
-    readonly mount: number;
-}
+export class UpdateSubscriptionDto extends CreateSubscriptionDto {}

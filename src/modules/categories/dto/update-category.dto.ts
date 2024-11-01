@@ -1,13 +1,4 @@
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { CreateCategoryDto } from './create-category.dto';
 
-export class UpdateCategoryDto {
-
-    @IsString()
-    @IsNotEmpty()
-    @MaxLength(100)
-    declare name: string;
-
-    @IsString()
-    @IsOptional()
-    declare description: string;
-}
+export class UpdateCategoryDto extends CreateCategoryDto {}

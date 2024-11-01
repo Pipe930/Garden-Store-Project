@@ -1,11 +1,11 @@
 import { BadRequestException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { UpdatePurchaseDto } from './dto/update-purchase.dto';
-import { Supplier } from './models/supplier.model';
+import { Supplier } from '../suppliers/models/supplier.model';
 import { Employee } from '../branch/models/employee.model';
 import { Purchase, PurchaseProduct } from './models/purchase.model';
 import { Product } from '../products/models/product.model';
-import { ResponseData } from 'src/core/interfaces/response-data.interface';
+import { ResponseData } from '../../core/interfaces/response-data.interface';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PurchaseOrder } from './models/purchase-order.model';
 import { Branch } from '../branch/models/branch.model';

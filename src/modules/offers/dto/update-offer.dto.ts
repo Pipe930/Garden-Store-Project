@@ -1,22 +1,3 @@
-import { Transform } from 'class-transformer';
-import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, MinDate } from 'class-validator';
+import { CreateOfferDto } from './create-offer.dto';
 
-export class UpdateOfferDto {
-
-    @IsString()
-    @IsNotEmpty()
-    readonly title: string;
-
-    @IsDate()
-    @Transform(({ value }) => new Date(value))
-    @MinDate(new Date())
-    @IsNotEmpty()
-    readonly endDate: Date;
-
-    @IsNumber()
-    readonly discount: number;
-
-    @IsString()
-    @IsOptional()
-    readonly description: string;
-}
+export class UpdateOfferDto extends CreateOfferDto {}

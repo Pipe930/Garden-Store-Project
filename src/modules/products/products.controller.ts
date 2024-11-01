@@ -25,6 +25,11 @@ export class ProductsController {
     return this.productsService.findAll(paginateDto);
   }
 
+  @Get('admin')
+  findAllAdmin(@Query() paginateDto: PaginateDto) {
+    return this.productsService.findAllProductsAdmin(paginateDto);
+  }
+
   @Get('product/:id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id);

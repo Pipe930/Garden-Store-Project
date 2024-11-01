@@ -25,9 +25,7 @@ export class CreateEmployeeDto {
     @IsString()
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
-    @Matches(/^\+56\d{9}$/, { message: "El numero de telefono no es valido" })
-    @MinLength(12)
-    @MaxLength(12)
+    @Matches(/^\+569\d{8}$/, { message: "El numero de telefono no es valido" })
     readonly phone: string;
 
     @IsEnum(GenderEnum)

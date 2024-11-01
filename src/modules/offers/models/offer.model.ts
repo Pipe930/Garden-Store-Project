@@ -27,7 +27,6 @@ export class Offer extends Model {
     @Column({
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         field: 'start_date'
     })
     declare startDate: Date;

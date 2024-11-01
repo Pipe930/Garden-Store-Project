@@ -63,20 +63,36 @@ export class ProductsService {
 
     const offset = (page - 1) * limit;
     const products = await Product.findAll<Product>({
-      include:[
-        {
-          model: ImagesProduct,
-          attributes: ['urlImage', 'type']
-        },
-        {
-          model: Category,
-          attributes: ['idCategory', 'name']
-        },
-        {
-          model: Offer,
-          attributes: ['idOffer', 'title', 'discount']
-        }
-      ],
+      include: this.includeConfigProduct(),
+      where: { published: true },
+      limit,
+      offset
+    });
+
+    const currentPage = page ? +page : 0;
+    const totalPages = Math.ceil(await Product.count() / limit);
+
+    if(products.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT }
+
+    return {
+      statusCode: HttpStatus.OK,
+      count: products.length,
+      currentPage,
+      totalPages,
+      data: products
+    };
+  }
+
+  async findAllProductsAdmin(paginateDto: PaginateDto): Promise<ResponseData> {
+
+    let { page, limit } = paginateDto;
+
+    if(!page) page = 1;
+    if(!limit) limit = 20;
+
+    const offset = (page - 1) * limit;
+    const products = await Product.findAll<Product>({
+      include: this.includeConfigProduct(),
       limit,
       offset
     });
@@ -99,20 +115,7 @@ export class ProductsService {
 
     const product = await Product.findOne<Product>({
       where: { idProduct: id },
-      include: [
-        {
-          model: ImagesProduct,
-          attributes: ['urlImage', 'type']
-        },
-        {
-          model: Category,
-          attributes: ['idCategory', 'name']
-        },
-        {
-          model: Offer,
-          attributes: ['idOffer', 'title', 'discount']
-        }
-      ]
+      include: this.includeConfigProduct()
     });
 
     if(!product) throw new NotFoundException("Producto no encontrado");
@@ -127,21 +130,8 @@ export class ProductsService {
   async findProductBySlug(slug: string): Promise<ResponseData> {
 
     const product = await Product.findOne<Product>(
-      { where: { slug },
-      include: [
-        {
-          model: ImagesProduct,
-          attributes: ['urlImage', 'type']
-        },
-        {
-          model: Category,
-          attributes: ['idCategory', 'name']
-        },
-        {
-          model: Offer,
-          attributes: ['idOffer', 'title', 'discount']
-        }
-      ]
+      { where: { slug, published: true  },
+      include: this.includeConfigProduct(),
     }
     );
 
@@ -158,20 +148,7 @@ export class ProductsService {
 
     const products = await Product.findAll<Product>(
       { where: { idCategory },
-      include: [
-        {
-          model: ImagesProduct,
-          attributes: ['urlImage', 'type']
-        },
-        {
-          model: Category,
-          attributes: ['idCategory', 'name']
-        },
-        {
-          model: Offer,
-          attributes: ['idOffer', 'title', 'discount']
-        }
-      ]
+      include: this.includeConfigProduct()
     });
 
     if(products.length === 0) throw new NotFoundException("No se encontraron productos en esta categoria");
@@ -200,22 +177,11 @@ export class ProductsService {
       whereCondition.idCategory = category;
     }
 
+    whereCondition.published = true; 
+
     const products = await Product.findAll<Product>(
       { where: whereCondition,
-      include: [
-        {
-          model: ImagesProduct,
-          attributes: ['urlImage', 'type']
-        },
-        {
-          model: Category,
-          attributes: ['idCategory', 'name']
-        },
-        {
-          model: Offer,
-          attributes: ['idOffer', 'title', 'discount']
-        }
-      ]
+      include: this.includeConfigProduct()
     });
 
     if(products.length === 0) throw new NotFoundException("No se encontraron productos con ese titulo");
@@ -242,7 +208,7 @@ export class ProductsService {
       product.brand = brand;
       product.price = price;
       product.published = published;
-      product.priceDiscount = await this.calculateDiscount(price, product.idOffer);
+      product.priceDiscount = await this.calculateDiscount(price, idOffer);
       product.slug = this.generateSlug(title);
       product.returnPolicy = returnPolicy;
       product.description = description;
@@ -347,5 +313,23 @@ export class ProductsService {
     
     const slug = title.toLowerCase().replace(/ /g, "-");
     return slug + "-" + randomUUID().split("-").join("");
+  }
+
+  private includeConfigProduct(): any[]{
+
+    return [
+      {
+        model: ImagesProduct,
+        attributes: ['urlImage', 'type']
+      },
+      {
+        model: Category,
+        attributes: ['idCategory', 'name']
+      },
+      {
+        model: Offer,
+        attributes: ['idOffer', 'title', 'discount']
+      }
+    ]
   }
 }

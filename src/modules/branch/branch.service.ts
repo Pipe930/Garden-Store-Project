@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { Branch, ProductBranch } from './models/branch.model';
 import { CreateStockBranchDto } from './dto/create-stock-branch.dto';
@@ -23,7 +23,7 @@ export class BranchService {
 
     const branches = await Branch.findAll();
 
-    if(branches.length === 0) throw new NotFoundException('No tenemos sucursales registradas');
+    if(branches.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT };
     
     return {
       statusCode: 200,

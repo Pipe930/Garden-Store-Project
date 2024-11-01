@@ -79,8 +79,7 @@ export class User extends Model {
         unique: true,
         validate: {
             is: /^\+569\d{8}$/,
-            notEmpty: true,
-            len: [12, 12]
+            notEmpty: true
         }
     })
     declare phone: string;

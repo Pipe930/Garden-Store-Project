@@ -12,6 +12,12 @@ export class CreateOfferDto {
     @Transform(({ value }) => new Date(value))
     @MinDate(new Date())
     @IsNotEmpty()
+    readonly startDate: Date;
+
+    @IsDate()
+    @Transform(({ value }) => new Date(value))
+    @MinDate(new Date())
+    @IsNotEmpty()
     readonly endDate: Date;
 
     @IsNumber()

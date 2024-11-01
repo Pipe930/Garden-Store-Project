@@ -1,5 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
-import { Purchase } from "./purchase.model";
+import { Purchase } from "../../purchase/models/purchase.model";
 
 @Table({
     tableName: 'suppliers',
@@ -20,7 +20,8 @@ export class Supplier extends Model {
         type: DataType.STRING(100),
         allowNull: false,
         validate: {
-            len: [3, 100]
+            len: [3, 100],
+            notEmpty: true
         }
     })
     declare name: string;
@@ -28,8 +29,10 @@ export class Supplier extends Model {
     @Column({
         type: DataType.STRING(12),
         allowNull: false,
+        unique: true,
         validate: {
-            len: [12, 12]
+            is: /^\+569\d{8}$/,
+            notEmpty: true
         }
     })
     declare phone: string;
@@ -37,8 +40,10 @@ export class Supplier extends Model {
     @Column({
         type: DataType.STRING(255),
         allowNull: false,
+        unique: true,
         validate: {
-            isEmail: true
+            isEmail: true,
+            notEmpty: true
         }
     })
     declare email: string;
@@ -55,7 +60,7 @@ export class Supplier extends Model {
 
     @Column({
         type: DataType.STRING(255),
-        allowNull: false,
+        allowNull: true,
         validate: {
             isUrl: true
         }

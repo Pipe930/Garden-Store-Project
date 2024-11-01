@@ -9,17 +9,20 @@ export class OffersService {
 
   async create(createOfferDto: CreateOfferDto):Promise<ResponseData> {
 
-    const { title, endDate, discount, description } = createOfferDto;
+    const { title, endDate, startDate, discount, description } = createOfferDto;
 
     const offer = await Offer.findOne({ where: { title } });
 
     if(offer) throw new ConflictException("La oferta ya existe");
+
+    if (startDate >= endDate) throw new BadRequestException("La fecha de inicio debe ser anterior a la fecha de fin");
 
     try {
       
       const newOffer = await Offer.create({
         title,
         endDate,
+        startDate,
         discount,
         description
       });
