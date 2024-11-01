@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
@@ -22,7 +22,7 @@ export class SuppliersService {
       }
     );
 
-    if(supplierFind) throw new NotFoundException("El proveedor ya existe");
+    if(supplierFind) throw new ConflictException("El proveedor ya existe");
 
     try {
       await Supplier.create({ name, website, phone, email, rating });

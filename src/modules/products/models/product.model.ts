@@ -2,12 +2,7 @@ import { BelongsTo, Column, DataType, ForeignKey, Table, Model, HasMany } from "
 import { Category } from "src/modules/categories/models/category.model";
 import { ImagesProduct } from "./image.model";
 import { Offer } from "src/modules/offers/models/offer.model";
-
-export enum AvailabilityStatus {
-    InStock = "In Stock",
-    OutOfStock = "Out of Stock",
-    LowStock = "Low Stock"
-}
+import { AvailabilityStatus } from "src/core/enums/productAviabilityStatus.enum";
 
 @Table({
     tableName: "products",
@@ -108,7 +103,7 @@ export class Product extends Model {
     declare reviewsCount: number;
 
     @Column({
-        type: DataType.ENUM(AvailabilityStatus.InStock, AvailabilityStatus.OutOfStock, AvailabilityStatus.LowStock),
+        type: DataType.ENUM(...Object.values(AvailabilityStatus)),
         allowNull: false,
         defaultValue: AvailabilityStatus.OutOfStock,
         field: "availability_status"
