@@ -1,10 +1,10 @@
 import { OfferService } from '@admin/services/offer.service';
 import { NgClass } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AlertService } from '@core/services/alert.service';
-import { catchError, of } from 'rxjs';
+import { catchError, EMPTY, of } from 'rxjs';
 
 @Component({
   selector: 'app-create-offer',
@@ -21,20 +21,34 @@ export class CreateOfferComponent implements OnInit {
   private readonly _builder = inject(FormBuilder);
 
   public dateTomorrow = signal<string>("");
+  public selectDate = signal<string>("");
 
   public createOfferForm: FormGroup = this._builder.group({
     title: this._builder.control('', [Validators.required, Validators.minLength(4), Validators.maxLength(100)]),
+    startDate: this._builder.control('', Validators.required),
     endDate: this._builder.control('', Validators.required),
     discount: this._builder.control(1, [Validators.required, Validators.min(1), Validators.max(100)]),
     description: this._builder.control('', Validators.maxLength(255)),
   });
 
   ngOnInit(): void {
-    const today = new Date().getDate();
+
     const tomorrow = new Date();
-    tomorrow.setDate(today + 1);
-    let tomorrowFormatted = tomorrow.toISOString().split('T')[0];
-    this.dateTomorrow.set(tomorrowFormatted);
+    tomorrow.setDate(new Date().getDate() + 1);
+
+    this.dateTomorrow.set(tomorrow.toISOString().split('T')[0]);
+    this.createOfferForm.get('endDate')?.disable();
+  }
+
+  public selectStartDate(event: Event): void {
+
+    const input = event.target as HTMLInputElement;
+
+    const tomorrow = new Date(input.value);
+    tomorrow.setDate(new Date(input.value).getDate() + 1);
+
+    this.selectDate.set(tomorrow.toISOString().split('T')[0]);
+    this.createOfferForm.get('endDate')?.enable();
   }
 
   public createOffer(): void {
@@ -44,9 +58,9 @@ export class CreateOfferComponent implements OnInit {
     }
 
     this._offerService.createOffer(this.createOfferForm.value).pipe(
-      catchError(error => {
+      catchError(() => {
         this._alertService.error("Error", "Ha ocurrido un error al crear la oferta");
-        return of();
+        return EMPTY;
       })
     ).subscribe(() => {
       this._alertService.success("Oferta creada", "La oferta ha sido creada correctamente");

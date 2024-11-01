@@ -18,6 +18,7 @@ export class ListProductsComponent implements OnInit {
   public listProducts = signal<Array<Product>>([]);
   public listCategories = signal<Array<Category>>([]);
   public currentPage = signal<number>(1);
+  public isLoading = signal<boolean>(false);
 
   public nameProduct: Signal<ElementRef> = viewChild.required("searchNameProduct");
   public selectCategory: Signal<ElementRef> = viewChild.required("selectIdCategory");
@@ -31,6 +32,7 @@ export class ListProductsComponent implements OnInit {
     this._productsService.getAllProducts();
     this._productsService.products$.subscribe(result => {
       this.listProducts.set(result);
+      this.isLoading.set(true);
     })
   }
 

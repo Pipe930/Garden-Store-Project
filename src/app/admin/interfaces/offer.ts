@@ -21,6 +21,7 @@ export interface ResponseOffer {
 export interface CreateOfferForm {
 
   title: string;
+  startDate: Date;
   endDate: Date;
   discount: number;
   description: string;

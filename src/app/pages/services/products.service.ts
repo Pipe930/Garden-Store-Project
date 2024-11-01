@@ -74,7 +74,7 @@ export class ProductsService {
       this.nextPage = false;
     }
 
-    if(currentPage === 1){
+    if(currentPage === 1 || !currentPage){
       this.prevPage = true;
     } else {
       this.prevPage = false;

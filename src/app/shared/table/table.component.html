@@ -2,6 +2,7 @@
 @let messageNoContentVar = messageNoContent();
 @let dataRowsVar = dataRows();
 @let showActionButtonVar = showActionButton();
+@let isLoadingVar = isLoading();
 
 
 <table class="container__table">
@@ -18,7 +19,7 @@
 
   <tbody class="table__body">
 
-    @defer (when isLoading()) {
+    @defer (when isLoadingVar) {
       @for (object of dataRowsVar; track $index) {
         <tr>
           <td class="table__body-text">

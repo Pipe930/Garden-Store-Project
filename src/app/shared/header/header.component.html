@@ -40,10 +40,31 @@
         </div>
       </div>
       <div class="header__container-user-avatar">
-        <div class="header__user-avatar">
+        <div class="header__user-avatar" data-bs-toggle="dropdown" aria-expanded="false">
           <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="avatar_user" class="header__img-avatar">
           <div class="circle-indicator pulse"></div>
         </div>
+
+        <ul class="dropdown-menu">
+          <li>
+            <button class="dropdown-item" type="button">
+              <i class="bx bx-user"></i>
+              Perfil
+            </button>
+          </li>
+          <li>
+            <button class="dropdown-item" type="button">
+              <i class="bx bxs-cog"></i>
+              Configuracion
+            </button>
+          </li>
+          <li>
+            <button class="dropdown-item" type="button">
+              <i class="bx bxs-log-out"></i>
+              Logout
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

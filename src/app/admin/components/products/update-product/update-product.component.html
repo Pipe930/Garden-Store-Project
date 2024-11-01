@@ -1,5 +1,6 @@
 
-@let listlistCategoriesVar = listCategories();
+@let listCategoriesVar = listCategories();
+@let listOffersVar = listOffers();
 
 <div class="container__container-title">
   <h2 class="container__container-title">Actualizar {{product().title}}</h2>
@@ -76,11 +77,20 @@
         <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
       }
     </div>
-    <div class="mb-3">
-      <label for="description" class="form-label">Categoria</label>
+    <div class="input-group mb-3">
+      <label for="description" class="input-group-text">Categoria</label>
       <select class="form-select" formControlName="category">
-        @for (category of listlistCategoriesVar; track $index) {
+        @for (category of listCategoriesVar; track $index) {
           <option [value]="category.idCategory">{{category.name}}</option>
+        }
+      </select>
+    </div>
+    <div class="input-group mb-3">
+      <label for="description" class="input-group-text">Oferta</label>
+      <select class="form-select" formControlName="offer">
+        <option value="">Seleccionar Oferta</option>
+        @for (offer of listOffersVar; track $index) {
+          <option [value]="offer.idOffer">{{offer.title}}</option>
         }
       </select>
     </div>

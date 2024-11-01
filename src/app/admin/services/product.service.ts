@@ -14,7 +14,7 @@ export class ProductService {
   private readonly _baseUrl = `${environment.api}/products`;
 
   public getAllProducts():Observable<ProductsResponse>{
-    return this._http.get<ProductsResponse>(`${this._baseUrl}?limit=10`);
+    return this._http.get<ProductsResponse>(`${this._baseUrl}/admin?limit=10`);
   }
 
   public createProduct(product: CreateProductForm):Observable<ProductResponse>{

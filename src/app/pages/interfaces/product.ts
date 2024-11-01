@@ -10,7 +10,7 @@ type TypeCategory = {
 
 type TypeOffer = {
   idOffer: number;
-  name: string;
+  title: string;
   discount: number;
 }
 
@@ -74,7 +74,7 @@ export const productJson: Product = {
   },
   offer: {
     idOffer: 0,
-    name: "",
+    title: "",
     discount: 0
   },
   images: []

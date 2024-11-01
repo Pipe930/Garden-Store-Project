@@ -1,6 +1,6 @@
-import { Component, inject, input, OnInit, output, signal } from '@angular/core';
+import { Component, inject, input, OnChanges, output, signal } from '@angular/core';
 import { Product } from '@pages/interfaces/product';
-import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
+import { DecimalPipe, NgClass, NgOptimizedImage, TitleCasePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProductsService } from '@pages/services/products.service';
 import { environment } from '@env/environment.development';
@@ -8,11 +8,11 @@ import { environment } from '@env/environment.development';
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [NgOptimizedImage, CurrencyPipe],
+  imports: [NgOptimizedImage, NgClass, DecimalPipe, TitleCasePipe],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
-export class CardComponent implements OnInit {
+export class CardComponent implements OnChanges {
 
   private readonly _router = inject(Router);
   private readonly _productService = inject(ProductsService);
@@ -22,9 +22,10 @@ export class CardComponent implements OnInit {
   public reload = input.required<boolean>();
   public eventProduct = output<Product>();
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
 
-    if(this.product().images.length > 0){
+    if(this.product().images){
+
       const image = this.product().images.filter(image => image.type === "cover")[0]
       this.urlImage.set(`${environment.apiImages}/${image.urlImage}`);
     } else {

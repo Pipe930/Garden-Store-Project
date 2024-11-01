@@ -96,5 +96,20 @@ export const navbarData: Array<Sidenav> = [
         label: "Lista Sucursales"
       }
     ]
+  },
+  {
+    routerLink: "purchases",
+    icon: "bx bxs-cart",
+    label: "Compras",
+    items: [
+      {
+        routerLink: "purchases/list",
+        label: "Lista Compras"
+      },
+      {
+        routerLink: "purchases/create",
+        label: "Crear Compra"
+      }
+    ]
   }
 ]

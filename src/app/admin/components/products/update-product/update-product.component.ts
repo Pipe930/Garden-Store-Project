@@ -1,4 +1,6 @@
+import { Offer } from '@admin/interfaces/offer';
 import { CategoryService } from '@admin/services/category.service';
+import { OfferService } from '@admin/services/offer.service';
 import { ProductService } from '@admin/services/product.service';
 import { NgClass } from '@angular/common';
 import { Component, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
@@ -23,11 +25,13 @@ export class UpdateProductComponent implements OnInit {
   private readonly _alertService = inject(AlertService);
   private readonly _builder = inject(FormBuilder);
   private readonly _categoryService = inject(CategoryService);
+  private readonly _offerService = inject(OfferService);
 
   public imageProduct = viewChild.required<ElementRef>('imageProduct');
   public imagePreview = viewChild.required<ElementRef>('imagePreview');
 
   public listCategories = signal<Category[]>([]);
+  public listOffers = signal<Offer[]>([]);
   public product = signal<Product>(productJson);
   private idProduct = 0;
 
@@ -49,6 +53,10 @@ export class UpdateProductComponent implements OnInit {
       this.listCategories.set(response.data);
     });
 
+    this._offerService.getAllOffers().subscribe((response) => {
+      this.listOffers.set(response.data);
+    })
+
     this._activedRoute.params.subscribe((params) => {
 
       this.idProduct = params["id"]
@@ -64,10 +72,11 @@ export class UpdateProductComponent implements OnInit {
         this.updateProductForm.get("returnPolicy")?.setValue(product.data.returnPolicy);
         this.updateProductForm.get("description")?.setValue(product.data.description);
         this.updateProductForm.get("category")?.setValue(categoryObtain[0].idCategory.toString());
-        // if(product.data.offer){
-        //   const offerObtain = this.listOffer.filter((offer) => offer.name_offer === product.data.offer?.name_offer);
-        //   this.updateProductForm.get("offer")?.setValue(offerObtain[0].id_offer);
-        // }
+        if(product.data.offer){
+
+          const offerObtain = this.listOffers().filter((offer) => offer.title === product.data.offer.title);
+          this.updateProductForm.get("offer")?.setValue(offerObtain[0].idOffer.toString());
+        }
         this.updateProductForm.updateValueAndValidity();
       });
     });

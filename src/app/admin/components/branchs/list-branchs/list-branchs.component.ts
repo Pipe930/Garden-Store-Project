@@ -1,5 +1,6 @@
 import { Branch, branchColumns } from '@admin/interfaces/branch';
 import { BranchService } from '@admin/services/branch.service';
+import { HttpStatusCode } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TableColumns } from '@core/interfaces/table';
@@ -23,7 +24,7 @@ export class ListBranchsComponent implements OnInit {
 
   ngOnInit(): void {
       this._branchService.getAllBranchs().subscribe(response => {
-        this.listBranchs.set(response.data);
+        if(response.statusCode === HttpStatusCode.Ok) this.listBranchs.set(response.data);
         this.isLoading.set(true);
       })
   }

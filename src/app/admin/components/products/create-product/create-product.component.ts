@@ -1,4 +1,6 @@
+import { Offer } from '@admin/interfaces/offer';
 import { CategoryService } from '@admin/services/category.service';
+import { OfferService } from '@admin/services/offer.service';
 import { ProductService } from '@admin/services/product.service';
 import { NgClass } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
@@ -7,7 +9,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AlertService } from '@core/services/alert.service';
 import { Category } from '@pages/interfaces/category';
-import { catchError, of } from 'rxjs';
+import { catchError, EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-create-product',
@@ -23,8 +25,10 @@ export class CreateProductComponent implements OnInit {
   private readonly _alertService = inject(AlertService);
   private readonly _builder = inject(FormBuilder);
   private readonly _categoryService = inject(CategoryService);
+  private readonly _offerService = inject(OfferService);
 
   public listCategories = signal<Category[]>([]);
+  public listOffers = signal<Offer[]>([]);
   public alertMessage = signal<boolean>(false);
   public imageProduct = viewChild.required<ElementRef>('imageProduct');
   public imagePreview = viewChild.required<ElementRef>('imagePreview');
@@ -44,9 +48,13 @@ export class CreateProductComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this._categoryService.getAllCategories().subscribe(result => {
-      this.listCategories.set(result.data);
+    this._categoryService.getAllCategories().subscribe(response => {
+      this.listCategories.set(response.data);
     });
+
+    this._offerService.getAllOffers().subscribe(response => {
+      this.listOffers.set(response.data);
+    })
   }
 
   public createProduct(): void {
@@ -77,7 +85,7 @@ export class CreateProductComponent implements OnInit {
           clearTimeout(timer);
         }
         this._alertService.error("Error al crear el producto", "No se pudo crear el producto");
-        return of();
+        return EMPTY;
       }
     )).subscribe(result => {
 

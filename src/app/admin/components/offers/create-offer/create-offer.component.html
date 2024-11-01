@@ -40,8 +40,12 @@
       </div>
     </div>
     <div class="mb-3">
+      <label for="discountInput" class="form-label">Fecha de Inicio</label>
+      <input type="date" [min]="dateTomorrow()" (change)="selectStartDate($event)" class="form-control form__input" id="discountInput" formControlName="startDate">
+    </div>
+    <div class="mb-3">
       <label for="discountInput" class="form-label">Fecha de Termino</label>
-      <input type="date" [min]="dateTomorrow()" class="form-control form__input" id="discountInput" formControlName="endDate">
+      <input type="date" [min]="selectDate()" class="form-control form__input" id="discountInput" formControlName="endDate">
     </div>
     <div class="mb-3">
       <label for="description" class="form-label">Descripción (Opcional)</label>

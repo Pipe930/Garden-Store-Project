@@ -34,6 +34,10 @@ export const routesAdmin: Routes = [
       {
         path: "branchs",
         loadChildren: () => import('./components/branchs/branchs.routes').then(m => m.routesBranchs)
+      },
+      {
+        path: "purchases",
+        loadChildren: () => import('./components/purchases/purchases.routes').then(m => m.routesPurchases)
       }
     ]
   }

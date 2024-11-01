@@ -1,6 +1,7 @@
 @let listProductsVar = listProducts();
 @let listCategoriesVar = listCategories();
 @let currentPageVar = currentPage();
+@let isLoadingVar = isLoading();
 
 <main class="container-main">
   <div class="container-main__continaer-inputs">
@@ -29,16 +30,26 @@
     <div class="container-main__container-products">
       <h2 class="container-products__title">Productos</h2>
       <hr>
-      <div class="container-products__products">
-        @for (product of listProductsVar; track $index) {
-          <app-card [product]="product" [reload]="false"></app-card>
-        } @empty {
+      @defer (when isLoadingVar) {
+        <div class="container-products__products">
+          @for (product of listProductsVar; track $index) {
+            <app-card [product]="product" [reload]="false"></app-card>
+          } @empty {
 
-          <div class="container-products__container-message">
-            <p>No se han encontrado productos</p>
+            <div class="container-products__container-message">
+              <p>No se han encontrado productos</p>
+            </div>
+          }
+        </div>
+      } @placeholder {
+        <div class="container-fluid d-flex justify-content-center w-100">
+          <div class="py-lg-5">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </div>
-        }
-      </div>
+        </div>
+      }
     </div>
 
     <nav aria-label="Page navigation container-main__container-btn-pages">

@@ -1,0 +1,10 @@
+@let listPurchasesVar = listPurchases();
+@let columnsVar = columnsPurchase();
+
+<div class="container__container-title">
+  <h2 class="container__title">Compras</h2>
+  <button class="container__btn btn btn-success" [routerLink]="['/admin/products/create']">
+    Crear Compra
+  </button>
+</div>
+<app-table [messageNoContent]="'compras'" [dataRows]="listPurchasesVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editPurchase($event)" [isLoading]="isLoading()"></app-table>

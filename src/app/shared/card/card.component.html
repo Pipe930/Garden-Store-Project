@@ -1,8 +1,9 @@
 @let productVar = product();
+@let urlImageVar = urlImage();
 
 <div class="card border-success product">
   <div class="card-header product__header">
-    <h5 class="card-title">{{productVar.title}}</h5>
+    <h5 class="card-title">{{productVar.title | titlecase}}</h5>
     <p class="card-text">{{productVar.brand}}</p>
     <div class="d-flex justify-content-between">
 
@@ -11,14 +12,38 @@
     </div>
   </div>
   <picture>
-    <img [ngSrc]="urlImage()" width="400" height="350" class="card-img-top" alt="imagen de producto" priority>
+    <img [ngSrc]="urlImageVar" width="400" height="300" class="card-img-top product__image" [ngClass]="{'product__image--opacity': productVar.stock === 0}" alt="imagen de producto" priority>
+    @if (productVar.stock === 0) {
+
+      <div class="product__container-sold-out">
+        <p class="product__sold-out">
+          Agotado
+        </p>
+      </div>
+    }
+    @if (productVar.offer) {
+
+      <p class="product__percentage shadow-lg">{{productVar.offer.discount}}%</p>
+      <p class="product__offer-text shadow-lg">Oferta</p>
+    }
   </picture>
   <div class="card-body product__body">
 
-    <div class="d-flex justify-content-between align-items-center product__container-price">
-      <div class="">
-        <p class="card-text product__price">$ {{productVar.price | currency: 'CLP'}}</p>
-        <p class="card-text product__text">Precio Efectivo</p>
+    <div class="d-flex justify-content-between align-items-center product__container-extra">
+      <div class="product__container-price">
+
+        @if (!productVar.offer) {
+          <p class="product__price">$ {{productVar.price | number}}</p>
+        } @else {
+          <p class="product__price"><s>$ {{productVar.price | number}}</s></p>
+        }
+
+        <p class="product__text">Precio Efectivo</p>
+
+        @if (productVar.offer) {
+          <p class="product__price">$ {{productVar.priceDiscount | number}}</p>
+          <p class="product__text">Precio Descuento</p>
+        }
       </div>
       <div class="">
         <button class="btn btn-success"><i class='bx bxs-cart-add bx-sm'></i></button>

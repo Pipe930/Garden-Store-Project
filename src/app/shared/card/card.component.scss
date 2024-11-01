@@ -16,80 +16,82 @@
 
     text-align: left;
 
-    .product__container-price{
-
-      margin-bottom: 1rem;
-
-      .product__price{
-
-        font-size: 18px;
-        margin-bottom: 0;
-      }
-
-      .product__text{
-        font-size: 14px;
-      }
-    }
 
     .product__container-extra{
+
       display: flex;
-      margin: 1.2rem 0;
+      // margin: 1rem 0;
       align-items: center;
       justify-content: space-between;
-    }
 
-    picture{
+      .product__container-price{
 
-      position: relative;
+        margin-bottom: 1rem;
 
-      .product__image--opacity{
-        opacity: .5;
-      }
+        .product__price{
 
-      .product__container-sold-out{
+          font-size: 18px;
+          margin-bottom: 0;
+        }
 
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        border-radius: 50%;
-        background-color: $color-dark-900;
-        color: $color-light;
-        margin: 7rem 5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
 
-        .product__sold-out{
-          text-align: center;
+        .product__text{
+          margin-bottom: .5rem;
+          font-size: 14px;
         }
       }
+    }
+  }
+  picture{
 
-      .product__percentage{
+    position: relative;
 
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: $color-success-700;
-        padding: 0.2rem 0.4rem;
-        color: $color-light;
-        border-radius: 5px;
-        box-shadow: 2px 2px 5px $color-dark;
+    .product__image--opacity{
+      opacity: .5;
+    }
 
+    .product__container-sold-out{
+
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border-radius: 50%;
+      background-color: $color-dark-900;
+      color: $color-light;
+      margin: 7rem 5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .product__sold-out{
+        text-align: center;
+        margin-bottom: 0;
       }
+    }
 
-      .product__offer-text{
+    .product__percentage{
 
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background-color: $color-danger;
-        color: $color-light;
-        padding: 0.2rem 0.4rem;
-        border-radius: 5px;
-        box-shadow: 2px 2px 5px $color-dark;
-      }
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: $color-success-700;
+      padding: 0.2rem 0.4rem;
+      color: $color-light;
+      border-radius: 5px;
+
+    }
+
+    .product__offer-text{
+
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: $color-danger;
+      color: $color-light;
+      padding: 0.2rem 0.4rem;
+      border-radius: 5px;
     }
   }
 
