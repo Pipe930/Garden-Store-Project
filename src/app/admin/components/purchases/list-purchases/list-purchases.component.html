@@ -1,5 +1,6 @@
 @let listPurchasesVar = listPurchases();
 @let columnsVar = columnsPurchase();
+@let isLoadingVar = isLoading();
 
 <div class="container__container-title">
   <h2 class="container__title">Compras</h2>
@@ -7,4 +8,4 @@
     Crear Compra
   </button>
 </div>
-<app-table [messageNoContent]="'compras'" [dataRows]="listPurchasesVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editPurchase($event)" [isLoading]="isLoading()"></app-table>
+<app-table [messageNoContent]="'compras'" [dataRows]="listPurchasesVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editPurchase($event)" [isLoading]="isLoadingVar"></app-table>

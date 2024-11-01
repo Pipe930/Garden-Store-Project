@@ -1,0 +1,44 @@
+.container__container-title{
+
+  display: flex;
+  justify-content: space-between;
+
+  .container__btn{
+
+    padding: .6rem 1.4rem;
+    transition: background .3s ease-in-out;
+  }
+}
+
+.container__container-form{
+  margin-top: 2rem;
+
+  .container-form__form{
+
+    .form__btn-create{
+
+      padding: 0.6rem 1rem;
+      transition: background .3s ease;
+    }
+    .position-relative {
+      position: relative;
+
+      .range-tooltip {
+        position: absolute;
+        top: -1px;
+        transform: translateX(-50%);
+        background-color: #1565c0;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: bold;
+        white-space: nowrap;
+      }
+
+      .custom-range {
+        width: 100%;
+      }
+    }
+  }
+}

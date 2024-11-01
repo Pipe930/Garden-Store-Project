@@ -21,7 +21,7 @@ export class UpdateProductComponent implements OnInit {
 
   private readonly _productService = inject(ProductService);
   private readonly _router = inject(Router);
-  private readonly _activedRoute = inject(ActivatedRoute);
+  private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _alertService = inject(AlertService);
   private readonly _builder = inject(FormBuilder);
   private readonly _categoryService = inject(CategoryService);
@@ -33,7 +33,7 @@ export class UpdateProductComponent implements OnInit {
   public listCategories = signal<Category[]>([]);
   public listOffers = signal<Offer[]>([]);
   public product = signal<Product>(productJson);
-  private idProduct = 0;
+  private idProduct = this._activatedRoute.snapshot.params["id"];
 
   public updateProductForm: FormGroup = this._builder.group({
 
@@ -55,30 +55,26 @@ export class UpdateProductComponent implements OnInit {
 
     this._offerService.getAllOffers().subscribe((response) => {
       this.listOffers.set(response.data);
-    })
+    });
 
-    this._activedRoute.params.subscribe((params) => {
+    this._productService.getProduct(this.idProduct).subscribe((product) => {
 
-      this.idProduct = params["id"]
-      this._productService.getProduct(this.idProduct).subscribe((product) => {
+      const categoryObtain = this.listCategories().filter((category) => category.name == product.data.category.name);
 
-        const categoryObtain = this.listCategories().filter((category) => category.name == product.data.category.name);
+      this.product.set(product.data);
+      this.updateProductForm.get("title")?.setValue(product.data.title);
+      this.updateProductForm.get("brand")?.setValue(product.data.brand);
+      this.updateProductForm.get("price")?.setValue(product.data.price);
+      this.updateProductForm.get("published")?.setValue(product.data.published);
+      this.updateProductForm.get("returnPolicy")?.setValue(product.data.returnPolicy);
+      this.updateProductForm.get("description")?.setValue(product.data.description);
+      this.updateProductForm.get("category")?.setValue(categoryObtain[0].idCategory.toString());
+      if(product.data.offer){
 
-        this.product.set(product.data);
-        this.updateProductForm.get("title")?.setValue(product.data.title);
-        this.updateProductForm.get("brand")?.setValue(product.data.brand);
-        this.updateProductForm.get("price")?.setValue(product.data.price);
-        this.updateProductForm.get("published")?.setValue(product.data.published);
-        this.updateProductForm.get("returnPolicy")?.setValue(product.data.returnPolicy);
-        this.updateProductForm.get("description")?.setValue(product.data.description);
-        this.updateProductForm.get("category")?.setValue(categoryObtain[0].idCategory.toString());
-        if(product.data.offer){
-
-          const offerObtain = this.listOffers().filter((offer) => offer.title === product.data.offer.title);
-          this.updateProductForm.get("offer")?.setValue(offerObtain[0].idOffer.toString());
-        }
-        this.updateProductForm.updateValueAndValidity();
-      });
+        const offerObtain = this.listOffers().filter((offer) => offer.title === product.data.offer.title);
+        this.updateProductForm.get("offer")?.setValue(offerObtain[0].idOffer.toString());
+      }
+      this.updateProductForm.updateValueAndValidity();
     });
   }
 

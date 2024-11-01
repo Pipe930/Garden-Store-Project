@@ -1,0 +1,11 @@
+@let listSuppliersVar = listSuppliers();
+@let columnsVar = columnsSuppliers();
+@let isLoadingVar = isLoading();
+
+<div class="container__container-title">
+  <h2 class="container__title">Proveedores</h2>
+  <button class="container__btn btn btn-success" [routerLink]="['/admin/suppliers/create']">
+    Crear Proveedor
+  </button>
+</div>
+<app-table [messageNoContent]="'proveedores'" [dataRows]="listSuppliersVar" [tableColumns]="columnsVar" [showActionButton]="true" (eventEdit)="editSupplier($event)" [isLoading]="isLoadingVar"></app-table>

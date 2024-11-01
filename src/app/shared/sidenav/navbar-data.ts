@@ -111,5 +111,35 @@ export const navbarData: Array<Sidenav> = [
         label: "Crear Compra"
       }
     ]
+  },
+  {
+    routerLink: "employees",
+    icon: "bx bxs-user-detail",
+    label: "Empleados",
+    items: [
+      {
+        routerLink: "employees/list",
+        label: "Lista Empleados"
+      },
+      {
+        routerLink: "employees/create",
+        label: "Crear Empleado"
+      }
+    ]
+  },
+  {
+    routerLink: "suppliers",
+    icon: "bx bxs-truck",
+    label: "Proveedores",
+    items: [
+      {
+        routerLink: "suppliers/list",
+        label: "Lista Proveedores"
+      },
+      {
+        routerLink: "suppliers/create",
+        label: "Crear Proveedor"
+      }
+    ]
   }
 ]

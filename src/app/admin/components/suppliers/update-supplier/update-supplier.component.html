@@ -1,0 +1,97 @@
+@let alertMessageVar = alertMessage();
+@let calificationValueVar = calificationValue();
+@let tooltipVisibleVar = tooltipVisible();
+
+
+<div class="container__container-title">
+  <h2 class="container__container-title">Crear Proveedor</h2>
+  <button class="container__btn btn btn-primary" [routerLink]="['/admin/suppliers/list']">Volver</button>
+</div>
+
+<div class="container__container-form">
+
+  <form novalidate class="container-form__form" [formGroup]="updateSupplierForm" (ngSubmit)="updateSupplier()">
+
+    @if(alertMessageVar){
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> El correo o el numero de telefono ya existe
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    }
+    <div class="mb-3">
+      <label for="nameInput" class="form-label">Nombre Proveedor</label>
+      <input type="text" class="form-control form__input" id="nameInput" formControlName="name" [ngClass]="{
+        'is-invalid': name.invalid && (name.dirty || name.touched)
+      }">
+      @if(name.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(name.getError("minlength")){
+        <span class="invalid-feedback">Tiene que tener un minimo de 4 caracteres</span>
+      }
+      @if(name.getError("maxlength")){
+        <span class="invalid-feedback">Tiene que tener un maximo de 100 caracteres</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="phone" class="form-label">Telefono</label>
+      <div class="input-group">
+        <span class="input-group-text form__input" id="basic-addon3">+569</span>
+        <input type="text" class="form-control form__input" id="phone" aria-describedby="basic-addon3 basic-addon4" formControlName="phone" [ngClass]="{
+          'is-invalid': phone.invalid && (phone.dirty || phone.touched)
+        }">
+        @if (phone.getError("required")) {
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(phone.getError("pattern")){
+          <span class="invalid-feedback">Tiene que ingresar un numero de telefono valido</span>
+        }
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="nameInput" class="form-label">Correo</label>
+      <input type="email" class="form-control form__input" id="nameInput" formControlName="email" [ngClass]="{
+        'is-invalid': email.invalid && (email.dirty || email.touched)
+      }">
+      @if(email.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(email.getError("email")){
+        <span class="invalid-feedback">Tiene que ingresar un correo valido</span>
+      }
+      @if(email.getError("maxlength")){
+        <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+      }
+    </div>
+    <div class="mb-3 position-relative">
+      <label for="calification" class="form-label">Calificación</label>
+      <input
+        type="range"
+        class="form-range custom-range"
+        min="0"
+        max="5"
+        step="0.1"
+        id="calification"
+        formControlName="rating"
+        [value]="calificationValueVar"
+        (mouseover)="showTooltip()"
+        (mouseout)="hideTooltip()"
+        (input)="updateTooltipPosition($event)"
+      />
+      <span
+        class="range-tooltip"
+        [style.display]="tooltipVisibleVar ? 'block' : 'none'"
+        [style.left.%]="calificationValueVar * 20"
+      >
+        {{ calificationValueVar }}
+      </span>
+    </div>
+    <div class="mb-3">
+      <label for="nameInput" class="form-label">Sitio Web (Opcional)</label>
+      <input type="url" class="form-control form__input" id="nameInput" formControlName="website">
+    </div>
+    <button type="submit" class="form__btn-create btn btn-success" [disabled]="updateSupplierForm.invalid">
+      Guardar
+    </button>
+  </form>
+</div>
