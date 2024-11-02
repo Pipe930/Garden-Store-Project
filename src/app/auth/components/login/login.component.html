@@ -4,7 +4,7 @@
 
     @if(activateMessage()){
       <div class="alert alert-danger d-flex align-items-center justify-content-between" role="alert">
-        Las credenciales no son validas
+        {{message()}}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     }

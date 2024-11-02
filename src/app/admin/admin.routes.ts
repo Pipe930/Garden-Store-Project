@@ -42,6 +42,10 @@ export const routesAdmin: Routes = [
       {
         path: "suppliers",
         loadChildren: () => import('./components/suppliers/suppliers.routes').then(m => m.routesSuppliers)
+      },
+      {
+        path: "employees",
+        loadChildren: () => import('./components/employees/employees.routes').then(m => m.routesEmployees)
       }
     ]
   }

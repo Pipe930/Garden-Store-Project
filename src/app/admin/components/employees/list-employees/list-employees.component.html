@@ -1,0 +1,11 @@
+@let listEmployeesVar = listEmployees();
+@let columnsEmployeeVar = columnsEmployee();
+@let isLoadingVar = isLoading();
+
+<div class="container__container-title">
+  <h2 class="container__title">Empleados</h2>
+  <button class="container__btn btn btn-success" [routerLink]="['/admin/employees/create']">
+    Crear Empleado
+  </button>
+</div>
+<app-table [messageNoContent]="'empleados'" [dataRows]="listEmployeesVar" [tableColumns]="columnsEmployeeVar" [showActionButton]="true" (eventEdit)="editEmployee($event)" [isLoading]="isLoadingVar"></app-table>

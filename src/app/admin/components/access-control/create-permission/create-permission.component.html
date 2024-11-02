@@ -1,5 +1,6 @@
 @let listResourcesVar = listResources();
 @let listActionsVar = listActions();
+@let alertMessageVar = alertMessage();
 
 <div class="container__container-title">
   <h2 class="container__container-title">Crear Permiso</h2>
@@ -9,7 +10,12 @@
 <div class="container__container-form">
 
   <form novalidate class="container-form__form" [formGroup]="createPermissionForm" (ngSubmit)="createPermission()">
-
+    @if(alertMessageVar){
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> Este nombre de rol ya existe
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    }
     <div class="mb-3">
       <label for="nameInput" class="form-label">Nombre Permiso</label>
       <input type="text" class="form-control form__input" id="nameInput" formControlName="name" [ngClass]="{

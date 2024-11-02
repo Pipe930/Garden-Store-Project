@@ -4,9 +4,8 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@auth/services/auth.service';
 import { NgClass } from '@angular/common';
 import { AlertService } from '@core/services/alert.service';
-import { catchError, of } from 'rxjs';
+import { catchError, EMPTY, of } from 'rxjs';
 import { HttpStatusCode } from '@angular/common/http';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +23,7 @@ export class LoginComponent {
   private readonly _renderer = inject(Renderer2);
 
   public activateMessage = signal<boolean>(false);
+  public message = signal<string>('');
   public otpArray = signal<string[]>(new Array(6).fill(''));
   public inputsList = viewChildren<ElementRef>('otpDigit');
   public modalOPT = viewChild.required<ElementRef>('OPTModal');
@@ -49,16 +49,17 @@ export class LoginComponent {
         if(error.error.statusCode === HttpStatusCode.Unauthorized){
 
           this.activateMessage.set(true);
+          this.message.set(error.error.message);
 
           const timer = setTimeout(() => {
             this.activateMessage.set(false);
           }, 5000);
           clearTimeout(timer);
 
-          return of();
+          return EMPTY;
         }
 
-        return of()
+        return EMPTY
       })
     ).subscribe(result => {
 
@@ -91,7 +92,7 @@ export class LoginComponent {
 
         this._alertService.error("Error al verificar", error.error.message);
 
-        return of();
+        return EMPTY;
       })
     ).subscribe(() => {
 

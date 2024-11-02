@@ -1,0 +1,159 @@
+<!-- @let alertMessageVar = alerMessage(); -->
+@let listGendersVar = listGenders();
+@let listBranchsVar = listBranchs();
+
+<div class="container__container-title">
+  <h2 class="container__container-title">Crear Empleado</h2>
+  <button class="container__btn btn btn-primary" [routerLink]="['/admin/employees/list']">Volver</button>
+</div>
+
+<div class="container__container-form">
+  <form novalidate class="container-form__form" [formGroup]="createEmployeeForm" (ngSubmit)="createEmployee()">
+
+    <div class="container-fluid">
+      <!-- @if(alertMessageVar){
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Error!</strong> El correo o telefono ingresado ya existe
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      } -->
+
+      <div class="row">
+        <div class="mb-3 col">
+          <label for="firstNameInput" class="form-label">Nombre</label>
+          <input type="text" class="form-control form__input" id="firstNameInput" formControlName="firstName" [ngClass]="{
+            'is-invalid': firstName.invalid && (firstName.dirty || firstName.touched)
+          }">
+          @if(firstName.getError("required")){
+            <span class="invalid-feedback">Este campo es requerido</span>
+          }
+          @if(firstName.getError("minlength")){
+            <span class="invalid-feedback">Tiene que tener un minimo de 3 caracteres</span>
+          }
+          @if(firstName.getError("maxlength")){
+            <span class="invalid-feedback">Tiene que tener un maximo de 20 caracteres</span>
+          }
+        </div>
+        <div class="mb-3 col">
+          <label for="lastNameInput" class="form-label">Apellido</label>
+          <input type="text" class="form-control form__input" id="lastNameInput" formControlName="lastName" [ngClass]="{
+            'is-invalid': lastName.invalid && (lastName.dirty || lastName.touched)
+          }">
+          @if(lastName.getError("required")){
+            <span class="invalid-feedback">Este campo es requerido</span>
+          }
+          @if(lastName.getError("minlength")){
+            <span class="invalid-feedback">Tiene que tener un minimo de 3 caracteres</span>
+          }
+          @if(lastName.getError("maxlength")){
+            <span class="invalid-feedback">Tiene que tener un maximo de 20 caracteres</span>
+          }
+        </div>
+      </div>
+      <div class="row">
+        <div class="mb-3 col">
+          <label for="emailInput" class="form-label">Email</label>
+          <input type="email" class="form-control form__input" id="emailInput" formControlName="email" [ngClass]="{
+            'is-invalid': email.invalid && (email.dirty || email.touched)
+          }">
+          @if(email.getError("required")){
+            <span class="invalid-feedback">Este campo es requerido</span>
+          }
+          @if(email.getError("email")){
+            <span class="invalid-feedback">Tiene que ingresar un correo valido</span>
+          }
+          @if(email.getError("maxlength")){
+            <span class="invalid-feedback">Tiene que tener un maximo de 20 caracteres</span>
+          }
+        </div>
+        <div class="mb-3 col">
+          <label for="phoneInput" class="form-label">Telefono</label>
+          <div class="input-group">
+            <span class="input-group-text">+569</span>
+            <input type="text" class="form-control form__input" id="phoneInput" formControlName="phone" [ngClass]="{
+              'is-invalid': phone.invalid && (phone.dirty || phone.touched)
+            }">
+            @if(phone.getError("required")){
+              <span class="invalid-feedback">Este campo es requerido</span>
+            }
+            @if(phone.getError("pattern")){
+              <span class="invalid-feedback">El numero de telefono no es valido</span>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="rutInput" class="form-label">Rut</label>
+        <input type="text" class="form-control form__input" id="rutInput" formControlName="rut" [ngClass]="{
+          'is-invalid': rut.invalid && (rut.dirty || rut.touched)
+        }">
+        @if(rut.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(rut.getError("pattern")){
+          <span class="invalid-feedback">Tiene que ingresar un rut valido</span>
+        }
+      </div>
+      <div class="input-group mb-3">
+        <label for="description" class="input-group-text">Genero</label>
+        <select class="form-select" formControlName="gender">
+          @for (gender of listGendersVar; track $index) {
+            <option [value]="gender">{{gender}}</option>
+          }
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="birthdayInput" class="form-label">Cumpleaños</label>
+        <input type="date" class="form-control form__input" id="birthdayInput" formControlName="birthday" [ngClass]="{
+          'is-invalid': birthday.invalid && (birthday.dirty || birthday.touched)
+        }">
+        @if(birthday.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+      </div>
+      <div class="mb-3">
+        <label for="dateContractInput" class="form-label">Fecha Contrato</label>
+        <input type="date" class="form-control form__input" id="dateContractInput" formControlName="dateContract" [ngClass]="{
+          'is-invalid': dateContract.invalid && (dateContract.dirty || dateContract.touched)
+        }">
+        @if(dateContract.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label for="salaryInput" class="form-label">Salario</label>
+        <input type="number" class="form-control form__input" id="salaryInput" formControlName="salary" [ngClass]="{
+          'is-invalid': salary.invalid && (salary.dirty || salary.touched)
+        }">
+        @if(salary.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(salary.getError("min")){
+          <span class="invalid-feedback">El salario tiene que ser de minimo 200000</span>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label for="conditionInput" class="form-label">Condicion</label>
+        <input type="text" class="form-control form__input" id="conditionInput" formControlName="condition" [ngClass]="{
+          'is-invalid': condition.invalid && (condition.dirty || condition.touched)
+        }">
+        @if(condition.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+      </div>
+      <div class="input-group mb-3">
+        <label for="description" class="input-group-text">Sucursal</label>
+        <select class="form-select" formControlName="idBranch">
+          @for (branch of listBranchsVar; track $index) {
+            <option [value]="branch.idBranch">{{branch.name}}</option>
+          }
+        </select>
+      </div>
+      <button type="submit" class="form__btn-create btn btn-success" [disabled]="createEmployeeForm.invalid">
+        Guardar
+      </button>
+    </div>
+  </form>
+</div>

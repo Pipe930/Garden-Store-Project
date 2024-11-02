@@ -1,3 +1,7 @@
+@let alertMessageVar = alertMessage();
+@let selectedPermissionsVar = selectedPermissions();
+@let listPermissionsVar = listPermissions();
+
 <div class="container__container-title">
   <h2 class="container__container-title">Crear Rol</h2>
   <button class="container__btn btn btn-primary" [routerLink]="['/admin/access-control/list']">Volver</button>
@@ -7,6 +11,12 @@
 
   <form novalidate class="container-form__form" [formGroup]="createRoleForm" (ngSubmit)="createRole()">
 
+    @if(alertMessageVar){
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> Este nombre de rol ya existe
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    }
     <div class="mb-3">
       <label for="nameInput" class="form-label">Nombre Rol</label>
       <input type="text" class="form-control form__input" id="nameInput" formControlName="name" [ngClass]="{
@@ -25,7 +35,7 @@
           <div class="col-md-5">
               <h5>Permisos Disponibles</h5>
               <select #availableOptions class="form-select" multiple size="10">
-                @for (permission of listPermissions(); track $index) {
+                @for (permission of listPermissionsVar; track $index) {
                   <option [value]="permission.idPermission">{{permission.name}}</option>
                 }
               </select>
@@ -39,7 +49,7 @@
           <div class="col-md-5">
               <h5>Permisos Seleccionados</h5>
               <select #selectedOptions class="form-select" size="10">
-                @for (permission of selectedPermissions(); track $index) {
+                @for (permission of selectedPermissionsVar; track $index) {
                   <option [value]="permission.idPermission">{{permission.name}}</option>
                 }
               </select>

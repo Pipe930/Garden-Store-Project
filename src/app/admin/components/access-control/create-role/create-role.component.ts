@@ -1,11 +1,11 @@
-import { Permission } from '@admin/interfaces/permission';
 import { CreateRole, PermissionType } from '@admin/interfaces/role';
 import { AccessControlService } from '@admin/services/access-control.service';
 import { NgClass } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AlertService } from '@core/services/alert.service';
+import { catchError, EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-create-role',
@@ -19,10 +19,11 @@ export class CreateRoleComponent implements OnInit {
   private readonly _accessControlService = inject(AccessControlService);
   private readonly _builder = inject(FormBuilder);
   private readonly _router = inject(Router);
-  private readonly _alertService = inject(AlertService)
+  private readonly _alertService = inject(AlertService);
 
   public listPermissions = signal<PermissionType[]>([]);
   public selectedPermissions = signal<PermissionType[]>([]);
+  public alertMessage = signal<boolean>(false);
 
   public createRoleForm: FormGroup = this._builder.group({
     name: this._builder.control("", [Validators.required, Validators.maxLength(40)])
@@ -40,7 +41,22 @@ export class CreateRoleComponent implements OnInit {
       permissions: this.selectedPermissions()
     }
 
-    this._accessControlService.createRole(roleJson).subscribe(() => {
+    this._accessControlService.createRole(roleJson).pipe(
+      catchError((error) => {
+
+        if (error.status === 409) {
+          this.alertMessage.set(true);
+
+          const timer = setTimeout(() => {
+            this.alertMessage.set(false);
+          }, 5000);
+          clearTimeout(timer);
+          return EMPTY;
+        }
+
+        return EMPTY;
+      })
+    ).subscribe(() => {
       this._alertService.success("Rol Creado", "El rol ha sido creado correctamente");
       this._router.navigate(["/admin/access-control/list"]);
     })

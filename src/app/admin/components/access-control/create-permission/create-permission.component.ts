@@ -1,13 +1,14 @@
 import { CreatePermission } from '@admin/interfaces/permission';
 import { AccessControlService } from '@admin/services/access-control.service';
 import { NgClass, TitleCasePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { HttpStatusCode } from '@angular/common/http';
+import { Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ActionsEnum } from '@core/enums/actions.enum';
 import { ResourcesEnum } from '@core/enums/resource.enum';
 import { AlertService } from '@core/services/alert.service';
-import { catchError, of } from 'rxjs';
+import { catchError, EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-create-permission',
@@ -25,6 +26,7 @@ export class CreatePermissionComponent {
 
   public listResources = signal<ResourcesEnum[]>([...Object.values(ResourcesEnum)]);
   public listActions = signal<ActionsEnum[]>([...Object.values(ActionsEnum)]);
+  public alertMessage = signal<boolean>(false);
 
   public listActionsSelected: ActionsEnum[] = [];
 
@@ -49,8 +51,17 @@ export class CreatePermissionComponent {
 
     this._accessControlService.createPermission(jsonPermission).pipe(
       catchError((error) => {
-        this._alertService.error("Error", error.error.message);
-        return of();
+
+        if(error.status === HttpStatusCode.Conflict) {
+          this.alertMessage.set(true);
+
+          const timer = setTimeout(() => {
+            this.alertMessage.set(false);
+          }, 5000);
+          clearTimeout(timer)
+          return EMPTY;
+        }
+        return EMPTY;
       })
     ).subscribe(() => {
       this._alertService.success("Permiso Creado", "El permiso ha sido creado correctamente");

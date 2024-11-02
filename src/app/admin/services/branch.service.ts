@@ -21,7 +21,7 @@ export class BranchService {
   }
 
   public getBranch(id: number): Observable<BranchResponse>{
-    return this._http.get<BranchResponse>(`${this.urlApi}/${id}`);
+    return this._http.get<BranchResponse>(`${this.urlApi}/branch/${id}`);
   }
 
   public createStockBranch(stockBranch: CreateProductBranchForm): Observable<any>{
