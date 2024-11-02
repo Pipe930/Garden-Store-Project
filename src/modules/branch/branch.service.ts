@@ -9,6 +9,8 @@ import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { Op } from 'sequelize';
 import { CreateBranchDto } from './dto/create-branch.dto';
 import { Address } from '../address/models/address.model';
+import { AvailabilityStatus } from 'src/core/enums/productAviabilityStatus.enum';
+import { ProductsService } from '../products/products.service';
 
 interface BranchProduct {
 
@@ -18,6 +20,8 @@ interface BranchProduct {
 
 @Injectable()
 export class BranchService {
+
+  constructor(private readonly _productService: ProductsService) {}
 
   async findAll(): Promise<ResponseData> {
 
@@ -131,6 +135,8 @@ export class BranchService {
   
         productFind.stock += product.quantity;
         await productFind.save();
+
+        await this._productService.validAvaibilityStatus(productFind.idProduct);
       } else {
 
         try {
@@ -140,6 +146,11 @@ export class BranchService {
             idProduct: product.idProduct,
             quantity: product.quantity
           });
+
+          productFind.stock += product.quantity;
+          await productFind.save();
+
+          await this._productService.validAvaibilityStatus(product.idProduct);
         } catch (error) {
           throw new InternalServerErrorException('Error No se pudo añadir el stock a la sucursal correctamente');
         }

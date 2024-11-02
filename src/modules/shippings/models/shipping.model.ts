@@ -1,7 +1,6 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Sale } from "src/modules/sales/models/sale.model";
 import { Address } from "src/modules/address/models/address.model";
-import { ShippingStatusEnum, WithdrawalEnum } from "src/core/enums/statusShipping.enum";
 
 @Table({
     tableName: 'shippings',
@@ -43,11 +42,14 @@ export class Shipping extends Model {
     declare deliveryDate: Date;
 
     @Column({
-        type: DataType.INTEGER,
+        type: DataType.STRING(40),
         allowNull: false,
         field: 'tracking_number',
+        validate: {
+            notEmpty: true
+        }
     })
-    declare trackingNumber: number;
+    declare trackingNumber: string;
 
     @Column({
         type: DataType.INTEGER,
@@ -59,19 +61,6 @@ export class Shipping extends Model {
     })
     declare shippingCost: number;
 
-    @Column({
-        type: DataType.ENUM(...Object.values(WithdrawalEnum)),
-        allowNull: false
-    })
-    declare withdrawal: string;
-
-    @Column({
-        type: DataType.ENUM(...Object.values(ShippingStatusEnum)),
-        defaultValue: ShippingStatusEnum.PREPARING,
-        allowNull: false
-    })
-    declare status: string;
-
     @ForeignKey(() => Address)
     @Column({
         type: DataType.INTEGER,
@@ -79,7 +68,4 @@ export class Shipping extends Model {
         field: 'id_address'
     })
     declare idAddress: number;
-
-    @BelongsTo(() => Address)
-    declare address: Address;
 }

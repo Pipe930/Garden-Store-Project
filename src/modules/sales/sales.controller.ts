@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Req, Put, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Req, Put, ParseIntPipe, ParseUUIDPipe } from '@nestjs/common';
 import { SalesService } from './sales.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { AuthGuard } from 'src/core/guards/auth.guard';
@@ -24,7 +24,7 @@ export class SalesController {
 
   @Put('status/:idSale')
   @UseGuards(AuthGuard)
-  cancelSale(@Param('idSale', ParseIntPipe) idSale: number, @Body() updateSateDto: UpdateSaleDto) {
+  cancelSale(@Param('idSale', ParseUUIDPipe) idSale: string, @Body() updateSateDto: UpdateSaleDto) {
     return this.salesService.updateStatusSale(idSale, updateSateDto);
   }
 

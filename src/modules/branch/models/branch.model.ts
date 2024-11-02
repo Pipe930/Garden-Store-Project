@@ -3,6 +3,7 @@ import { Address } from "src/modules/address/models/address.model";
 import { Product } from "src/modules/products/models/product.model";
 import { Employee } from "./employee.model";
 import { PurchaseOrder } from "src/modules/purchase/models/purchase-order.model";
+import { Sale } from "src/modules/sales/models/sale.model";
 
 @Table({
     tableName: 'branchs',
@@ -112,6 +113,9 @@ export class Branch extends Model {
     
     @HasMany(() => Employee)
     declare employees: Employee[];
+
+    @HasMany(() => Sale)
+    declare sales: Sale[];
     
     @HasMany(() => PurchaseOrder)
     declare purchaseOrders: PurchaseOrder[];

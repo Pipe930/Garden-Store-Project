@@ -4,6 +4,8 @@ import { Product } from "src/modules/products/models/product.model";
 import { User } from "src/modules/users/models/user.model";
 import { Shipping } from "src/modules/shippings/models/shipping.model";
 import { StatusSaleEnum } from "src/core/enums/statusSale.enum";
+import { ShippingStatusEnum, WithdrawalEnum } from "src/core/enums/statusShipping.enum";
+import { Branch } from "src/modules/branch/models/branch.model";
 
 @Table({
     tableName: 'sales',
@@ -71,10 +73,24 @@ export class Sale extends Model {
     declare productsQuantity: number;
 
     @Column({
-        type: DataType.ENUM(...Object.values(StatusSaleEnum)),
+        type: DataType.ENUM(...Object.values(ShippingStatusEnum)),
+        defaultValue: ShippingStatusEnum.PREPARING,
         allowNull: false
     })
-    declare status: string;
+    declare statusOrder: string;
+
+    @Column({
+        type: DataType.ENUM(...Object.values(WithdrawalEnum)),
+        allowNull: false
+    })
+    declare withdrawal: string;
+
+    @Column({
+        type: DataType.ENUM(...Object.values(StatusSaleEnum)),
+        allowNull: false,
+        defaultValue: StatusSaleEnum.PENDING
+    })
+    declare statusPayment: string;
 
     @ForeignKey(() => User)
     @Column({
@@ -83,6 +99,14 @@ export class Sale extends Model {
         field: 'id_user'
     })
     declare idUser: number;
+
+    @ForeignKey(() => Branch)
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: true,
+        field: 'id_branch'
+    })
+    declare idBranch: number;
 
     @HasMany(() => SaleProduct)
     declare saleProducts: SaleProduct[];
@@ -125,7 +149,20 @@ export class SaleProduct extends Model {
 
     @Column({
         type: DataType.INTEGER,
-        allowNull: false
+        allowNull: false,
+        field: 'price_unit',
+        validate: {
+            min: 1000
+        }
+    })
+    declare priceUnit: number;
+
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false,
+        validate: {
+            min: 1
+        }
     })
     declare quantity: number;
 

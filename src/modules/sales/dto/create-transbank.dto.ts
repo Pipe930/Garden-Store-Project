@@ -15,7 +15,7 @@ export class CreateTransbankDto {
     @Min(1000)
     readonly amount: number;
 
-    @IsUrl()
+    @IsString()
     @IsNotEmpty()
     readonly returnUrl: string;
 }

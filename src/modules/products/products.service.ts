@@ -12,6 +12,7 @@ import { Offer } from '../offers/models/offer.model';
 import { randomUUID } from 'crypto';
 import { SearchProductDto } from './dto/search-product.dto';
 import { PaginateDto } from './dto/paginate.dto';
+import { AvailabilityStatus } from 'src/core/enums/productAviabilityStatus.enum';
 
 @Injectable()
 export class ProductsService {
@@ -313,6 +314,16 @@ export class ProductsService {
     
     const slug = title.toLowerCase().replace(/ /g, "-");
     return slug + "-" + randomUUID().split("-").join("");
+  }
+
+  public async validAvaibilityStatus(idProduct: number): Promise<void> {
+
+    const product = await Product.findByPk<Product>(idProduct);
+
+    if(product.stock > 0 && product.stock <= 10) product.availabilityStatus = AvailabilityStatus.LowStock;
+    if(product.stock > 10) product.availabilityStatus = AvailabilityStatus.InStock;
+
+    product.save();
   }
 
   private includeConfigProduct(): any[]{

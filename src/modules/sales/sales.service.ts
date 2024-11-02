@@ -7,22 +7,26 @@ import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { CreateTransbankDto } from './dto/create-transbank.dto';
-import { AvailabilityStatus, Product } from '../products/models/product.model';
+import { Product } from '../products/models/product.model';
 import { UpdateSaleDto } from './dto/update-status-sale.dto';
 import { Shipping } from '../shippings/models/shipping.model';
 import { StatusSaleEnum } from 'src/core/enums/statusSale.enum';
+import { ShippingStatusEnum, WithdrawalEnum } from 'src/core/enums/statusShipping.enum';
+import { ProductsService } from '../products/products.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class SalesService {
 
   constructor(
     private readonly httpService: HttpService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly productService: ProductsService
   ) {}
 
   async create(createSaleDto: CreateSaleDto, idUser: number):Promise<ResponseData> {
 
-    let { priceTotal, productsQuantity, discountApplied } = createSaleDto;
+    let { priceTotal, productsQuantity, discountApplied, withdrawal } = createSaleDto;
 
     const cartUser = await Cart.findOne({
       where: {
@@ -37,21 +41,23 @@ export class SalesService {
 
     try {
       
-      const sale = await Sale.create({
+      const newSale = await Sale.create({
 
         priceIva: this.calculateIvaPrice(priceTotal),
         priceNet: this.calculateNetPrice(priceTotal),
         priceTotal,
         productsQuantity,
         discountApplied,
+        withdrawal,
         status: StatusSaleEnum.PENDING,
         idUser
       });
 
       cartUser.items.forEach(async item => {
         await SaleProduct.create({
-          idSale: sale.idSale,
+          idSale: newSale.idSale,
           idProduct: item.idProduct,
+          priceUnit: item.priceUnit,
           quantity: item.quantity
         });
 
@@ -64,14 +70,15 @@ export class SalesService {
       cartUser.priceTotalDiscount = 0;
 
       await cartUser.save();
-
+      
+      return {
+        statusCode: HttpStatus.CREATED,
+        message: 'Venta creada con exito',
+        data: newSale
+      };
     } catch (error) {  
       throw new InternalServerErrorException('Error No se pudo crear la venta');
     }
-    return {
-      statusCode: HttpStatus.CREATED,
-      message: 'Venta creada con exito'
-    };
   }
 
   async findUserSales(idUser: number): Promise<ResponseData> {
@@ -105,15 +112,36 @@ export class SalesService {
     };
   }
 
-  async updateStatusSale(idSale: number, updateSaleDto: UpdateSaleDto): Promise<ResponseData> {
+  async updateStatusSale(idSale: string, updateSaleDto: UpdateSaleDto): Promise<ResponseData> {
+
+    const { status, shipping } = updateSaleDto;
 
     const sale = await Sale.findByPk(idSale);
 
     if(!sale) throw new NotFoundException('No se encontro la venta');
-    if(sale.status === StatusSaleEnum.PAID) throw new BadRequestException('La venta ya se encuentra pagada');
+    if(sale.statusPayment === StatusSaleEnum.PAID) throw new BadRequestException('La venta ya se encuentra pagada');
 
-    sale.status = updateSaleDto.status;
-    await sale.save();
+    sale.statusPayment = status;
+
+    try {      
+      
+      if(sale.statusPayment === StatusSaleEnum.PAID && sale.withdrawal === WithdrawalEnum.DELIVERY) {
+  
+        await Shipping.create({
+          idShippingSale: sale.idSale,
+          ...shipping,
+          trackingNumber: randomUUID().split('-')[0].toUpperCase()
+        })
+      }
+
+      await sale.save();
+
+    } catch (error) {
+
+      console.log(error);
+      throw new InternalServerErrorException('Error al actualizar el estado de la venta');
+    }
+
 
     return {
 
@@ -191,30 +219,29 @@ export class SalesService {
 
   private async validateStatusSale(status: string, sale: Sale): Promise<void> {
 
-    if(status !== StatusSaleEnum.PAID) return;
+    if(status === ShippingStatusEnum.DELIVERED){
 
-    const products = await SaleProduct.findAll({
-      where: {
-        idSale: sale.idSale
-      }
-    });
+      const products = await SaleProduct.findAll({
+        where: {
+          idSale: sale.idSale
+        }
+      });
+  
+      products.forEach(async productSale => {
+  
+        const product = await Product.findByPk(productSale.idProduct);
+  
+        if(product.stock < productSale.quantity) throw new BadRequestException('No hay stock suficiente para la venta');
+  
+        product.stock -= productSale.quantity;
+        product.sold += productSale.quantity;
 
-    products.forEach(async productSale => {
-
-      const product = await Product.findByPk(productSale.idProduct);
-
-      if(product.stock < productSale.quantity) throw new BadRequestException('No hay stock suficiente para la venta');
-
-      product.stock -= productSale.quantity;
-      product.sold += productSale.quantity;
-
-      if(product.stock <= 10) product.availabilityStatus = AvailabilityStatus.LowStock;
-      if(product.stock === 0) product.availabilityStatus = AvailabilityStatus.OutOfStock;
-
-      await product.save();
-    });
-
-    sale.status = status;
-    await sale.save();
+        await this.productService.validAvaibilityStatus(product.idProduct);
+        await product.save();
+      });
+  
+      sale.statusOrder = status;
+      await sale.save();
+    }
   }
 }

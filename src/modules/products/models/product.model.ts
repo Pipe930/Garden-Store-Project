@@ -1,8 +1,9 @@
-import { BelongsTo, Column, DataType, ForeignKey, Table, Model, HasMany } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Table, Model, HasMany, BelongsToMany } from "sequelize-typescript";
 import { Category } from "src/modules/categories/models/category.model";
 import { ImagesProduct } from "./image.model";
 import { Offer } from "src/modules/offers/models/offer.model";
 import { AvailabilityStatus } from "src/core/enums/productAviabilityStatus.enum";
+import { Branch, ProductBranch } from "src/modules/branch/models/branch.model";
 
 @Table({
     tableName: "products",

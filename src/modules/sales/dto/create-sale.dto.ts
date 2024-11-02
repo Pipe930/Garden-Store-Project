@@ -1,17 +1,25 @@
-import { IsNumber, IsPositive, Min } from "class-validator";
+import { IsEnum, IsNumber, IsOptional, IsPositive, Min } from "class-validator";
+import { WithdrawalEnum } from "src/core/enums/statusShipping.enum";
 
 
 export class CreateSaleDto {
 
     @IsNumber()
     @Min(1000)
-    declare priceTotal: number;
+    readonly priceTotal: number;
 
     @IsNumber()
     @Min(0)
-    declare discountApplied: number;
+    readonly discountApplied: number;
 
     @IsNumber()
     @IsPositive()
-    declare productsQuantity: number;
+    readonly productsQuantity: number;
+
+    @IsEnum(WithdrawalEnum)
+    readonly withdrawal: WithdrawalEnum;
+
+    @IsNumber()
+    @IsOptional()
+    readonly idBranch: number;
 }

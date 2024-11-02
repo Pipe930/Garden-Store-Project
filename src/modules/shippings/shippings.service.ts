@@ -4,6 +4,7 @@ import { UpdateShippingDto } from './dto/update-shipping.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { Shipping } from './models/shipping.model';
 import { ShippingStatusEnum } from 'src/core/enums/statusShipping.enum';
+import { Sale } from '../sales/models/sale.model';
 
 @Injectable()
 export class ShippingsService {
@@ -36,17 +37,19 @@ export class ShippingsService {
 
     try {
 
+      const sale = await Sale.findByPk(idShipping);
       const shipping = await Shipping.findByPk(idShipping);
 
       if(!shipping) throw new NotFoundException("No se encontro el envio");
-      if(shipping.status === ShippingStatusEnum.DELIVERED) throw new BadRequestException("El envio ya fue entregado");
+      if(!sale) throw new NotFoundException("No se encontro el envio");
+      if(sale.statusOrder === ShippingStatusEnum.DELIVERED) throw new BadRequestException("El envio ya fue entregado");
 
-      shipping.status = shippingStatusDto.status;
+      sale.statusOrder = shippingStatusDto.status;
 
-      if(shipping.status === ShippingStatusEnum.DELIVERED) shipping.deliveryDate = new Date();
-      if(shipping.status === ShippingStatusEnum.SHIPPED) shipping.shippingDate = new Date();
+      if(sale.statusOrder === ShippingStatusEnum.DELIVERED) shipping.deliveryDate = new Date();
+      if(sale.statusOrder === ShippingStatusEnum.SHIPPED) shipping.shippingDate = new Date();
 
-      await shipping.save();
+      await sale.save();
 
       return {
         message: "Se actualizo el estado del envio",
