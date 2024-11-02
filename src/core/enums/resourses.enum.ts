@@ -16,5 +16,7 @@ export enum ResourcesEnum {
     PROVIDERS = "proveedores",
     BRANCHS = "sucursales",
     OFFERS = "ofertas",
-    WARRANTIES = "garantias"
+    WARRANTIES = "garantias",
+    ADDRESS = "direcciones",
+    ADDRESSUSER = "direcciones-usuario"
 }

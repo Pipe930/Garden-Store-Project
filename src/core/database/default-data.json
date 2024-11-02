@@ -216,6 +216,26 @@
                 "UPDATE",
                 "DELETE"
             ]
+        },
+        {
+            "name": "gestionar direcciones",
+            "resource": "direcciones",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+            ]
+        },
+        {
+            "name": "gestionar direcciones usuarios",
+            "resource": "direcciones-usuario",
+            "actions": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+            ]
         }
     ],
     "rolePermission": [
@@ -230,6 +250,62 @@
         {
             "idRole": 1,
             "idPermission": 15
+        },
+        {
+            "idRole": 2,
+            "idPermission": 1
+        },
+        {
+            "idRole": 2,
+            "idPermission": 2
+        },
+        {
+            "idRole": 2,
+            "idPermission": 3
+        },
+        {
+            "idRole": 2,
+            "idPermission": 4
+        },
+        {
+            "idRole": 2,
+            "idPermission": 5
+        },
+        {
+            "idRole": 2,
+            "idPermission": 6
+        },
+        {
+            "idRole": 2,
+            "idPermission": 8
+        },
+        {
+            "idRole": 2,
+            "idPermission": 9
+        },
+        {
+            "idRole": 2,
+            "idPermission": 10
+        },
+        {
+            "idRole": 2,
+            "idPermission": 12
+        },
+        {
+            "idRole": 2,
+            "idPermission": 13
+        },
+        {
+            "idRole": 2,
+            "idPermission": 14
+        },
+        {
+            "idRole": 2,
+            "idPermission": 16
+        },
+        {
+            "idRole": 2,
+            "idPermission": 17
         }
     ]
 }

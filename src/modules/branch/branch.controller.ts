@@ -19,7 +19,7 @@ export class BranchController {
     return this.branchService.createBranch(createBranchDto);
   }
 
-  @Get(':id')
+  @Get('branch/:id')
   getBranch(@Param('id', ParseIntPipe) id: number) {
     return this.branchService.getBranch(id);
   }
@@ -34,11 +34,17 @@ export class BranchController {
     return this.branchService.getStockBranch(idBranch, idProduct);
   }
 
-  @Post('employee')
+  
+  @Get('employees')
+  findAllEmployees() {
+    return this.branchService.findAllEmployees();
+  }
+  
+  @Post('employees')
   createEmployee(@Body() createEmployeeDto: CreateEmployeeDto) {
     return this.branchService.createEmployee(createEmployeeDto);
   }
-
+  
   @Get('employees/:idBranch')
   findEmployees(@Param('idBranch', ParseIntPipe) id: number) {
     return this.branchService.findEmployeesByBranch(id);

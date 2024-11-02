@@ -34,15 +34,17 @@ export class CreateEmployeeDto {
 
     @IsString()
     @IsNotEmpty()
-    @MinLength(11)
-    @MaxLength(12)
+    @MinLength(10)
+    @MaxLength(11)
     readonly rut: string;
 
     @IsDate()
+    @Transform(({ value }) => new Date(value))
     @IsNotEmpty()
     readonly birthday: Date;
 
     @IsDate()
+    @Transform(({ value }) => new Date(value))
     @IsNotEmpty()
     readonly dateContract: Date;
 

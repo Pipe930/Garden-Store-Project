@@ -27,7 +27,7 @@ export class BranchService {
 
     const branches = await Branch.findAll();
 
-    if(branches.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT };
+    if(branches.length === 0) return { message: "No tenemos sucursales registrados", statusCode: HttpStatus.NO_CONTENT };
     
     return {
       statusCode: 200,
@@ -246,6 +246,18 @@ export class BranchService {
     }
   }
 
+  async findAllEmployees(): Promise<ResponseData> {
+
+    const employees = await Employee.findAll();
+
+    if(employees.length === 0) return { message: "No hay empleados registrados", statusCode: HttpStatus.NO_CONTENT };
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: employees
+    }
+  }
+
   async findEmployeesByBranch(idBranch: number): Promise<ResponseData> {
 
     const branch = await Branch.findByPk(idBranch);
@@ -268,7 +280,7 @@ export class BranchService {
 
   async updateEmployee(idEmployee: number, updateEmployeeDto: UpdateEmployeeDto): Promise<ResponseData> {
 
-    const { email, phone, dateContract, salary, condition, idBranch } = updateEmployeeDto;
+    const { firstName, lastName, email, phone, gender, birthday, rut, dateContract, salary, condition, idBranch } = updateEmployeeDto;
 
     const employee = await Employee.findByPk(idEmployee);
     const branch = await Branch.findByPk(idBranch);
@@ -276,8 +288,13 @@ export class BranchService {
     if(!employee) throw new NotFoundException('El empleado no existe');
     if(!branch) throw new NotFoundException('La sucursal no existe');
 
+    employee.firstName = firstName;
+    employee.lastName = lastName;
     employee.email = email;
     employee.phone = phone;
+    employee.rut = rut;
+    employee.gender = gender;
+    employee.birthday = birthday;
     employee.dateContract = dateContract;
     employee.salary = salary;
     employee.condition = condition;
