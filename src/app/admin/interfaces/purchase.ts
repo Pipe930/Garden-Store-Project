@@ -3,9 +3,9 @@ import { TableColumns } from "@core/interfaces/table";
 
 export enum StatusPurchaseEnum {
 
-  PENDING = 'PENDING',
-  PAID = 'PAID',
-  CANCELED = 'CANCELED'
+  PENDING = 'PENDIENTE',
+  PAID = 'PAGADO',
+  CANCELED = 'CANCELADO'
 }
 
 export enum MethodPaymentEnum {

@@ -8,7 +8,7 @@ export interface Purchase {
   priceTotal: number;
   discountApplied: number;
   productsQuantity: number;
-  status: string;
+  statusPayment: string;
   idUser: number;
   createdAt: Date;
   updatedAt: Date;
@@ -48,8 +48,8 @@ export enum TypeStatusEnum {
 
 export enum TypeRetirementEnum {
 
-  STORE_PICKUP = 'EN TIENDA',
-  HOME_DELIVERY = 'A DOMICILIO'
+  STORE_PICKUP = 'RETIRO EN TIENDA',
+  HOME_DELIVERY = 'DESPACHO A DOMICILIO'
 }
 
 export enum TypeStatusTransbankEnum {
@@ -122,10 +122,36 @@ export interface Voucher {
   discountApplied: number;
 }
 
+export interface VoucherConfirm {
+
+  address: Address;
+  typePerson: string;
+  typePay: string;
+  typeRetirement: string;
+  shippingCost: number;
+  idSale: number;
+}
+
+export interface Shipping {
+
+  informationShipping: string;
+  shippingCost: number;
+  idAddress: number;
+}
+
+export interface UpdateVoucher {
+
+  status: string;
+  shipping?: Shipping;
+}
+
 export interface CreateVoucher {
+
+  withdrawal: string;
   productsQuantity: number;
   priceTotal: number;
   discountApplied: number;
+  idBranch?: number;
 }
 
 

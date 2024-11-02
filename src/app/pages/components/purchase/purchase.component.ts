@@ -6,12 +6,13 @@ import { Cart, cartJson } from '@pages/interfaces/cart';
 import { AddressService } from '@pages/services/address.service';
 import { Address, addressObject } from '@pages/interfaces/address';
 import { Commune, Province, Region } from '@pages/interfaces/locates';
-import { TransationTransbank, TypePaimentEnum, TypeRetirementEnum, Voucher, VoucherObject } from '@pages/interfaces/purchase';
+import { CreateVoucher, TransationTransbank, TypePaimentEnum, TypeRetirementEnum, Voucher, VoucherConfirm, VoucherObject } from '@pages/interfaces/purchase';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common';
 import { SessionService } from '@core/services/session.service';
 import { TransbankService } from '@pages/services/transbank.service';
 import { Branch } from '@admin/interfaces/branch';
+import { PurchaseService } from '@pages/services/purchase.service';
 
 @Component({
   selector: 'app-purchase',
@@ -28,6 +29,7 @@ export class PurchaseComponent implements OnInit {
   private readonly _alertService = inject(AlertService);
   private readonly _sessionService = inject(SessionService);
   private readonly _transbankService = inject(TransbankService);
+  private readonly _purchaseService = inject(PurchaseService);
 
   public formCreateAddress: FormGroup = this._builder.group({
 
@@ -62,7 +64,15 @@ export class PurchaseComponent implements OnInit {
   public listCommune = signal<Commune[]>([]);
   public cart = signal<Cart>(cartJson);
 
+  public shippingCost = 0;
+
   public voucher: Voucher = VoucherObject;
+  public voucherObject: CreateVoucher = {
+    withdrawal: "",
+    priceTotal: 0,
+    productsQuantity: 0,
+    discountApplied: 0
+  };
 
   ngOnInit(): void {
 
@@ -94,9 +104,9 @@ export class PurchaseComponent implements OnInit {
     const element = event.target as HTMLSelectElement;
 
     if(element.value != ""){
-      this._addressService.getProvinceRegion(parseInt(element.value)).subscribe(result => {
+      this._addressService.getProvinceRegion(parseInt(element.value)).subscribe(response => {
 
-        this.listProvince.set(result.data);
+        this.listProvince.set(response.data);
         this.formCreateAddress.get("province")?.enable();
       });
 
@@ -112,9 +122,9 @@ export class PurchaseComponent implements OnInit {
     const element = event.target as HTMLSelectElement;
 
     if(element.value != ""){
-      this._addressService.getProvinceCommune(parseInt(element.value)).subscribe(result => {
+      this._addressService.getProvinceCommune(parseInt(element.value)).subscribe(response => {
 
-        this.listCommune.set(result.data);
+        this.listCommune.set(response.data);
         this.formCreateAddress.get("commune")?.enable();
       });
     } else {
@@ -146,7 +156,7 @@ export class PurchaseComponent implements OnInit {
         idCommune: parseInt(form.commune)
       }
 
-      this._addressService.createAddress(json).subscribe(result => {
+      this._addressService.createAddress(json).subscribe(() => {
         this._alertService.toastSuccess("La dirección se registro con exito");
         this._addressService.getAllAddress();
         this.formCreateAddress.reset();
@@ -272,14 +282,13 @@ export class PurchaseComponent implements OnInit {
 
         let tokenUser = this._sessionService.getSession()?.access;
         let arrayTokenUser = tokenUser?.split(".");
-        let uuidRandom = crypto.randomUUID();
-        let uuid = uuidRandom.split("-").join("");
+        let uuid = crypto.randomUUID().split("-").join("");
 
         const transation: TransationTransbank = {
           buyOrder: uuid.substring(1, 25),
           sessionId: arrayTokenUser![2],
           amount: this.cart().priceTotal,
-          returnUrl: "http://127.0.0.1:4200/purchase-confirm"
+          returnUrl: "http://localhost:4200/purchase-confirm"
         }
 
         this._transbankService.createTransationTransbank(transation).subscribe(result => {
@@ -287,7 +296,42 @@ export class PurchaseComponent implements OnInit {
           this.voucher.totalPrice = this.cart().priceTotal;
           this.voucher.productsQuantity = this.cart().productsTotal;
           this.voucher.discountApplied = this.cart().priceTotalDiscount;
-          localStorage.setItem("voucher", JSON.stringify(this.voucher));
+
+          if(this.voucher.typeRetirement === TypeRetirementEnum.HOME_DELIVERY && this.voucher.address.name !== ""){
+
+            this.voucherObject = {
+              withdrawal: this.voucher.typeRetirement,
+              priceTotal: this.voucher.totalPrice,
+              productsQuantity: this.voucher.productsQuantity,
+              discountApplied: this.voucher.discountApplied
+            }
+
+          } else if(this.voucher.typeRetirement === TypeRetirementEnum.STORE_PICKUP && this.voucher.idBranch !== 0){
+
+            this.voucherObject = {
+              withdrawal: this.voucher.typeRetirement,
+              priceTotal: this.voucher.totalPrice,
+              productsQuantity: this.voucher.productsQuantity,
+              discountApplied: this.voucher.discountApplied,
+              idBranch: this.voucher.idBranch
+            }
+          }
+
+          this._purchaseService.createPurchase(this.voucherObject).subscribe(response => {
+
+            const newVoucherObject: VoucherConfirm = {
+
+              address: this.voucher.address,
+              typePerson: this.voucher.typePerson,
+              typePay: this.voucher.typePay,
+              shippingCost: this.shippingCost,
+              typeRetirement: this.voucher.typeRetirement,
+              idSale: response.data.idSale,
+            }
+
+            localStorage.setItem("voucher", JSON.stringify(newVoucherObject));
+          })
+
           let form = document.createElement("form");
           form.method = "POST";
           form.action = result.data.url;

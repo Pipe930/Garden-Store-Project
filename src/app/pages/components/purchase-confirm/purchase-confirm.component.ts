@@ -1,7 +1,8 @@
+import { StatusPurchaseEnum } from '@admin/interfaces/purchase';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ConfirmTransbank, CreateVoucher, TransbankInfo, TypeRetirementEnum, TypeStatusTransbankEnum, Voucher } from '@pages/interfaces/purchase';
+import { ConfirmTransbank, TransbankInfo, TypeRetirementEnum, TypeStatusTransbankEnum, UpdateVoucher, VoucherConfirm } from '@pages/interfaces/purchase';
 import { PurchaseService } from '@pages/services/purchase.service';
 import { TransbankService } from '@pages/services/transbank.service';
 
@@ -19,7 +20,8 @@ export class PurchaseConfirmComponent {
   private readonly _purchaseService = inject(PurchaseService);
 
   public transbankInfo: ConfirmTransbank = TransbankInfo;
-  public voucher!: CreateVoucher;
+  public voucherConfirmObject!: VoucherConfirm;
+  public updateSale!: UpdateVoucher;
 
   ngOnInit(): void {
 
@@ -29,32 +31,32 @@ export class PurchaseConfirmComponent {
 
         if(result.data.status === TypeStatusTransbankEnum.AUTHORIZED){
 
-          const voucherObject: Voucher = JSON.parse(localStorage.getItem("voucher")!);
+          this.voucherConfirmObject = JSON.parse(localStorage.getItem("voucher")!);
 
-          if(voucherObject.typeRetirement === TypeRetirementEnum.HOME_DELIVERY && voucherObject.address.name !== ""){
+          this.transbankInfo = result.data;
 
-            this.voucher = {
-              priceTotal: voucherObject.totalPrice,
-              productsQuantity: voucherObject.productsQuantity,
-              discountApplied: voucherObject.discountApplied
+          if(this.voucherConfirmObject.typeRetirement === TypeRetirementEnum.HOME_DELIVERY){
+
+            this.updateSale = {
+
+              status: StatusPurchaseEnum.PAID,
+              shipping: {
+                informationShipping: "Envio para cliente a domicilio",
+                shippingCost: 0,
+                idAddress: this.voucherConfirmObject.address.idAddress
+              }
             }
+          } else if(this.voucherConfirmObject.typeRetirement === TypeRetirementEnum.STORE_PICKUP){
 
-          } else if(voucherObject.typeRetirement === TypeRetirementEnum.STORE_PICKUP && voucherObject.idBranch !== 0){
-
-            this.voucher = {
-              priceTotal: voucherObject.totalPrice,
-              productsQuantity: voucherObject.productsQuantity,
-              discountApplied: voucherObject.discountApplied
+            this.updateSale = {
+              status: StatusPurchaseEnum.PAID
             }
           }
 
-          this.transbankInfo = result.data;
-          this._purchaseService.createPurchase(this.voucher).subscribe(result => {
-
-            if(result){
+          this._purchaseService.updateStatusPurchase(this.voucherConfirmObject.idSale, this.updateSale).subscribe(() => {
               localStorage.removeItem("voucher");
-            }
-          })
+          });
+
 
         }
 
