@@ -26,32 +26,20 @@ export class PermissionsGuard implements CanActivate {
     ])
 
     try {
-      const rolesUser = await Role.findAll<Role>({
-        include: [
-          {
-            model: User,
-            where: {
-              idUser: request.user.idUser
-            }
-          },
-          {
-            model: Permission
-          }
-        ]
-      });
-
+      const rolesUser = await this.getRolesUser(request.user.idUser);
+      
       let hasPermission = false;
       for(const role of rolesUser){
         for(const routePermission of permissionsReflect){
-
+          
           const userPermission = role.permissions.find(
             (permission) => permission.resource === routePermission.resource,
           );
-          
+
           if(!userPermission) continue;
-          
+
           const allActionsAviable = routePermission.action.every((requieredAction) => userPermission.actions.includes(requieredAction));
-          
+
           if(!allActionsAviable) continue;
 
           hasPermission = true;
@@ -64,5 +52,22 @@ export class PermissionsGuard implements CanActivate {
     } catch (error) {
       throw new ForbiddenException("No tienes permisos para realizar esta accion");
     }
+  }
+
+  private async getRolesUser(idUser: number): Promise<Role[]> {
+
+    return await Role.findAll<Role>({
+      include: [
+        {
+          model: User,
+          where: {
+            idUser
+          }
+        },
+        {
+          model: Permission
+        }
+      ]
+    });
   }
 }

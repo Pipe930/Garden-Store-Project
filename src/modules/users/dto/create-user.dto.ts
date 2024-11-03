@@ -25,14 +25,14 @@ export class CreateUserDto {
     readonly createdCart: boolean;
 
     @IsString()
-    @MaxLength(255)
+    @MaxLength(50)
     @MinLength(8)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
     readonly password: string;
 
     @IsString()
-    @MaxLength(255)
+    @MaxLength(50)
     @MinLength(8)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())

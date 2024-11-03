@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, Length, MaxLength } from "class-validator";
 
 
 export class LoginUserDto {
@@ -11,8 +11,7 @@ export class LoginUserDto {
     readonly email: string;
 
     @IsString()
-    @MaxLength(50)
-    @MinLength(6)
+    @Length(8, 50)
     @IsNotEmpty()
     @Transform(({value}) => value.trim())
     readonly password: string;
