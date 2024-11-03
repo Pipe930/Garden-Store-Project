@@ -24,7 +24,7 @@ export class CardComponent implements OnChanges {
 
   ngOnChanges(): void {
 
-    if(this.product().images){
+    if(this.product().images.length !== 0){
 
       const image = this.product().images.filter(image => image.type === "cover")[0]
       this.urlImage.set(`${environment.apiImages}/${image.urlImage}`);

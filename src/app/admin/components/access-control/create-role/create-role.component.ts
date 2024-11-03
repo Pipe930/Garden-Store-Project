@@ -1,7 +1,7 @@
 import { CreateRole, PermissionType } from '@admin/interfaces/role';
 import { AccessControlService } from '@admin/services/access-control.service';
 import { NgClass } from '@angular/common';
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AlertService } from '@core/services/alert.service';

@@ -34,8 +34,17 @@ export class AuthService {
     );
   }
 
-  public verifyOTP(verifyOtp: VerifyOTPInterface):Observable<any>{
-    return this._http.post(`${this.urlApi}/verifyOTP`, verifyOtp);
+  public verifyOTP(verifyOtp: VerifyOTPInterface):Observable<LoginResponse>{
+    return this._http.post<LoginResponse>(`${this.urlApi}/verifyOTP`, verifyOtp)    .pipe(
+      map((response) => {
+
+        if(response && 'accessToken' in response.data && 'refreshToken' in response.data){
+          sessionStorage.setItem('accessToken', response.data.accessToken);
+          sessionStorage.setItem('refreshToken', response.data.refreshToken);
+        }
+        return response;
+      })
+    );;
   }
 
   public forgotPassword(formForgotPassword: FormForgotPassword): Observable<ForgotPasswordResponse>{

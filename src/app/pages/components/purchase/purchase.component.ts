@@ -13,6 +13,7 @@ import { SessionService } from '@core/services/session.service';
 import { TransbankService } from '@pages/services/transbank.service';
 import { Branch } from '@admin/interfaces/branch';
 import { PurchaseService } from '@pages/services/purchase.service';
+import { BranchService } from '@admin/services/branch.service';
 
 @Component({
   selector: 'app-purchase',
@@ -30,6 +31,7 @@ export class PurchaseComponent implements OnInit {
   private readonly _sessionService = inject(SessionService);
   private readonly _transbankService = inject(TransbankService);
   private readonly _purchaseService = inject(PurchaseService);
+  private readonly _branchService = inject(BranchService);
 
   public formCreateAddress: FormGroup = this._builder.group({
 
@@ -90,10 +92,9 @@ export class PurchaseComponent implements OnInit {
       this.listRegions.set(result.data);
     });
 
-    // this._addressService.getAllBranchs().subscribe(result => {
-    //   this.listBranchs = result.data;
-    // })
-
+    this._branchService.getAllBranchs().subscribe(response => {
+      this.listBranchs.set(response.data);
+    });
   }
 
   public changeRegion(event: Event):void{
@@ -274,6 +275,14 @@ export class PurchaseComponent implements OnInit {
 
   }
 
+  private generateUUID(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
+}
+
   public createPay():void {
 
     if((this.voucher.address.address.addressName !== "" || this.voucher.idBranch !== 0) &&
@@ -282,7 +291,7 @@ export class PurchaseComponent implements OnInit {
 
         let tokenUser = this._sessionService.getSession()?.access;
         let arrayTokenUser = tokenUser?.split(".");
-        let uuid = crypto.randomUUID().split("-").join("");
+        let uuid = this.generateUUID().split("-").join("");
 
         const transation: TransationTransbank = {
           buyOrder: uuid.substring(1, 25),
@@ -294,7 +303,7 @@ export class PurchaseComponent implements OnInit {
         this._transbankService.createTransationTransbank(transation).subscribe(result => {
 
           this.voucher.totalPrice = this.cart().priceTotal;
-          this.voucher.productsQuantity = this.cart().productsTotal;
+          this.voucher.productsQuantity = this.cart().quantityTotal;
           this.voucher.discountApplied = this.cart().priceTotalDiscount;
 
           if(this.voucher.typeRetirement === TypeRetirementEnum.HOME_DELIVERY && this.voucher.address.name !== ""){

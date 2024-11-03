@@ -3,7 +3,6 @@ import { inject } from '@angular/core';
 import { catchError, concatMap, EMPTY, Subject, throwError } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { Router } from '@angular/router';
-import { validUrl } from '../utils/urls-api';
 
 let refreshTokenInProgress = false;
 let refreshTokenSubject: Subject<string | null> = new Subject<string | null>();
@@ -17,7 +16,7 @@ export const apiExceptionInterceptor: HttpInterceptorFn = (req, next) => {
 
     catchError((error: HttpErrorResponse) => {
 
-      if (!validUrl(req)) return next(req);
+      if(req.url.includes('auth/login')) return next(req);
 
       if (error.status === HttpStatusCode.Unauthorized) {
 
