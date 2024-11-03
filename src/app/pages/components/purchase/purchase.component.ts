@@ -4,7 +4,7 @@ import { AlertService } from '@core/services/alert.service';
 import { CartService } from '@pages/services/cart.service';
 import { Cart, cartJson } from '@pages/interfaces/cart';
 import { AddressService } from '@pages/services/address.service';
-import { Address, addressObject } from '@pages/interfaces/address';
+import { Address, addressObject, CreateAddress } from '@pages/interfaces/address';
 import { Commune, Province, Region } from '@pages/interfaces/locates';
 import { CreateVoucher, TransationTransbank, TypePaimentEnum, TypeRetirementEnum, Voucher, VoucherConfirm, VoucherObject } from '@pages/interfaces/purchase';
 import { RouterLink } from '@angular/router';
@@ -143,36 +143,25 @@ export class PurchaseComponent implements OnInit {
       return;
     }
 
-    let list_elements = form.addressName.split(" ");
-    let number = list_elements[list_elements.length - 1];
-
-    if(!isNaN(number) && !isNaN(parseFloat(number))){
-
-      const json = {
-        name: form.name,
-        addressName: form.addressName,
-        numDepartment: form.numDepartment,
-        city: form.city,
-        description: form.description,
-        idCommune: parseInt(form.commune)
-      }
-
-      this._addressService.createAddress(json).subscribe(() => {
-        this._alertService.toastSuccess("La dirección se registro con exito");
-        this._addressService.getAllAddress();
-        this.formCreateAddress.reset();
-        this.formCreateAddress.patchValue({phone: "+569"});
-
-        this.listProvince.set([]);
-        this.listCommune.set([]);
-        this.activeErrorNumber = false;
-        this.formCreateAddress.get("province")?.disable();
-        this.formCreateAddress.get("commune")?.disable();
-      });
-    } else {
-
-      this.activeErrorNumber = true;
+    const json: CreateAddress = {
+      name: form.name,
+      addressName: form.addressName,
+      numDepartment: form.numDepartment,
+      city: form.city,
+      description: form.description,
+      idCommune: parseInt(form.commune)
     }
+
+    this._addressService.createAddress(json).subscribe(() => {
+      this._alertService.toastSuccess("La dirección se registro con exito");
+      this._addressService.getAllAddress();
+      this.formCreateAddress.reset();
+
+      this.listProvince.set([]);
+      this.listCommune.set([]);
+      this.formCreateAddress.get("province")?.disable();
+      this.formCreateAddress.get("commune")?.disable();
+    });
   }
 
   get name(){

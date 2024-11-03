@@ -1,4 +1,4 @@
-import { AddressAdmin } from '@admin/interfaces/addressAdmin';
+import { AddressAdmin, CreateAddress } from '@admin/interfaces/addressAdmin';
 import { AddressAdminService } from '@admin/services/address-admin.service';
 import { BranchService } from '@admin/services/branch.service';
 import { NgClass } from '@angular/common';
@@ -7,7 +7,9 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AlertService } from '@core/services/alert.service';
-import { catchError, of } from 'rxjs';
+import { Commune, Province, Region } from '@pages/interfaces/locates';
+import { AddressService } from '@pages/services/address.service';
+import { catchError, EMPTY, of } from 'rxjs';
 
 @Component({
   selector: 'app-create-branch',
@@ -23,8 +25,12 @@ export class CreateBranchComponent implements OnInit {
   private readonly _builder = inject(FormBuilder);
   private readonly _alertService = inject(AlertService);
   private readonly _addressAdminService = inject(AddressAdminService);
+  private readonly _addressService = inject(AddressService);
 
   public listAddress = signal<AddressAdmin[]>([]);
+  public listRegions = signal<Region[]>([]);
+  public listProvinces = signal<Province[]>([]);
+  public listCommunes = signal<Commune[]>([]);
 
   public createBranchForm: FormGroup = this._builder.group({
     name: this._builder.control("", [Validators.required, Validators.minLength(4), Validators.maxLength(255)]),
@@ -37,10 +43,29 @@ export class CreateBranchComponent implements OnInit {
     idAddress: this._builder.control("", Validators.required)
   });
 
+  public createAddressForm: FormGroup = this._builder.group({
+
+    addressName: this._builder.control("", [Validators.required, Validators.maxLength(255), Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+ \d+$/)]),
+    numDepartment: this._builder.control(""),
+    city: this._builder.control("", [Validators.required, Validators.minLength(4), Validators.maxLength(60)]),
+    description: this._builder.control(""),
+    region: this._builder.control("", Validators.required),
+    province: this._builder.control("", Validators.required),
+    commune: this._builder.control("", Validators.required)
+  })
+
   ngOnInit(): void {
     this._addressAdminService.getAllAddress();
-    this._addressAdminService.listAddressAdmin$.subscribe(branch => {
-      this.listAddress.set(branch);
+    this._addressAdminService.listAddressAdmin$.subscribe(address => {
+      this.listAddress.set(address);
+    });
+
+    this._addressService.getAllRegions().subscribe(response => {
+      this.listRegions.set(response.data);
+
+      this.createAddressForm.get("province")?.disable();
+      this.createAddressForm.get("commune")?.disable();
+
     });
   }
 
@@ -65,6 +90,102 @@ export class CreateBranchComponent implements OnInit {
       this._alertService.success("Sucursal Creada", "La sucursal ha sido creada correctamente");
       this._router.navigate(["/admin/branchs/list"]);
     });
+  }
+
+  public createAddress(): void {
+
+    if(this.createAddressForm.invalid) {
+      this.createAddressForm.markAllAsTouched();
+      return;
+    }
+
+    const form = this.createAddressForm.value;
+
+    const json: CreateAddress = {
+      addressName: form.addressName,
+      numDepartment: form.numDepartment,
+      city: form.city,
+      description: form.description,
+      idCommune: parseInt(form.commune)
+    }
+
+    this._addressAdminService.createAddress(json).pipe(
+      catchError((error) => {
+        if(error.error.statusCode === HttpStatusCode.BadRequest) this._alertService.error("Error", "No se pudo crear la dirección");
+
+        return EMPTY;
+      })
+    ).subscribe(() => {
+      this._alertService.success("Dirección Creada", "La dirección ha sido creada correctamente");
+      this._addressAdminService.getAllAddress();
+      this.createAddressForm.reset();
+      this.createAddressForm.get("province")?.disable();
+      this.createAddressForm.get("commune")?.disable();
+    });
+  }
+
+  public changeRegion(event: Event):void{
+
+    this.listProvinces.set([]);
+    this.listCommunes.set([]);
+
+    const element = event.target as HTMLSelectElement;
+
+    if(element.value != ""){
+      this._addressService.getProvinceRegion(parseInt(element.value)).subscribe(response => {
+
+        this.listProvinces.set(response.data);
+        this.createAddressForm.get("province")?.enable();
+      });
+
+    }
+
+    this.createAddressForm.get("province")?.disable();
+    this.createAddressForm.get("commune")?.disable();
+  }
+
+  public changeProvince(event: Event):void{
+
+    this.listCommunes.set([]);
+    const element = event.target as HTMLSelectElement;
+
+    if(element.value != ""){
+      this._addressService.getProvinceCommune(parseInt(element.value)).subscribe(response => {
+
+        this.listCommunes.set(response.data);
+        this.createAddressForm.get("commune")?.enable();
+      });
+    } else {
+      this.createAddressForm.get("commune")?.disable();
+    }
+  }
+
+  get addressName() {
+    return this.createAddressForm.controls["addressName"];
+  }
+
+  get numDepartment() {
+    return this.createAddressForm.controls["numDepartment"];
+  }
+
+  get city() {
+    return this.createAddressForm.controls["city"];
+  }
+
+  get description() {
+    return this.createAddressForm.controls["description"];
+  }
+
+  get region() {
+    return this.createAddressForm.controls["region"];
+  }
+
+  get province() {
+    return this.createAddressForm.controls["province"];
+  }
+
+  get commune() {
+    return this.createAddressForm.controls["commune"];
   }
 
   get name() {
