@@ -124,8 +124,8 @@
             ]
         },
         {
-            "name": "gestionar compras clientes",
-            "resource": "compras",
+            "name": "gestionar compras ventas",
+            "resource": "vetnas",
             "actions": [
                 "CREATE",
                 "READ"
@@ -250,6 +250,10 @@
         {
             "idRole": 1,
             "idPermission": 15
+        },
+        {
+            "idRole": 1,
+            "idPermission": 18
         },
         {
             "idRole": 2,

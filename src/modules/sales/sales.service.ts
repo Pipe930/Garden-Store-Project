@@ -26,7 +26,7 @@ export class SalesService {
 
   async create(createSaleDto: CreateSaleDto, idUser: number):Promise<ResponseData> {
 
-    let { priceTotal, productsQuantity, discountApplied, withdrawal } = createSaleDto;
+    let { priceTotal, productsQuantity, discountApplied, withdrawal, idBranch } = createSaleDto;
 
     const cartUser = await Cart.findOne({
       where: {
@@ -50,7 +50,8 @@ export class SalesService {
         discountApplied,
         withdrawal,
         status: StatusSaleEnum.PENDING,
-        idUser
+        idUser,
+        idBranch
       });
 
       cartUser.items.forEach(async item => {
@@ -76,7 +77,7 @@ export class SalesService {
         message: 'Venta creada con exito',
         data: newSale
       };
-    } catch (error) {  
+    } catch (error) {
       throw new InternalServerErrorException('Error No se pudo crear la venta');
     }
   }
@@ -104,7 +105,7 @@ export class SalesService {
       ]
     });
 
-    if(sales.length === 0) throw new BadRequestException('No se encontraron ventas para el usuario');
+    if(sales.length === 0) return { message: "No se encontraron ventas en este usuario", statusCode: HttpStatus.NO_CONTENT }
 
     return {
       statusCode: HttpStatus.OK,

@@ -11,7 +11,7 @@ export class AddressService {
 
         const regions = await Region.findAll<Region>();
 
-        if (regions.length === 0) throw new NotFoundException("No tenemos regiones registradas");
+        if (regions.length === 0) return { message: "No tenemos regiones registradas", statusCode: HttpStatus.NO_CONTENT }
 
         return {
             statusCode: HttpStatus.OK,
@@ -24,7 +24,7 @@ export class AddressService {
 
         const provinces = await Province.findAll<Province>();
 
-        if (provinces.length === 0) throw new NotFoundException("No tenemos provincias registradas");
+        if (provinces.length === 0) return { message: "No tenemos provincias registradas", statusCode: HttpStatus.NO_CONTENT }
 
         return {
             statusCode: HttpStatus.OK,
@@ -37,7 +37,7 @@ export class AddressService {
 
         const communes = await Commune.findAll<Commune>();
 
-        if (communes.length === 0) throw new NotFoundException("No tenemos comunas registradas");
+        if (communes.length === 0) return { message: "No tenemos comunas registradas", statusCode: HttpStatus.NO_CONTENT }
 
         return {
             statusCode: HttpStatus.OK,
@@ -232,7 +232,7 @@ export class AddressService {
             
         });
 
-        if (addressUser.length === 0) throw new NotFoundException("No tenemos direcciones registradas con este usuario");
+        if (addressUser.length === 0) return { message: "No tenemos direcciones en este usuario", statusCode: HttpStatus.NO_CONTENT }
 
         return {
             statusCode: HttpStatus.OK,

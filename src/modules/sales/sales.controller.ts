@@ -26,7 +26,7 @@ export class SalesController {
   }
 
   @Put('status/:idSale')
-  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.UPDATE] }])
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.CREATE] }])
   cancelSale(@Param('idSale', ParseUUIDPipe) idSale: string, @Body() updateSateDto: UpdateSaleDto) {
     return this.salesService.updateStatusSale(idSale, updateSateDto);
   }
