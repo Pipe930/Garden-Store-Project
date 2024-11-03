@@ -52,11 +52,8 @@
         @if (phone.getError("required")) {
           <span class="invalid-feedback">Este campo es requerido</span>
         }
-        @if (phone.getError("minlength")) {
-          <span class="invalid-feedback">Tiene que ser minimo de 8 caracteres</span>
-        }
-        @if (phone.getError("maxlength")) {
-          <span class="invalid-feedback">Tiene que ser maximo de 8 caracteres</span>
+        @if (phone.getError("pattern")) {
+          <span class="invalid-feedback">Tiene que ingresar un telefono valido</span>
         }
       </div>
     </div>

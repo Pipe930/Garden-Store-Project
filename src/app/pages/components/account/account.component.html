@@ -45,7 +45,10 @@
         <div class="tab-pane fade show active" id="profile-information" role="tabpanel" aria-labelledby="profile-information-list">
           <div class="profile__container-information">
             <h3 class="profile__title-content">Mis Datos</h3>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Editar Datos</button>
+            <div class="contianer">
+              <button class="btn btn-primary mx-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">Editar Datos</button>
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Eliminar Cuenta</button>
+            </div>
           </div>
 
           <ul class="list-group mb-4">
@@ -63,11 +66,46 @@
             </li>
           </ul>
 
-          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Cambiar Datos</h1>
+                  <h1 class="modal-title fs-5" id="deleteAccountModalLabel">Eliminar Cuenta</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <h5 class="modal-title text-center mb-3">¿Estas seguro de querer eliminar tu cuenta?</h5>
+                  <p class="modal-title">Para eliminarla tienes que ingresar tu contraseña y confirmar la eliminación</p>
+                  <form novalidate [formGroup]="deleteAccountForm" (ngSubmit)="deleteAccount()">
+                    <div class="mb-3">
+                      <label for="passwordDeleteAccount" class="col-form-label">Contraseña</label>
+                      <input type="password" class="form-control" id="passwordDeleteAccount" formControlName="password" [ngClass]="{
+                        'is-invalid': passwordDeleteAccount.invalid && (passwordDeleteAccount.dirty || passwordDeleteAccount.touched)
+                      }">
+                      @if (passwordDeleteAccount.getError('required')){
+                        <span class="invalid-feedback">Este campo es requerido</span>
+                      }
+                      @if (passwordDeleteAccount.getError('minlength')){
+                        <span class="invalid-feedback">Tiene que tener minimo 8 caracteres</span>
+                      }
+                      @if (passwordDeleteAccount.getError('maxlength')){
+                        <span class="invalid-feedback">Tiene que tener maximo 50 caracteres</span>
+                      }
+                    </div>
+                    <div class="d-grid gap-2">
+                      <button class="btn btn-danger" type="submit" data-bs-dismiss="modal" [disabled]="deleteAccountForm.invalid">Eliminar Cuenta</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="editProfileModalLabel">Cambiar Datos</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
@@ -131,7 +169,7 @@
                 <span class="invalid-feedback">Tiene que tener minimo 8 caracteres</span>
               }
               @if (currentPassword.getError('maxlength')){
-                <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                <span class="invalid-feedback">Tiene que tener maximo 50 caracteres</span>
               }
             </fieldset>
             <fieldset class="form__control">
@@ -147,7 +185,7 @@
                 <span class="invalid-feedback">Tiene que tener minimo 8 caracteres</span>
               }
               @if (newPassword.getError('maxlength')){
-                <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                <span class="invalid-feedback">Tiene que tener maximo 50 caracteres</span>
               }
             </fieldset>
             <fieldset class="form__control">
@@ -162,7 +200,7 @@
                 <span class="invalid-feedback">Tiene que tener minimo 8 caracteres</span>
               }
               @if (reNewPassword.getError('maxlength')){
-                <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                <span class="invalid-feedback">Tiene que tener maximo 50 caracteres</span>
               }
             </fieldset>
             <button class="btn btn-success" type="submit">Cambiar Contraseña</button>

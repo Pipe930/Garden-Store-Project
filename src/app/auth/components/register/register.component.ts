@@ -31,7 +31,7 @@ export class RegisterComponent {
     firstName: this._builder.control("", [Validators.maxLength(20)]),
     lastName: this._builder.control("", [Validators.maxLength(20)]),
     email: this._builder.control("", [Validators.required, Validators.email, Validators.maxLength(255)]),
-    phone: this._builder.control("", [Validators.required, Validators.minLength(8), Validators.maxLength(8)]),
+    phone: this._builder.control("", [Validators.required, Validators.pattern(/^[0-9]{8}$/)]),
     password: this._builder.control("", [Validators.required, Validators.minLength(8), Validators.maxLength(50)]),
     rePassword: this._builder.control("", [Validators.required, Validators.minLength(8), Validators.maxLength(50)])
   }, {

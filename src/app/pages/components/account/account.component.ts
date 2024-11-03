@@ -32,7 +32,6 @@ export class AccountComponent {
   private readonly _addressService = inject(AddressService);
   private readonly _builder = inject(FormBuilder);
   private readonly _alertService = inject(AlertService);
-  private readonly _renderer = inject(Renderer2);
   private readonly _purchaseService = inject(PurchaseService);
 
   public changePasswordForm: FormGroup = this._builder.group({
@@ -41,6 +40,10 @@ export class AccountComponent {
     reNewPassword: this._builder.control("", [Validators.required, Validators.minLength(8), Validators.maxLength(50)])
   }, {
     validators: this._validatorService.comparePasswords("newPassword", "reNewPassword")
+  });
+
+  public deleteAccountForm: FormGroup = this._builder.group({
+    password: this._builder.control("", [Validators.required, Validators.minLength(8), Validators.maxLength(50)]),
   });
 
   public createFormAddress: FormGroup = this._builder.group({
@@ -120,6 +123,27 @@ export class AccountComponent {
     sessionStorage.clear();
     this._sessionService.changeFalseSession();
     this._router.navigate(['/home']);
+  }
+
+  public deleteAccount():void {
+
+    Swal.fire({
+      title: "¿Estas seguro de eliminar tu cuenta?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, eliminar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._profileService.deleteAccount(this.deleteAccountForm.value).subscribe(() => {
+          this._alertService.success("Cuenta Eliminada", "La cuenta a sido eliminada con exito");
+          sessionStorage.clear();
+          this._sessionService.changeFalseSession();
+          this._router.navigate(['/']);
+        })
+      }
+    });
   }
 
   public deleteAddress(idAddress: number):void {
@@ -342,6 +366,10 @@ export class AccountComponent {
       this._alertService.success("Cambio Contraseña", "Se cambio la contraseña correctamente");
     })
 
+  }
+
+  get passwordDeleteAccount(){
+    return this.deleteAccountForm.controls["password"];
   }
 
   get name(){
