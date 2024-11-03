@@ -15,7 +15,7 @@ export class CreateRoleDto {
     readonly permissions: PermissionCreate[];
 }
 
-export class Permission {
+export class PermissionObject {
 
     @IsEnum(ResourcesEnum)
     readonly resource: ResourcesEnum;

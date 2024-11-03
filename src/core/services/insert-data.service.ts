@@ -4,8 +4,10 @@ import { Commune, Province, Region } from 'src/modules/address/models/locates.mo
 import { Category } from 'src/modules/categories/models/category.model';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { Role } from 'src/modules/access-control/models/rol.model';
+import { Role, RoleUser } from 'src/modules/access-control/models/rol.model';
 import { Permission, RolePermission } from 'src/modules/access-control/models/permission.model';
+import { User } from 'src/modules/users/models/user.model';
+import { hashSync } from 'bcrypt';
 
 @Injectable()
 export class InsertDataService {
@@ -91,5 +93,24 @@ export class InsertDataService {
         await RolePermission.bulkCreate(jsonData.rolePermission);
 
         console.log("[+] Data Inserted Roles and Permissions Successfully");
+    }
+
+    async createSuperUser(): Promise<void> {
+
+        if(await User.count() > 0) return;
+
+        const superuser = await User.create<User>({
+            firstName: "Super",
+            lastName: "User",
+            email: "admin@gmail.com",
+            password: hashSync("admin1234", 10),
+            phone: "+56912345678",
+            active: true
+        });
+
+        await RoleUser.create({
+            idRole: 2,
+            idUser: superuser.idUser
+        })
     }
 }

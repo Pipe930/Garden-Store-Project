@@ -65,7 +65,7 @@ import { SuppliersModule } from './modules/suppliers/suppliers.module';
       useClass: MorganInterceptor("combined"),
     },
     InsertDataService
-  ]
+  ],
 })
 export class AppModule implements NestModule {
 

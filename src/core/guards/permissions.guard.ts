@@ -1,16 +1,17 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Permission } from 'src/modules/access-control/dto/create-role.dto';
+import { PermissionObject } from 'src/modules/access-control/dto/create-role.dto';
 import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
 import { RequestJwt } from '../interfaces/request-jwt.interface';
-import { UsersService } from 'src/modules/users/users.service';
+import { User } from 'src/modules/users/models/user.model';
+import { Role } from 'src/modules/access-control/models/rol.model';
+import { Permission } from 'src/modules/access-control/models/permission.model';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
 
   constructor(
-    private readonly reflector: Reflector, 
-    private readonly userService: UsersService
+    private readonly reflector: Reflector
   ) {}
 
   async canActivate(
@@ -19,13 +20,25 @@ export class PermissionsGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<RequestJwt>();
 
-    const permissionsReflect = this.reflector.getAllAndOverride<Permission[]>(PERMISSIONS_KEY, [
+    const permissionsReflect = this.reflector.getAllAndOverride<PermissionObject[]>(PERMISSIONS_KEY, [
       context.getHandler(),
       context.getClass()
     ])
 
     try {
-      const rolesUser = await this.userService.getUserPermissions(request.user.idUser);
+      const rolesUser = await Role.findAll<Role>({
+        include: [
+          {
+            model: User,
+            where: {
+              idUser: request.user.idUser
+            }
+          },
+          {
+            model: Permission
+          }
+        ]
+      });
 
       let hasPermission = false;
       for(const role of rolesUser){

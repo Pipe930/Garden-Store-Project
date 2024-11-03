@@ -1,21 +1,23 @@
-import { Controller, Post, Body, Param, UseGuards, Put, ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, Body, Param, Put, ParseIntPipe } from '@nestjs/common';
 import { ShippingsService } from './shippings.service';
 import { CreateShippingDto } from './dto/create-shipping.dto';
 import { UpdateShippingDto } from './dto/update-shipping.dto';
-import { AuthGuard } from 'src/core/guards/auth.guard';
+import { Auth } from 'src/core/decorators/auth.decorator';
+import { ResourcesEnum } from 'src/core/enums/resourses.enum';
+import { ActionsEnum } from 'src/core/enums/actions.enum';
 
 @Controller('shippings')
 export class ShippingsController {
   constructor(private readonly shippingsService: ShippingsService) {}
 
   @Post()
-  @UseGuards(AuthGuard)
+  @Auth([{ resource: ResourcesEnum.SHIPPINGS, action: [ ActionsEnum.CREATE ] }])
   create(@Body() createShippingDto: CreateShippingDto) {
     return this.shippingsService.create(createShippingDto);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard)
+  @Auth([{ resource: ResourcesEnum.SHIPPINGS, action: [ ActionsEnum.UPDATE ] }])
   update(@Param('id',  ParseIntPipe) id: number, @Body() updateShippingDto: UpdateShippingDto) {
     return this.shippingsService.updateStateShipping(id, updateShippingDto);
   }

@@ -5,37 +5,40 @@ import { AuthGuard } from 'src/core/guards/auth.guard';
 import { CreateTransbankDto } from './dto/create-transbank.dto';
 import { UpdateSaleDto } from './dto/update-status-sale.dto';
 import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
+import { Auth } from 'src/core/decorators/auth.decorator';
+import { ResourcesEnum } from 'src/core/enums/resourses.enum';
+import { ActionsEnum } from 'src/core/enums/actions.enum';
 
 @Controller('sales')
 export class SalesController {
   constructor(private readonly salesService: SalesService) {}
 
   @Post()
-  @UseGuards(AuthGuard)
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.CREATE] }])
   create(@Body() createSaleDto: CreateSaleDto, @Req() request: RequestJwt) {
     return this.salesService.create(createSaleDto, request.user.idUser);
   }
 
   @Get('user')
-  @UseGuards(AuthGuard)
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.READ] }])
   findAllSalesUser(@Req() request: RequestJwt) {
     return this.salesService.findUserSales(request.user.idUser);
   }
 
   @Put('status/:idSale')
-  @UseGuards(AuthGuard)
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.UPDATE] }])
   cancelSale(@Param('idSale', ParseUUIDPipe) idSale: string, @Body() updateSateDto: UpdateSaleDto) {
     return this.salesService.updateStatusSale(idSale, updateSateDto);
   }
 
   @Post('transbank/create')
-  @UseGuards(AuthGuard)
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.CREATE] }])
   createTransbank(@Body() createTransbankDto: CreateTransbankDto) {
     return this.salesService.createTransbankTransaction(createTransbankDto);
   }
 
   @Get('transbank/commit/:token')
-  @UseGuards(AuthGuard)
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.CREATE] }])
   commitTransbank(@Param('token') token: string) {
     return this.salesService.commitTransbankTransaction(token);
   }

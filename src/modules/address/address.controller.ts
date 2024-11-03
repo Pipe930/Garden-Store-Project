@@ -3,6 +3,9 @@ import { AddressService } from './address.service';
 import { AuthGuard } from 'src/core/guards/auth.guard';
 import { CreateAddressDto, CreateAddressUserDto } from './dto/create-address.dto';
 import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
+import { Auth } from 'src/core/decorators/auth.decorator';
+import { ResourcesEnum } from 'src/core/enums/resourses.enum';
+import { ActionsEnum } from 'src/core/enums/actions.enum';
 
 @Controller('address')
 export class AddressController {
@@ -49,46 +52,49 @@ export class AddressController {
     }
 
     @Post()
+    @Auth([{ resource: ResourcesEnum.ADDRESS, action: [ActionsEnum.CREATE]}])
     createAddress(@Body() createAddressDto: CreateAddressDto) {
         return this.addressService.createAddress(createAddressDto);
     }
 
     @Get()
+    @Auth([{ resource: ResourcesEnum.ADDRESS, action: [ActionsEnum.READ]}])
     findAllAddresses() {
         return this.addressService.findAllAddress();
     }
 
     @Get('admin/:idAddress')
+    @Auth([{ resource: ResourcesEnum.ADDRESS, action: [ActionsEnum.READ]}])
     findOneAddress(@Param('idAddress', ParseIntPipe) idAddress: number) {
         return this.addressService.findOneAddress(idAddress);
     }
 
     @Post('user')
-    @UseGuards(AuthGuard)
+    @Auth([{ resource: ResourcesEnum.ADDRESSUSER, action: [ActionsEnum.CREATE]}])
     createAddressUser(@Body() createAddressDto: CreateAddressUserDto, @Req() request: RequestJwt) {
         return this.addressService.createAddressUser(createAddressDto, request.user.idUser);
     }
 
     @Get('user')
-    @UseGuards(AuthGuard)
+    @Auth([{ resource: ResourcesEnum.ADDRESSUSER, action: [ActionsEnum.READ]}])
     findAllAddressesUser(@Req() request: RequestJwt) {
         return this.addressService.findAllAddressUser(request.user.idUser);
     }
 
     @Get('user/:idAddressUser')
-    @UseGuards(AuthGuard)
+    @Auth([{ resource: ResourcesEnum.ADDRESSUSER, action: [ActionsEnum.CREATE]}])
     findOneAddressUser(@Param('idAddressUser', ParseIntPipe) idAddressUser: number, @Req() request: RequestJwt) {
         return this.addressService.findOneAddressUser(idAddressUser, request.user.idUser);
     }
 
     @Put('user/:idAddressUser')
-    @UseGuards(AuthGuard)
+    @Auth([{ resource: ResourcesEnum.ADDRESSUSER, action: [ActionsEnum.UPDATE]}])
     updateAddressUser(@Body() createAddressDto: CreateAddressUserDto, @Param('idAddressUser', ParseIntPipe) idAddressUser: number, @Req() request: RequestJwt) {
         return this.addressService.updateAddressUser( idAddressUser, request.user.idUser, createAddressDto);
     }
 
     @Delete('user/:idAddressUser')
-    @UseGuards(AuthGuard)
+    @Auth([{ resource: ResourcesEnum.ADDRESSUSER, action: [ActionsEnum.DELETE]}])
     deleteAddressUser(@Param('idAddressUser', ParseIntPipe) idAddressUser: number, @Req() request: RequestJwt) {
         return this.addressService.deleteAddressUser(idAddressUser, request.user.idUser);
     }

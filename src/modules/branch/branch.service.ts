@@ -157,9 +157,6 @@ export class BranchService {
     
         branch.capacityOccupied += product.quantity;
         await branch.save();
-    
-        productFind.stock += product.quantity;
-        await productFind.save();
       }
   
     }
