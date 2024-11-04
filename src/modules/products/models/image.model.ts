@@ -3,7 +3,7 @@ import { Product } from "./product.model";
 import { TypeImagesEnum } from "src/core/enums/typeImages.enum";
 
 @Table({
-    tableName: "imagesProduct",
+    tableName: "images_product",
     modelName: "Image",
     timestamps: false,
 })

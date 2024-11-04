@@ -46,7 +46,7 @@ export class Permission extends Model {
 
 
 @Table({
-    tableName: "rolePermission",
+    tableName: "role_permission",
     modelName: "RolePermission",
     timestamps: false
 })

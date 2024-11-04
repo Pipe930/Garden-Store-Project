@@ -23,6 +23,8 @@ import { ShippingsModule } from './modules/shippings/shippings.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { PurchaseModule } from './modules/purchase/purchase.module';
 import { SuppliersModule } from './modules/suppliers/suppliers.module';
+import { PostsModule } from './modules/posts/posts.module';
+import { CommentsModule } from './modules/comments/comments.module';
 
 @Module({
   imports: [
@@ -57,7 +59,9 @@ import { SuppliersModule } from './modules/suppliers/suppliers.module';
     ShippingsModule,
     SubscriptionsModule,
     PurchaseModule,
-    SuppliersModule
+    SuppliersModule,
+    PostsModule,
+    CommentsModule
   ],
   providers: [
     {

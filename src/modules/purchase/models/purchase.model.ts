@@ -4,7 +4,8 @@ import { Employee } from "../../branch/models/employee.model";
 import { Product } from "../../products/models/product.model";
 import { randomUUID } from "crypto";
 import { PurchaseOrder } from "./purchase-order.model";
-import { MethodPaymentEnum, StatusPurchaseEnum } from "../../../core/enums/statusPurchase.enum";
+import { MethodPaymentEnum } from "../../../core/enums/statusPurchase.enum";
+import { StatusSaleEnum } from "src/core/enums/statusSale.enum";
 
 @Table({
     tableName: 'purchases',
@@ -54,9 +55,9 @@ export class Purchase extends Model {
     declare ivaPrice: number;
 
     @Column({
-        type: DataType.ENUM(...Object.values(StatusPurchaseEnum)),
+        type: DataType.ENUM(...Object.values(StatusSaleEnum)),
         allowNull: false,
-        defaultValue: StatusPurchaseEnum.PENDING
+        defaultValue: StatusSaleEnum.PENDING
     })
     declare status: string;
 

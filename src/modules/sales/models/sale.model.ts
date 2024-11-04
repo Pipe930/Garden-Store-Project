@@ -74,7 +74,7 @@ export class Sale extends Model {
 
     @Column({
         type: DataType.ENUM(...Object.values(ShippingStatusEnum)),
-        defaultValue: ShippingStatusEnum.PREPARING,
+        defaultValue: ShippingStatusEnum.PREPARATION,
         allowNull: false
     })
     declare statusOrder: string;
@@ -117,7 +117,7 @@ export class Sale extends Model {
 
 
 @Table({
-    tableName: 'saleProduct',
+    tableName: 'sale_product',
     modelName: 'SaleProduct',
     timestamps: false
 })

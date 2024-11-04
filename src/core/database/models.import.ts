@@ -19,6 +19,9 @@ import { Purchase, PurchaseProduct } from "src/modules/purchase/models/purchase.
 import { Supplier } from "src/modules/suppliers/models/supplier.model"; 
 import { PurchaseOrder } from "src/modules/purchase/models/purchase-order.model";
 import { UserOPTVerification } from "src/modules/users/models/userOPTVerification";
+import { Post } from "src/modules/posts/models/post.models";
+import { Comment } from "src/modules/comments/models/comment.model";
+import { PostTag, Tag } from "src/modules/posts/models/tag.model";
 
 export const ArrayModels: Array<any> = [
     User,
@@ -50,5 +53,9 @@ export const ArrayModels: Array<any> = [
     Purchase,
     PurchaseProduct,
     PurchaseOrder,
-    UserOPTVerification
+    UserOPTVerification,
+    Post,
+    Comment,
+    Tag,
+    PostTag
 ]

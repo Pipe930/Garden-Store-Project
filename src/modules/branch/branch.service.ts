@@ -75,17 +75,9 @@ export class BranchService {
     } = createBranchDto;
 
     const addressFind = await Address.findByPk(idAddress);
-    const branch = await Branch.findOne({
-      where: {
-        [Op.or]: {
-          name,
-          tradeName
-        }
-      }
-    });
 
+    await this.validExistNameBranch(name, tradeName);
     if(!addressFind) throw new NotFoundException('La direccion no existe');
-    if(branch) throw new ConflictException('La sucursal ya existe');
 
     try {
 
@@ -315,6 +307,20 @@ export class BranchService {
       statusCode: 200,
       data: employee
     }
+  }
+
+  private async validExistNameBranch(name: string, tradeName: string): Promise<void> {
+
+    const branch = await Branch.findOne({
+      where: {
+        [Op.or]: {
+          name,
+          tradeName
+        }
+      }
+    });
+
+    if(branch) throw new ConflictException('La sucursal ya existe');
   }
 
   private async validExistsBranchProduct(idBranch: number, idProduct: number): Promise<BranchProduct> {

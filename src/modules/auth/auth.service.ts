@@ -35,16 +35,7 @@ export class AuthService {
 
         const { firstName, lastName, email, phone, password, rePassword } = registerUserDto;
 
-        const user = await User.findOne<User>({
-        where: {
-            [Op.or]: [
-                { email },
-                { phone }
-            ]
-        }
-        });
-    
-        if(user) throw new ConflictException("El correo o telefono ingresado ya existe");
+        await this.validateUser(email, phone);
         if(password !== rePassword) throw new BadRequestException("Las contraseñas no coinciden");
 
         const role = await Role.findOne<Role>({
@@ -365,6 +356,7 @@ export class AuthService {
 
         const user = await User.findByPk<User>(idUser);
 
+        await this.validateUser(email, phone);
         if(!user) throw new NotFoundException("Usuario no encontrado");
 
         user.firstName = firstName;
@@ -412,5 +404,19 @@ export class AuthService {
 
     private userRoleValid(user: User, role: string): boolean{
         return user.rolesUser.some(roles => roles.name === role);
+    }
+
+    private async validateUser(email: string, phone: string): Promise<void>{
+
+        const user = await User.findOne<User>({
+            where: {
+                [Op.or]: [
+                    { email },
+                    { phone }
+                ]
+            }
+        });
+        
+        if(user) throw new ConflictException("El correo o telefono ingresado ya existe");
     }
 }

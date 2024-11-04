@@ -69,7 +69,7 @@ export class Address extends Model<Address> {
 
 
 @Table({
-    tableName: "addressUser",
+    tableName: "address_user",
     modelName: "AddressUser",
     timestamps: false
 })

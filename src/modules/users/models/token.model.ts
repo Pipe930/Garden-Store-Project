@@ -1,9 +1,8 @@
 import { Column, DataType, Table, Model, Sequelize, ForeignKey } from "sequelize-typescript";
 import { User } from "./user.model";
-import { validate } from "class-validator";
 
 @Table({
-    tableName: "tokenActivation",
+    tableName: "token_activation",
     modelName: "TokenActivation",
     timestamps: false
 })
@@ -53,7 +52,7 @@ export class TokenActivation extends Model {
 
 
 @Table({
-    tableName: "refreshToken",
+    tableName: "refresh_token",
     modelName: "RefreshToken",
     timestamps: false
 })

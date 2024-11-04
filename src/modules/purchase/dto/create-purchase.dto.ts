@@ -1,6 +1,7 @@
 import { Type } from "class-transformer";
 import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, Min } from "class-validator";
-import { MethodPaymentEnum, StatusPurchaseEnum } from "src/core/enums/statusPurchase.enum";
+import { MethodPaymentEnum } from "src/core/enums/statusPurchase.enum";
+import { StatusSaleEnum } from "src/core/enums/statusSale.enum";
 
 export class CreatePurchaseDto {
 
@@ -17,7 +18,7 @@ export class CreatePurchaseDto {
     readonly ivaPrice: number;
 
     @IsOptional()
-    @IsEnum(StatusPurchaseEnum)
+    @IsEnum(StatusSaleEnum)
     @IsNotEmpty()
     readonly status: string;
 

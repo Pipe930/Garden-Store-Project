@@ -12,9 +12,7 @@ export class CategoriesService {
 
     const { name, description } = createCategoryDto;
 
-    const category = await Category.findOne<Category>({ where: { name: { [Op.iLike]: name } } });
-
-    if(category) throw new ConflictException("El nombre de la categoria ya existe");
+    await this.validExistNameCategory(name);
 
     try {    
       const newCategory = await Category.create<Category>({ name: this.titleCase(name), slug: this.generateSlug(name), description });
@@ -63,6 +61,7 @@ export class CategoriesService {
     const category = await Category.findByPk<Category>(id);
 
     if(!category) throw new NotFoundException("La categoria no existe");
+    await this.validExistNameCategory(name);
 
     try {
       
@@ -94,6 +93,13 @@ export class CategoriesService {
       statusCode: HttpStatus.NO_CONTENT,
       message: "Categoria eliminada correctamente"
     };
+  }
+
+  private async validExistNameCategory(name: string): Promise<void> {
+
+    const category = await Category.findOne<Category>({ where: { name: { [Op.iLike]: name } } });
+
+    if(category) throw new ConflictException("El nombre de la categoria ya existe");
   }
 
   private generateSlug(name: string): string {

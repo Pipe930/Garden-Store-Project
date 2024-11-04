@@ -11,16 +11,13 @@ export class OffersService {
 
     const { title, endDate, startDate, discount, description } = createOfferDto;
 
-    const offer = await Offer.findOne({ where: { title } });
-
-    if(offer) throw new ConflictException("La oferta ya existe");
-
+    await this.validTitleOffer(title);
     if (startDate >= endDate) throw new BadRequestException("La fecha de inicio debe ser anterior a la fecha de fin");
 
     try {
       
       const newOffer = await Offer.create({
-        title,
+        title: title.toLowerCase(),
         endDate,
         startDate,
         discount,
@@ -66,11 +63,12 @@ export class OffersService {
 
     const { title, endDate, discount, description } = updateOfferDto;
 
-    try {
-      
-      const offer = await Offer.findByPk(id);
+    const offer = await Offer.findByPk(id);
 
-      if(!offer) throw new NotFoundException("La oferta no existe");
+    await this.validTitleOffer(title);
+    if(!offer) throw new NotFoundException("La oferta no existe");
+
+    try {
 
       offer.title = title;
       offer.endDate = endDate;
@@ -79,15 +77,21 @@ export class OffersService {
 
       await offer.save();
 
-      return {
-        statusCode: HttpStatus.OK,
-        message: 'Offer updated successfully',
-        data: offer
-      }
-
     } catch (error) {
       throw new BadRequestException("La oferta no se actualizo exitosamente");
     }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Oferta actualizada exitosamente',
+      data: offer
+    }
   }
 
+  private async validTitleOffer(title: string): Promise<void> {
+
+    const offer = await Offer.findOne({ where: { title: title.toLowerCase() } });
+
+    if(offer) throw new ConflictException("La oferta ya existe");
+  }
 }

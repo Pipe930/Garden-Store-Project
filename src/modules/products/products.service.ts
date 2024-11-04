@@ -23,12 +23,11 @@ export class ProductsService {
 
     const { title, brand, returnPolicy, price, description, idCategory, idOffer } = createProductDto;
 
-    const product = await Product.findOne<Product>({ where: { title: { [Op.iLike]: title } } });
     const category = await Category.findByPk<Category>(idCategory);
-    const offer = await Offer.findByPk<Offer>(idOffer); 
+    const offer = await Offer.findByPk<Offer>(idOffer);
 
+    await this.validTitleProduct(title);
     if(!offer && idOffer) throw new BadRequestException("La oferta ingresada no existe");
-    if(product) throw new ConflictException("Ya existe un producto con ese titulo");
     if(!category) throw new BadRequestException("La categoria ingresada no existe");
 
     try{
@@ -200,7 +199,8 @@ export class ProductsService {
 
     const product = await Product.findByPk<Product>(id);
     const category = await Category.findByPk<Category>(idCategory);
-    
+
+    await this.validTitleProduct(title);
     if(!product) throw new NotFoundException("Producto no encontrado");
     if(!category) throw new BadRequestException("La categoria ingresada no existe");
 
@@ -342,5 +342,12 @@ export class ProductsService {
         attributes: ['idOffer', 'title', 'discount']
       }
     ]
+  }
+
+  private async validTitleProduct(title: string): Promise<void> {
+    
+    const product = await Product.findOne<Product>({ where: { title: { [Op.iLike]: title } } });
+
+    if(product) throw new ConflictException("Ya existe un producto con ese titulo");
   }
 }

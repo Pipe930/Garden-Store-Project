@@ -1,10 +1,3 @@
-export enum StatusPurchaseEnum {
-
-    PENDING = 'PENDING',
-    PAID = 'PAID',
-    CANCELED = 'CANCELED'
-}
-
 export enum MethodPaymentEnum {
 
     CREDIT_CARD = 'Tarjeta de crédito',

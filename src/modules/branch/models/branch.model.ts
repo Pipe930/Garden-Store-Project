@@ -1,4 +1,4 @@
-import { BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
+import { BelongsToMany, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { Address } from "src/modules/address/models/address.model";
 import { Product } from "src/modules/products/models/product.model";
 import { Employee } from "./employee.model";
@@ -126,7 +126,7 @@ export class Branch extends Model {
 
 
 @Table({
-    tableName: 'productBranch',
+    tableName: 'product_branch',
     modelName: 'ProductBranch',
     timestamps: false,
 })

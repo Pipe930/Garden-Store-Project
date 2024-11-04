@@ -19,16 +19,7 @@ export class UsersService {
 
     const { firstName, lastName, email, phone, password, active, createdCart, roles } = createUserDto;
 
-    const user = await User.findOne<User>({
-      where: {
-        [Op.or]: {
-          email,
-          phone
-        }
-      }
-    });
-
-    if(user) throw new ConflictException("El email o el telefono ya estan registrados");
+    await this.validateUser(email, phone);
     if(password !== createUserDto.rePassword) throw new BadRequestException("Las contraseñas no coinciden");
 
     try {      
@@ -143,6 +134,7 @@ export class UsersService {
       ]
     });
 
+    await this.validateUser(email, phone);
     if(!user) throw new NotFoundException("Usuario no encontrado");
 
     try {      
@@ -209,5 +201,19 @@ export class UsersService {
     });
     
     return roles;
+  }
+
+  private async validateUser(email: string, phone: string): Promise<void>{
+
+    const user = await User.findOne<User>({
+      where: {
+        [Op.or]: {
+          email,
+          phone
+        }
+      }
+    });
+
+    if(user) throw new ConflictException("El email o el telefono ya estan registrados");
   }
 }

@@ -125,7 +125,7 @@
         },
         {
             "name": "gestionar compras ventas",
-            "resource": "vetnas",
+            "resource": "ventas",
             "actions": [
                 "CREATE",
                 "READ"

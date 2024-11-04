@@ -47,13 +47,7 @@ export class AccessControlService {
 
         const { name, permissions } = createRoleDto;
 
-        const roleExists = await Role.findOne<Role>({
-            where: {
-                name: name.toLowerCase()
-            }
-        });
-
-        if(roleExists) throw new ConflictException("El nombre del rol ya existe");
+        await this.validExistNameRole(name);
 
         try {
             const roleCreated = await Role.create<Role>({
@@ -96,6 +90,7 @@ export class AccessControlService {
         });
 
         if(!role) throw new NotFoundException("El rol no existe");
+        await this.validExistNameRole(name);
 
         role.name = name.toLowerCase();
 
@@ -163,18 +158,12 @@ export class AccessControlService {
 
         const { name, resource, actions } = createPermissionDto;
 
-        const permissionExists = await Permission.findOne<Permission>({
-            where: {
-                name
-            }
-        });
-
-        if(permissionExists) throw new ConflictException("El nombre del permiso ya existe");
+        await this.validExistNamePermission(name);
         if(!this.validateUniqueActions(actions)) throw new BadRequestException("Solo debe haber una accion por permiso");
 
         try {
             const permissionCreated = await Permission.create<Permission>({
-                name,
+                name: name.toLowerCase(),
                 resource,
                 actions
             });
@@ -195,10 +184,11 @@ export class AccessControlService {
 
         const permission = await Permission.findByPk<Permission>(idPermission);
 
+        await this.validExistNamePermission(name);
         if(!permission) throw new NotFoundException("El permiso no existe");
         if(!this.validateUniqueActions(actions)) throw new BadRequestException("Solo debe haber una accion por permiso");
 
-        permission.name = name;
+        permission.name = name.toLowerCase();
         permission.resource = resource;
         permission.actions = actions;
 
@@ -208,6 +198,27 @@ export class AccessControlService {
             statusCode: HttpStatus.OK,
             message: "Permiso actualizado exitosamente"
         };
+    }
+
+    private async validExistNamePermission(name: string): Promise<void>{
+
+        const permissionExists = await Permission.findOne<Permission>({
+            where: {
+                name: name.toLowerCase()
+            }
+        });
+
+        if(permissionExists) throw new ConflictException("El nombre del permiso ya existe");
+    }
+
+    private async validExistNameRole(name: string): Promise<void>{
+        const roleExists = await Role.findOne<Role>({
+            where: {
+                name: name.toLowerCase()
+            }
+        });
+
+        if(roleExists) throw new ConflictException("El nombre del rol ya existe");
     }
 
     private validateUniqueActions(actions: ActionsEnum[]): boolean {

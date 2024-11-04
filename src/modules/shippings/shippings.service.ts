@@ -17,7 +17,7 @@ export class ShippingsService {
       const newShipping = await Shipping.create({
         informationShipping,
         shippingCost,
-        status: ShippingStatusEnum.PREPARING,
+        status: ShippingStatusEnum.PREPARATION,
         withdrawal,
         idAddress
       })

@@ -36,7 +36,7 @@ export class Role extends Model {
 
 
 @Table({
-    tableName: "roleUser",
+    tableName: "role_user",
     modelName: "RoleUser",
     timestamps: false
 })
