@@ -26,7 +26,7 @@ export class ProductsController {
   }
 
   @Get('images/:id')
-  // @Auth([{ resource: ResourcesEnum.PRODUCTS, action: [ActionsEnum.READ]}])
+  @Auth([{ resource: ResourcesEnum.PRODUCTS, action: [ActionsEnum.READ]}])
   findImages(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.getImagesProduct(id);
   }

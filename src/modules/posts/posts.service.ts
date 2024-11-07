@@ -11,6 +11,8 @@ import { Reaction } from './models/reaction.model';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { PaginateDto } from '../products/dto/paginate.dto';
+import { SearchPostDto } from './dto/search-post.dto';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class PostsService {
@@ -192,6 +194,66 @@ export class PostsService {
       statusCode: HttpStatus.NO_CONTENT,
       message: 'Publicación eliminada con exito'
     };
+  }
+
+  async postSearch(searchPostDto: SearchPostDto): Promise<ResponseData> {
+
+    const { title } = searchPostDto;
+
+    const posts = await Post.findAll({
+      where: {
+          title: {
+            [Op.iLike]: `%${title}%`
+          },
+          published: true
+      },
+      include: [
+        {
+          model: Tag,
+          through: {
+            attributes: []
+          },
+          attributes: ['idTag', 'name']
+        }
+      ]
+    });
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: posts
+    }
+  }
+
+  async filterTagPost(idTag: number): Promise<ResponseData> {
+
+    const tags = await PostTag.findAll({
+      where: { idTag }
+    });
+
+    const tagIds = tags.map(tag => tag.idTag);
+
+    const posts = await Post.findAll({
+      where: { published: true },
+      include: [
+        {
+          model: Tag,
+          through: {
+            attributes: []
+          },
+          attributes: ['idTag', 'name'],
+          where: {
+            idTag: tagIds // Filtra usando los idTag de la lista obtenida
+          }
+        }
+      ]
+    });
+
+    if(posts.length === 0) return { message: "No tenemos publicaciones registrados", statusCode: HttpStatus.NO_CONTENT }
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: posts
+    }
   }
 
   async createPostUser(createPostUserDto: CreatePostUserDto, idUser: number): Promise<ResponseData> {

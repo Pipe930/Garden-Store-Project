@@ -174,13 +174,8 @@ export class ProductsService {
 
     const whereCondition: any = {};
 
-    if (title !== "") {
-      whereCondition.title = { [Op.iLike]: `%${title}%` };
-    }
-
-    if (category !== 0) {
-      whereCondition.idCategory = category;
-    }
+    if (title !== "") whereCondition.title = { [Op.iLike]: `%${title}%` };
+    if (category !== 0) whereCondition.idCategory = category;
 
     whereCondition.published = true; 
 

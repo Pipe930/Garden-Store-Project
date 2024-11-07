@@ -9,6 +9,7 @@ import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
 import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
 import { PaginateDto } from '../products/dto/paginate.dto';
+import { SearchPostDto } from './dto/search-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -63,6 +64,16 @@ export class PostsController {
   @Get('slug/:slug')
   findOnePostUser(@Param('slug') slug: string) {
     return this.postsService.findOneBySlug(slug);
+  }
+
+  @Get('search')
+  searchPost(@Query() query: SearchPostDto) {
+    return this.postsService.postSearch(query);
+  }
+
+  @Get('filter/:idTag')
+  filterPost(@Param('idTag', ParseIntPipe) idTag: number) {
+    return this.postsService.filterTagPost(idTag);
   }
 
   @Put('user/:slug')
