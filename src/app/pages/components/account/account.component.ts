@@ -18,7 +18,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, RouterLink, TitleCasePipe, DecimalPipe, DatePipe],
+  imports: [ReactiveFormsModule, NgClass, TitleCasePipe, DecimalPipe, DatePipe],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss'
 })
@@ -122,7 +122,7 @@ export class AccountComponent {
     this._authService.logout();
     sessionStorage.clear();
     this._sessionService.changeFalseSession();
-    this._router.navigate(['/home']);
+    this._router.navigate(['/']);
   }
 
   public deleteAccount():void {

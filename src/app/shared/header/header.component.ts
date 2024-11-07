@@ -43,11 +43,10 @@ export class HeaderComponent {
   }
 
   public logout():void{
-
     this._authService.logout();
     sessionStorage.clear();
     this._sessionService.changeFalseSession();
-    this._router.navigate(["home"]);
+    this._router.navigate(["/"]);
   }
 
 }

@@ -18,7 +18,7 @@ export class SessionService {
 
   public validSession():boolean {
 
-    if(sessionStorage.getItem("accessToken") || sessionStorage.getItem("refreshToken")) return true;
+    if(sessionStorage.getItem("accessToken") && sessionStorage.getItem("refreshToken")) return true;
     return false;
   }
 

@@ -64,6 +64,7 @@ export class CreateRoleComponent implements OnInit {
 
   ngOnInit(): void {
     this._accessControlService.getAllPermissions().subscribe(permissions => {
+      this.listPermissions.set([]);
       this.listPermissions.set(permissions.data);
     })
   }

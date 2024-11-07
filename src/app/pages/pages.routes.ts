@@ -7,6 +7,11 @@ import { authenticationGuard } from '../core/guards/authentication.guard';
 import { PurchaseComponent } from './components/purchase/purchase.component';
 import { PurchaseConfirmComponent } from './components/purchase-confirm/purchase-confirm.component';
 import { AccountComponent } from './components/account/account.component';
+import { ListPostsComponent } from './components/list-posts/list-posts.component';
+import { PostDetailComponent } from './components/post-detail/post-detail.component';
+import { ListPostsUserComponent } from './components/list-posts-user/list-posts-user.component';
+import { CreatePostUserComponent } from './components/create-post-user/create-post-user.component';
+import { UpdatePostUserComponent } from './components/update-post-user/update-post-user.component';
 
 export const routesPages: Routes = [
 
@@ -46,6 +51,33 @@ export const routesPages: Routes = [
         path: "account",
         component: AccountComponent,
         canActivate: [authenticationGuard]
+      },
+      {
+        path: "blog",
+        component: ListPostsComponent
+      },
+      {
+        path: "detail-blog/:slug",
+        component: PostDetailComponent
+      },
+      {
+        path: "manage-posts",
+        children: [
+          {
+            path: "list",
+            component: ListPostsUserComponent
+          },
+          {
+            path: "create",
+            component: CreatePostUserComponent
+          },
+          {
+            path: 'edit/:slug',
+            component: UpdatePostUserComponent
+          }
+        ],
+        canActivate: [authenticationGuard]
+
       }
     ]
   }

@@ -101,7 +101,7 @@
       </label>
       <p class="form-text">Esta opción permite dejar publico el producto o dejarlo privado</p>
     </div>
-    <!-- <div class="mb-3">
+    <div class="mb-3">
       <label for="formFile" class="form-label">Imagen Portada</label>
       <input class="form-control" (change)="changeImage()" #imageProduct type="file" id="formFile" formControlName="thumbnail" [ngClass]="{
         'is-invalid': thumbnail.invalid && (thumbnail.dirty || thumbnail.touched)
@@ -112,7 +112,7 @@
       <div class="form__container-img-preview">
         <img src="../../../../assets/imgs/upload-image_2023-04-11-023334_kxuh.png" class="form__image-preview img-thumbnail" #imagePreview>
       </div>
-    </div> -->
+    </div>
     <button type="submit" class="form__btn-create btn btn-success" [disabled]="updateProductForm.invalid">
       Guardar
     </button>

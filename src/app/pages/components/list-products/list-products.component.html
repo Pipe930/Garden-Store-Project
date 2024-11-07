@@ -5,9 +5,9 @@
 
 <main class="container-main">
   <div class="container-main__continaer-inputs">
-    <div class="contianer-inputs__container-search">
-      <input placeholder="Buscar..." type="search" #searchNameProduct class="continaer-inputs__search">
-      <button (click)="searchProduct()" class="continaer-inputs__btn-search">
+    <div class="input-group contianer-inputs__container-search">
+      <input type="search" class="form-control continaer-inputs__search" #searchNameProduct placeholder="Buscar...">
+      <button class="btn btn-success continaer-inputs__btn-search" type="button" (click)="searchProduct()">
         <i class='bx bx-search-alt-2'></i>
       </button>
     </div>
@@ -19,7 +19,7 @@
           <option [value]="category.idCategory">{{category.name}}</option>
         }
       </select>
-      <button (click)="searchProduct()" class="continaer-inputs__btn-filter">
+      <button (click)="searchProduct()" class="btn btn-success continaer-inputs__btn-filter">
         <i class='bx bxs-filter-alt'></i>
         Filtrar
       </button>

@@ -33,4 +33,8 @@ export class ProductService {
     return this._http.post<any>(`${this._baseUrl}/upload/image/product`, file);
   }
 
+  public getImageProduct(id: number):Observable<any>{
+    return this._http.get<any>(`${this._baseUrl}/images/${id}`);
+  }
+
 }

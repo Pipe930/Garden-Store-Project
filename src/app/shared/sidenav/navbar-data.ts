@@ -141,5 +141,16 @@ export const navbarData: Array<Sidenav> = [
         label: "Crear Proveedor"
       }
     ]
+  },
+  {
+    routerLink: "posts",
+    icon: "bx bxs-news",
+    label: "Publicaciones",
+    items: [
+      {
+        routerLink: "posts/list",
+        label: "Publicaciones y Etiquetas"
+      }
+    ]
   }
 ]

@@ -13,5 +13,10 @@ export const routes: Routes = [
   {
     path: "admin",
     loadChildren: () => import("./admin/admin.routes").then(m => m.routesAdmin)
+  },
+  {
+    path: "**",
+    pathMatch: "full",
+    loadComponent: () => import("./shared/page404/page404.component").then(m => m.Page404Component)
   }
 ];

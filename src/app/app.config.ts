@@ -1,11 +1,15 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, LOCALE_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { registerLocaleData } from '@angular/common';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
+import localeEs from '@angular/common/locales/es';
 
 import { routes } from './app.routes';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { apiAuthorizationInterceptor } from './core/interceptors/api-authorization.interceptor';
 import { apiExceptionInterceptor } from './core/interceptors/api-exception.interceptor';
-import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
+
+registerLocaleData(localeEs, 'es');
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([apiAuthorizationInterceptor, apiExceptionInterceptor])
     ),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    { provide: LOCALE_ID, useValue: 'es' }
   ]
 };

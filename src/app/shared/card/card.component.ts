@@ -23,15 +23,13 @@ export class CardComponent implements OnChanges {
   public eventProduct = output<Product>();
 
   ngOnChanges(): void {
-
     if(this.product().images.length !== 0){
 
       const image = this.product().images.filter(image => image.type === "cover")[0]
-      this.urlImage.set(`${environment.apiImages}/${image.urlImage}`);
+      this.urlImage.set(`${environment.apiImages}${image.urlImage}`);
     } else {
       this.urlImage.set("https://cdni.iconscout.com/illustration/premium/thumb/404-7304110-5974976.png");
     }
-
   }
 
   public productDetail(product: Product): void {

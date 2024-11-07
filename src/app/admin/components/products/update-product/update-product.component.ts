@@ -7,6 +7,7 @@ import { Component, ElementRef, inject, OnInit, signal, viewChild } from '@angul
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AlertService } from '@core/services/alert.service';
+import { environment } from '@env/environment.development';
 import { Category } from '@pages/interfaces/category';
 import { Product, productJson } from '@pages/interfaces/product';
 
@@ -35,12 +36,19 @@ export class UpdateProductComponent implements OnInit {
   public product = signal<Product>(productJson);
   private idProduct = this._activatedRoute.snapshot.params["id"];
 
+  private newImageBase64 = "";
+  private newImageName = "";
+  private imageBase64 = "";
+  private nameImage = "";
+  private type = "";
+
   public updateProductForm: FormGroup = this._builder.group({
 
     title: this._builder.control('', [Validators.required, Validators.minLength(4), Validators.maxLength(255)]),
     price: this._builder.control(0, [Validators.required, Validators.min(1000)]),
     brand: this._builder.control('', [Validators.required, Validators.minLength(4), Validators.maxLength(100)]),
     returnPolicy: this._builder.control('', [Validators.required, Validators.minLength(4), Validators.maxLength(255)]),
+    thumbnail: this._builder.control(''),
     published: this._builder.control(false),
     category: this._builder.control('', Validators.required),
     offer: this._builder.control(''),
@@ -60,6 +68,14 @@ export class UpdateProductComponent implements OnInit {
     this._productService.getProduct(this.idProduct).subscribe((product) => {
 
       const categoryObtain = this.listCategories().filter((category) => category.name == product.data.category.name);
+
+      this._productService.getImageProduct(this.idProduct).subscribe((image) => {
+
+        this.imageBase64 = image.data.image;
+        this.nameImage = image.data.filename;
+        this.type = image.data.type;
+        this.imagePreview().nativeElement.src = `data:${this.type};base64,${this.imageBase64}`;
+      })
 
       this.product.set(product.data);
       this.updateProductForm.get("title")?.setValue(product.data.title);
@@ -87,6 +103,19 @@ export class UpdateProductComponent implements OnInit {
 
     const { thumbnail, category, offer, ...forms } = this.updateProductForm.value;
 
+    if(thumbnail !== ""){
+
+      const [filename, imageBase64] = this.newImageBase64.split(',');
+
+      this._productService.uploadImage({
+        file: imageBase64,
+        filename: this.newImageName,
+        typeFormat: filename.split(';')[0].split(':')[1],
+        type: 'cover',
+        idProduct: parseInt(this.idProduct)
+      }).subscribe(() => {});
+    }
+
     this._productService.updateProduct(      {
       ...forms,
       idCategory: parseInt(category),
@@ -96,6 +125,31 @@ export class UpdateProductComponent implements OnInit {
       this._alertService.success("Producto actualizado", "El producto se ha actualizado correctamente");
       this._router.navigate(["/admin/products/list"]);
     });
+  }
+
+  public changeImage(){
+
+    const imageProduct = this.imageProduct().nativeElement;
+    const imagePreview = this.imagePreview().nativeElement;
+
+    if (imageProduct instanceof HTMLInputElement && imageProduct.files && imageProduct.files.length > 0) {
+
+      const archivo = imageProduct.files[0];
+      const src = URL.createObjectURL(imageProduct.files[0]);
+
+      this.newImageName = archivo.name;
+      imagePreview.src = src;
+
+      const reader = new FileReader();
+      reader.readAsDataURL(archivo);
+
+      reader.onload = () => {
+        this.newImageBase64 = reader.result as string;
+      }
+      return;
+    }
+
+    imagePreview.src = "/assets/imgs/upload-image_2023-04-11-023334_kxuh.png";
   }
 
 
@@ -125,6 +179,10 @@ export class UpdateProductComponent implements OnInit {
 
   get idOffer() {
     return this.updateProductForm.controls['offer'];
+  }
+
+  get thumbnail() {
+    return this.updateProductForm.controls['thumbnail'];
   }
 
 }

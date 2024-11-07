@@ -117,7 +117,7 @@ export class ProductDetailComponent {
   private loadImages(product: Product): void{
 
     if(product.images.length > 0){
-      this.urlImage.set(`${environment.apiImages}/${product.images.filter(image => image.type === "cover")[0].urlImage}`);
+      this.urlImage.set(`${environment.apiImages}${product.images.filter(image => image.type === "cover")[0].urlImage}`);
       return;
     }
 
