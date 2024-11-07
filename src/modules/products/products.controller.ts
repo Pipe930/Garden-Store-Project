@@ -25,6 +25,12 @@ export class ProductsController {
     return this.productsService.uploadImages(fileUploadDto);
   }
 
+  @Get('images/:id')
+  // @Auth([{ resource: ResourcesEnum.PRODUCTS, action: [ActionsEnum.READ]}])
+  findImages(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.getImagesProduct(id);
+  }
+
   @Get()
   findAll(@Query() paginateDto: PaginateDto) {
     return this.productsService.findAll(paginateDto);

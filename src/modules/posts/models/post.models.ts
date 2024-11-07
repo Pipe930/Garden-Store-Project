@@ -2,6 +2,7 @@ import { BelongsToMany, Column, DataType, ForeignKey, HasMany, Model, Table } fr
 import { User } from "src/modules/users/models/user.model";
 import { PostTag, Tag } from "./tag.model";
 import { Comment } from "src/modules/comments/models/comment.model";
+import { Reaction } from "./reaction.model";
 
 @Table({
     tableName: "posts",
@@ -29,10 +30,35 @@ export class Post extends Model {
     declare title: string;
 
     @Column({
-        type: DataType.TEXT,
+        type: DataType.STRING(255),
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
+    })
+    declare subtitle: string;
+
+    @Column({
+        type: DataType.STRING(255),
+        allowNull: false,
+        unique: true
+    })
+    declare slug: string;
+
+    @Column({
+        type: DataType.STRING(255),
         allowNull: false
     })
-    declare body: string;
+    declare thumbnail: string;
+
+    @Column({
+        type: DataType.TEXT,
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
+    })
+    declare content: string;
 
     @Column({
         type: DataType.INTEGER,
@@ -43,13 +69,6 @@ export class Post extends Model {
         }
     })
     declare likes: number;
-
-    @Column({
-        type: DataType.STRING(255),
-        allowNull: false,
-        unique: true
-    })
-    declare slug: string;
 
     @Column({
         type: DataType.INTEGER,
@@ -89,4 +108,7 @@ export class Post extends Model {
 
     @HasMany(() => Comment)
     declare comments: Comment[];
+
+    @HasMany(() => Reaction)
+    declare reactions: Reaction[];
 }

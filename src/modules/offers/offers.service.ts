@@ -65,8 +65,8 @@ export class OffersService {
 
     const offer = await Offer.findByPk(id);
 
-    await this.validTitleOffer(title);
     if(!offer) throw new NotFoundException("La oferta no existe");
+    if(offer.title !== title) await this.validTitleOffer(title);
 
     try {
 

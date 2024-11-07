@@ -7,6 +7,7 @@ export const AppConfigEnvironment = () => ({
     domainUrl: process.env.DOMAIN_URL,
     tbkApiKeySecret: process.env.TBK_API_KEY_SECRET,
     tbkApiKeyId: process.env.TBK_API_KEY_ID,
+    s3AwsUrl: process.env.S3_AWS_URL,
     database: {
 
         dialect: process.env.DATABASE_DIALECT as any,

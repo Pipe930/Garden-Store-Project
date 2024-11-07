@@ -13,11 +13,16 @@ import { randomUUID } from 'crypto';
 import { SearchProductDto } from './dto/search-product.dto';
 import { PaginateDto } from './dto/paginate.dto';
 import { AvailabilityStatus } from 'src/core/enums/productAviabilityStatus.enum';
+import { ConfigService } from '@nestjs/config';
+import { TypeImagesEnum } from 'src/core/enums/typeImages.enum';
 
 @Injectable()
 export class ProductsService {
 
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService, 
+    private readonly configService: ConfigService
+  ) {}
 
   async create(createProductDto: CreateProductDto):Promise<ResponseData> {
 
@@ -68,11 +73,11 @@ export class ProductsService {
       limit,
       offset
     });
-
+    
+    if(products.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT }
+    
     const currentPage = page ? +page : 0;
     const totalPages = Math.ceil(await Product.count() / limit);
-
-    if(products.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT }
 
     return {
       statusCode: HttpStatus.OK,
@@ -200,9 +205,9 @@ export class ProductsService {
     const product = await Product.findByPk<Product>(id);
     const category = await Category.findByPk<Category>(idCategory);
 
-    await this.validTitleProduct(title);
     if(!product) throw new NotFoundException("Producto no encontrado");
     if(!category) throw new BadRequestException("La categoria ingresada no existe");
+    if(product.title !== title) await this.validTitleProduct(title);
 
     try {
       product.title = title;
@@ -249,29 +254,28 @@ export class ProductsService {
     const [filenameImage, extendsImage] = filename.split(".");
     const nowDate = new Date();
     const newFileNameImage = filenameImage + "-" + new Intl.DateTimeFormat('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(nowDate).toString() + "-" + nowDate.getTime().toString() + "." + extendsImage;
-    const dataForm = new FormData();
 
-    dataForm.append(
-      'file', 
-      new Blob([Buffer.from(file, 'base64')], { type: typeFormat }), 
-      newFileNameImage
-    );
+    const imageBuffer = Buffer.from(file, 'base64');
 
     const product = await Product.findByPk<Product>(idProduct);
     const imageProduct = await ImagesProduct.findOne<ImagesProduct>({ where: { idProduct, type } });
 
     if(!product) throw new NotFoundException("Producto no encontrado");
-    if(imageProduct) throw new BadRequestException("Este producto ya tiene una imagen de tipo portada");
+    if(imageProduct) {
+      await this.httpService.axiosRef.delete(`${this.configService.get<string>("s3AwsUrl")}/media/${imageProduct.urlImage.split("/")[2]}`);
+      await imageProduct.destroy();
+    };
 
     try {
       
-      await this.httpService.axiosRef.post("http://127.0.0.1:8000/upload", dataForm, {
+      await this.httpService.axiosRef.put(`${this.configService.get<string>("s3AwsUrl")}/media/${newFileNameImage}`, imageBuffer, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': typeFormat,
+          'Content-Length': imageBuffer.length
+      }
       });
     } catch (error) {
-      if(error.code === "ECONNREFUSED") throw new BadRequestException("No se envio correctamente al proveedor de imagenes");
+      throw new BadRequestException("No se envio correctamente al proveedor de imagenes");
     }
 
     try {
@@ -294,6 +298,35 @@ export class ProductsService {
         type
       }
     }
+  }
+
+  async getImagesProduct(idProduct: number) {
+
+    const product = await Product.findByPk<Product>(idProduct);
+    const images = await ImagesProduct.findOne<ImagesProduct>({ where: { idProduct, type: TypeImagesEnum.COVER } });
+
+    if(!images) throw new NotFoundException("Producto no tiene imagenes");
+    if(!product) throw new NotFoundException("Producto no encontrado");  
+
+    try {
+
+      const response = await this.httpService.axiosRef.get(`${this.configService.get<string>("s3AwsUrl") + images.urlImage}`, { responseType: 'arraybuffer' });
+
+      const buffer = Buffer.from(response.data, 'binary');
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: "Imagenes encontradas",
+        data: {
+          type: images.type,
+          filename: images.urlImage.split("/")[2],
+          image: buffer.toString('base64')
+        }
+      }
+    } catch (error) {
+      throw new InternalServerErrorException("No se pudo obtener las imagenes del producto");
+    }
+
   }
 
   private async calculateDiscount(price: number, idOffer: number): Promise<number> {

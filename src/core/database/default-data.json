@@ -68,173 +68,203 @@
             "name": "gestionar categorias",
             "resource": "categorias",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
             ]
         },
         {
             "name": "gestionar roles",
             "resource": "roles",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
             ]
         },
         {
             "name": "getionar permisos",
             "resource": "permisos",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
             ]
         },
         {
             "name": "gestionar usuarios",
             "resource": "usuarios",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
             ]
         },
         {
             "name": "gestionar productos",
             "resource": "productos",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
             ]
         },
         {
             "name": "gestionar ventas",
             "resource": "ventas",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR"
             ]
         },
         {
             "name": "gestionar compras ventas",
             "resource": "ventas",
             "actions": [
-                "CREATE",
-                "READ"
+                "CREAR",
+                "LEER"
             ]
         },
         {
             "name": "gestionar compras",
             "resource": "compras",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR"
             ]
         },
         {
             "name": "gestionar proveedores",
             "resource": "proveedores",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
             ]
         },
         {
             "name": "gestionar comentarios",
             "resource": "comentarios",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
             ]
         },
         {
             "name": "gestionar comentarios clientes",
             "resource": "comentarios",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR"
             ]
         },
         {
             "name": "gestionar sucursales",
             "resource": "sucursales",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR"
             ]
         },
         {
             "name": "gestionar empleados",
             "resource": "empleados",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
             ]
         },
         {
             "name": "gestionar reseñas",
             "resource": "resenas",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
             ]
         },
         {
             "name": "gestionar reseñas clientes",
             "resource": "resenas",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR"
             ]
         },
         {
             "name": "gestionar publicaciones",
             "resource": "publicaciones",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
             ]
         },
         {
             "name": "gestionar direcciones",
             "resource": "direcciones",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
             ]
         },
         {
             "name": "gestionar direcciones usuarios",
             "resource": "direcciones-usuario",
             "actions": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
+            ]
+        },
+        {
+            "name": "gestionar ofertas",
+            "resource": "ofertas",
+            "actions": [
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
+            ]
+        },
+        {
+            "name": "gestionar publicaciones usuarios",
+            "resource": "publicaciones-usuario",
+            "actions": [
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
+            ]
+        },
+        {
+            "name": "gestionar etiquetas",
+            "resource": "etiquetas",
+            "actions": [
+                "CREAR",
+                "LEER",
+                "MODIFICAR",
+                "ELIMINAR"
             ]
         }
     ],
@@ -254,6 +284,10 @@
         {
             "idRole": 1,
             "idPermission": 18
+        },
+        {
+            "idRole": 1,
+            "idPermission": 20
         },
         {
             "idRole": 2,
@@ -310,6 +344,46 @@
         {
             "idRole": 2,
             "idPermission": 17
+        },
+        {
+            "idRole": 2,
+            "idPermission": 19
+        },
+        {
+            "idRole": 2,
+            "idPermission": 21
+        }
+    ],
+    "tags": [
+        {
+            "name": "Jardineria"
+        },
+        {
+            "name": "Plantas"
+        },
+        {
+            "name": "Consejos"
+        },
+        {
+            "name": "Recomendaciones"
+        },
+        {
+            "name": "Trucos"
+        },
+        {
+            "name": "Guias"
+        },
+        {
+            "name": "Ecologico"
+        },
+        {
+            "name": "Decoracion"
+        },
+        {
+            "name": "GardensLife"
+        },
+        {
+            "name": "Jardines"
         }
     ]
 }

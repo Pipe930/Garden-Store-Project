@@ -6,6 +6,8 @@ import { Subscription } from "src/modules/subscriptions/models/subscription.mode
 import { UserOPTVerification } from "./userOPTVerification";
 import { Sale } from "src/modules/sales/models/sale.model";
 import { Comment } from "src/modules/comments/models/comment.model";
+import { Reaction } from "src/modules/posts/models/reaction.model";
+import { Post } from "src/modules/posts/models/post.models";
 
 @Table({
     tableName: "users",
@@ -115,4 +117,10 @@ export class User extends Model {
 
     @HasMany(() => Comment)
     declare comments: Comment[];
+
+    @HasMany(() => Reaction)
+    declare reactions: Reaction[];
+
+    @HasMany(() => Post)
+    declare posts: Post[];
 }

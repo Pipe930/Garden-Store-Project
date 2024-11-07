@@ -61,7 +61,8 @@ export class CategoriesService {
     const category = await Category.findByPk<Category>(id);
 
     if(!category) throw new NotFoundException("La categoria no existe");
-    await this.validExistNameCategory(name);
+    if(category.name !== name) await this.validExistNameCategory(name);
+    
 
     try {
       

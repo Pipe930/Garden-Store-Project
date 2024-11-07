@@ -25,6 +25,7 @@ async function bootstrap() {
   await inserDataService.insertDataCategories();
   await inserDataService.insertDataAccessControl();
   await inserDataService.createSuperUser();
+  await inserDataService.insertTags();
 
   const configService = app.get(ConfigService);
   await app.listen(parseInt(configService.get("port")));

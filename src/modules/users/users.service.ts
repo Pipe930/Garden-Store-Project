@@ -134,8 +134,8 @@ export class UsersService {
       ]
     });
 
-    await this.validateUser(email, phone);
     if(!user) throw new NotFoundException("Usuario no encontrado");
+    if(user.email !== email || user.phone !== phone) await this.validateUser(email, phone);
 
     try {      
       user.firstName = firstName;

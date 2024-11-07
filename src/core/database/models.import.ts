@@ -22,6 +22,7 @@ import { UserOPTVerification } from "src/modules/users/models/userOPTVerificatio
 import { Post } from "src/modules/posts/models/post.models";
 import { Comment } from "src/modules/comments/models/comment.model";
 import { PostTag, Tag } from "src/modules/posts/models/tag.model";
+import { Reaction } from "src/modules/posts/models/reaction.model";
 
 export const ArrayModels: Array<any> = [
     User,
@@ -57,5 +58,6 @@ export const ArrayModels: Array<any> = [
     Post,
     Comment,
     Tag,
-    PostTag
+    PostTag,
+    Reaction
 ]

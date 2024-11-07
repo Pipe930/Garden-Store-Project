@@ -8,6 +8,7 @@ import { Role, RoleUser } from 'src/modules/access-control/models/rol.model';
 import { Permission, RolePermission } from 'src/modules/access-control/models/permission.model';
 import { User } from 'src/modules/users/models/user.model';
 import { hashSync } from 'bcrypt';
+import { Tag } from 'src/modules/posts/models/tag.model';
 
 @Injectable()
 export class InsertDataService {
@@ -112,5 +113,22 @@ export class InsertDataService {
             idRole: 2,
             idUser: superuser.idUser
         })
+    }
+
+    async insertTags(): Promise<void> {
+
+        if(await Tag.count() > 0) return;
+
+        console.log("[+] Inserting Tags...");
+
+        const jsonData = this.readJsonData();
+
+        jsonData.tags.forEach((tag: Tag) => {
+            tag.slug = tag.name.toLowerCase().replace(/ /g, "-");
+            tag.name = tag.name.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+        });
+        await Tag.bulkCreate(jsonData.tags);
+
+        console.log("[+] Data Inserted Tags Successfully");
     }
 }
