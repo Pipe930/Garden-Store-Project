@@ -226,12 +226,6 @@ export class PostsService {
 
   async filterTagPost(idTag: number): Promise<ResponseData> {
 
-    const tags = await PostTag.findAll({
-      where: { idTag }
-    });
-
-    const tagIds = tags.map(tag => tag.idTag);
-
     const posts = await Post.findAll({
       where: { published: true },
       include: [
@@ -242,7 +236,7 @@ export class PostsService {
           },
           attributes: ['idTag', 'name'],
           where: {
-            idTag: tagIds // Filtra usando los idTag de la lista obtenida
+            idTag
           }
         }
       ]
@@ -309,7 +303,9 @@ export class PostsService {
     const offset = (page - 1) * limit;
 
     const posts = await Post.findAll({
-      where: { published: true, idUser },
+      where: { 
+        idUser 
+      },
       include: [
         {
           model: Tag,
