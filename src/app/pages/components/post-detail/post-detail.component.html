@@ -10,7 +10,7 @@
                     <!-- Post title-->
                     <h1 class="fw-bolder mb-1">{{postFindVar.title}}</h1>
                     <!-- Post meta content-->
-                    <div class="text-muted fst-italic mb-2">Posted on January 1, 2023 by Start Bootstrap</div>
+                    <div class="text-muted fst-italic mb-2">Publicado el {{postFindVar.createdAt | date: 'longDate'}}</div>
                     <!-- Post categories-->
                     @for (tag of postFindVar.tags; track $index) {
                       <span class="badge bg-success">{{tag.name}}</span>

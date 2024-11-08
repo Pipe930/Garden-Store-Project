@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '@env/environment.development';
@@ -7,7 +8,7 @@ import { PostService } from '@pages/services/post.service';
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.scss'
 })

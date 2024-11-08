@@ -74,7 +74,7 @@ export const navbarData: Array<Sidenav> = [
     items: [
       {
         routerLink: "access-control/list",
-        label: "Lista Roles & Permisos"
+        label: "Roles & Permisos"
       },
       {
         routerLink: "access-control/role/create",

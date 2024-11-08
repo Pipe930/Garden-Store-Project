@@ -31,7 +31,8 @@ export class ListPostsUserComponent implements OnInit {
   public deletePost(slug: string): void{
 
     Swal.fire({
-      title: "¿Estas seguro de eliminar tu cuenta?",
+      title: "¿Estas seguro de eliminar esta publicación?",
+      text: "Se borrara permanentemente y no podrás revertir esta acción",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",

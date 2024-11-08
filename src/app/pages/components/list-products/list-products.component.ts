@@ -3,6 +3,7 @@ import { CardComponent } from '@shared/card/card.component';
 import { Product } from '@pages/interfaces/product';
 import { Category } from '@pages/interfaces/category';
 import { ProductsService } from '@pages/services/products.service';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-list-products',
@@ -14,6 +15,7 @@ import { ProductsService } from '@pages/services/products.service';
 export class ListProductsComponent implements OnInit {
 
   private readonly _productsService = inject(ProductsService);
+  private readonly _viewportScroller = inject(ViewportScroller);
 
   public listProducts = signal<Array<Product>>([]);
   public listCategories = signal<Array<Category>>([]);
@@ -40,11 +42,14 @@ export class ListProductsComponent implements OnInit {
 
     this.currentPage.update(value => value + 1);
     this._productsService.getProductsPage(this.currentPage());
+    this._viewportScroller.scrollToPosition([0, 0]);
   }
+
   public previousPage():void{
 
     if(this.currentPage() > 1) this.currentPage.update(value => value - 1);
     this._productsService.getProductsPage(this.currentPage());
+    this._viewportScroller.scrollToPosition([0, 0]);
   }
 
   public searchProduct():void {

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
-import { CreatePost, ListPostsResponse, ListTagResponse, PostResponse, UpdatePost } from '@pages/interfaces/post';
-import { Observable } from 'rxjs';
+import { CreatePost, ListPostsResponse, ListTagResponse, Post, PostResponse, UpdatePost } from '@pages/interfaces/post';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +11,41 @@ export class PostService {
 
   private readonly _http = inject(HttpClient);
   private readonly urlApi = `${environment.api}/posts`;
+  private listPosts = new BehaviorSubject<Post[]>([]);
+  public listPosts$ = this.listPosts.asObservable();
+  private listPostsByUser = new BehaviorSubject<Post[]>([]);
+  public listPostsByUser$ = this.listPostsByUser.asObservable();
 
-  public getAllPosts(): Observable<ListPostsResponse>{
-    return this._http.get<ListPostsResponse>(this.urlApi);
+  public currentPage = new Subject<number>();
+  public totalPages = new Subject<number>();
+  public limit = 10;
+
+  public getAllPosts(): void{
+    this._http.get<ListPostsResponse>(`${this.urlApi}?limit=${this.limit}`).subscribe((response) => {
+      this.listPosts.next(response.data);
+      this.totalPages.next(response.totalPages);
+      this.currentPage.next(response.currentPage);
+    });
+  }
+
+  public getPostsPage(page: number): void {
+    this._http.get<ListPostsResponse>(`${this.urlApi}?limit=${this.limit}&page=${page}`).subscribe((response) => {
+      this.listPosts.next(response.data);
+      this.totalPages.next(response.totalPages);
+      this.currentPage.next(response.currentPage);
+    });
+  }
+
+  public searchPost(title: string): void {
+    this._http.get<ListPostsResponse>(`${this.urlApi}/search?title=${title}`).subscribe((response) => {
+      this.listPosts.next(response.data);
+    });
+  }
+
+  public filterPost(idTag: number): void {
+    this._http.get<ListPostsResponse>(`${this.urlApi}/filter/${idTag}`).subscribe((response) => {
+      this.listPosts.next(response.data);
+    });
   }
 
   public getAllPostsByUser(): Observable<ListPostsResponse>{
