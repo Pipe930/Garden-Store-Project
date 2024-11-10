@@ -1,14 +1,27 @@
-import { HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { Comment } from './models/comment.model';
+import { User } from '../users/models/user.model';
+import { Post } from '../posts/models/post.models';
 
 @Injectable()
 export class CommentsService {
   async create(createCommentDto: CreateCommentDto, idUser: number): Promise<ResponseData> {
 
     const { comment, idPost } = createCommentDto;
+    
+    const postFind = await Post.findByPk(idPost);
+    const commentFind = await Comment.findOne({
+      where: {
+        idPost,
+        idUser
+      }
+    });
+
+    if(commentFind) throw new ConflictException('Ya has comentado en esta publicacion');
+    if(!postFind) throw new NotFoundException('Publicacion no encontrada');
 
     try {
 
@@ -29,22 +42,30 @@ export class CommentsService {
 
   async findAllPost(idPost: number): Promise<ResponseData> {
 
+    const postFind = await Post.findByPk(idPost);
+
+    if(!postFind) throw new NotFoundException('Publicacion no encontrada');
+
     const comments = await Comment.findAll({
       where: {
         idPost
-      }
+      },
+      attributes: ['idComment', 'comment', 'likes', 'createdAt', 'updatedAt'],
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['firstName', 'lastName']
+        }
+      ]
     });
 
-    if(!comments) return { message: "No tenemos publicaciones registrados", statusCode: HttpStatus.NO_CONTENT }
+    if(comments.length === 0) return { message: "Esta publicacion no tiene comentarios", statusCode: HttpStatus.NO_CONTENT }
 
     return {
       statusCode: HttpStatus.OK,
       data: comments
     }
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
   }
 
   async update(id: number, updateCommentDto: UpdateCommentDto): Promise<ResponseData> {

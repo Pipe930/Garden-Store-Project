@@ -10,6 +10,7 @@ import { UpdateTagDto } from './dto/update-tag.dto';
 import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
 import { PaginateDto } from '../products/dto/paginate.dto';
 import { SearchPostDto } from './dto/search-post.dto';
+import { CreateReactionDto } from './dto/create-reaction.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -24,6 +25,12 @@ export class PostsController {
   @Get()
   findAll(@Query() paginateDto: PaginateDto) {
     return this.postsService.findAll(paginateDto);
+  }
+
+  @Get('admin')
+  @Auth([{ resource: ResourcesEnum.POSTS, action: [ActionsEnum.READ] }])
+  findAllAdmin() {
+    return this.postsService.findAllAdmin();
   }
 
   @Get('post/:id')
@@ -88,6 +95,24 @@ export class PostsController {
     return this.postsService.removePostUser(slug, request.user.idUser);
   }
 
+  @Post('like')
+  @Auth([{ resource: ResourcesEnum.POSTSUSER, action: [ActionsEnum.CREATE] }])
+  likePost(@Body() body: CreateReactionDto, @Req() request: RequestJwt) {
+    return this.postsService.createReactionLike(body, request.user.idUser);
+  }
+
+  @Post('dislike')
+  @Auth([{ resource: ResourcesEnum.POSTSUSER, action: [ActionsEnum.CREATE] }])
+  dislikePost(@Body() body: CreateReactionDto, @Req() request: RequestJwt) {
+    return this.postsService.createReactionDislike(body, request.user.idUser);
+  }
+
+  @Get('reaction/:idPost')
+  @Auth([{ resource: ResourcesEnum.POSTSUSER, action: [ActionsEnum.READ] }])
+  getReactions(@Param('idPost', ParseIntPipe) idPost: number, @Req() request: RequestJwt) {
+    return this.postsService.getReactionUser(idPost, request.user.idUser);
+  }
+
   @Post('tags')
   @Auth([{ resource: ResourcesEnum.TAGS, action: [ActionsEnum.CREATE] }])
   createTag(@Body() createTagDto: CreateTagDto) {
@@ -100,6 +125,7 @@ export class PostsController {
   }
 
   @Get('tags/:id')
+  @Auth([{ resource: ResourcesEnum.TAGS, action: [ActionsEnum.READ] }])
   findOneTag(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.findOneTag(id);
   }

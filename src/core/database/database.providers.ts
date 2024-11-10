@@ -13,6 +13,8 @@ export const databaseProviders = [
             Logger.log("Conexion Database Successfully");
             sequelize.addModels(ArrayModels);
             Logger.log("Models Create Database Successfully");
+
+            await import('./assosiations');
             await sequelize.sync();
             return sequelize;
         },

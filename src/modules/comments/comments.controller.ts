@@ -22,13 +22,13 @@ export class CommentsController {
     return this.commentsService.findAllPost(id);
   }
 
-  @Put(':id')
+  @Put('post/:id')
   @Auth([{ resource: ResourcesEnum.COMMENTS, action: [ActionsEnum.UPDATE] }])
   update(@Param('id', ParseIntPipe) id: number, @Body() updateCommentDto: UpdateCommentDto) {
     return this.commentsService.update(id, updateCommentDto);
   }
 
-  @Delete(':id')
+  @Delete('post/:id')
   @Auth([{ resource: ResourcesEnum.COMMENTS, action: [ActionsEnum.DELETE] }])
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.commentsService.remove(id);

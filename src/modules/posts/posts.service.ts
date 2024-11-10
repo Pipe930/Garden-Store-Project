@@ -13,6 +13,7 @@ import { ConfigService } from '@nestjs/config';
 import { PaginateDto } from '../products/dto/paginate.dto';
 import { SearchPostDto } from './dto/search-post.dto';
 import { Op } from 'sequelize';
+import { ReactionsEnum } from 'src/core/enums/reactions.enum';
 
 @Injectable()
 export class PostsService {
@@ -104,6 +105,18 @@ export class PostsService {
     }
   }
 
+  async findAllAdmin(): Promise<ResponseData> {
+
+    const posts = await Post.findAll();
+
+    if(posts.length === 0) return { message: "No tenemos publicaciones registrados", statusCode: HttpStatus.NO_CONTENT }
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: posts
+    }
+  }
+
   async findOneBySlug(slug: string): Promise<ResponseData> {
 
     const post = await Post.findOne(
@@ -116,7 +129,7 @@ export class PostsService {
             through: {
               attributes: []
             }
-          } 
+          }
         ] 
       });
 
@@ -130,7 +143,17 @@ export class PostsService {
 
   async findOne(id: number): Promise<ResponseData> {
 
-    const post = await Post.findByPk(id);
+    const post = await Post.findByPk(id, {
+      include: [
+        {
+          model: Tag,
+          through: {
+            attributes: []
+          },
+          attributes: ['idTag', 'name']
+        }
+      ]
+    });
 
     if(!post) throw new NotFoundException("Publicación no encontrada");
 
@@ -523,12 +546,38 @@ export class PostsService {
 
     try {
 
-      if(reactionFind){
+      if(reactionFind && reactionFind.reaction === ReactionsEnum.DISLIKE){
+
+        console.log("Se elimino el dislike y se creo un like");
 
         await reactionFind.destroy();
+        post.dislikes -= 1;
+
+        await Reaction.create({
+          reaction,
+          idPost,
+          idUser
+        });
+
+        post.likes += 1;
+        await post.save();
+
+        return {
+          statusCode: HttpStatus.CREATED,
+          message: 'Reacción creada con exito'
+        }
+      } else if(reactionFind) {
+        console.log("Se elimino el like");
+        await reactionFind.destroy();
         post.likes -= 1;
+        await post.save();
+
+        return {
+          statusCode: HttpStatus.CREATED,
+          message: 'Reacción creada con exito'
+        }
       }
-      
+      console.log("Se creo un like");
       await Reaction.create({
         reaction,
         idPost,
@@ -562,12 +611,41 @@ export class PostsService {
 
     try {
 
-      if(reactionFind){
+      if(reactionFind && reactionFind.reaction === ReactionsEnum.LIKE){
+
+        console.log("Se elimino el like y se creo un dislike");
 
         await reactionFind.destroy();
+        post.likes -= 1;
+
+        await Reaction.create({
+          reaction,
+          idPost,
+          idUser
+        });
+
+        post.dislikes += 1;
+        await post.save();
+
+        return {
+          statusCode: HttpStatus.CREATED,
+          message: 'Reacción creada con exito'
+        }
+      } else if(reactionFind) {
+
+        console.log("Se elimino el dislike");
+        await reactionFind.destroy();
         post.dislikes -= 1;
+        await post.save();
+
+        return {
+          statusCode: HttpStatus.CREATED,
+          message: 'Reacción creada con exito'
+        }
       }
-      
+
+      console.log("Se creo un dislike");
+
       await Reaction.create({
         reaction,
         idPost,
@@ -576,6 +654,7 @@ export class PostsService {
 
       post.dislikes += 1;
       await post.save();
+      
 
     } catch (error) {
       throw new InternalServerErrorException('Error al crear la reacción');
@@ -584,6 +663,46 @@ export class PostsService {
     return {
       statusCode: HttpStatus.CREATED,
       message: 'Reacción creada con exito'
+    }
+  }
+
+  async getReactionUser(idPost: number, idUser: number): Promise<ResponseData> {
+
+    const reaction = await Reaction.findOne({
+      where: { idPost, idUser }
+    });
+
+    if(!reaction) throw new NotFoundException("Reacción no encontrada");
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: reaction
+    };
+  }
+
+  async getImagesPost(slugPost: string) {
+
+    const post = await Post.findOne({ where: { slug: slugPost } });
+
+    if(!post) throw new NotFoundException("Publicación no encontrado");  
+
+    try {
+
+      const response = await this.httpService.axiosRef.get(`${this.configService.get<string>("s3AwsUrl") + post.thumbnail}`, { responseType: 'arraybuffer' });
+
+      const buffer = Buffer.from(response.data, 'binary');
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: "Imagenes encontradas",
+        data: {
+          filename: post.thumbnail.split("/")[2],
+          type: response.headers['content-type'],
+          image: buffer.toString('base64')
+        }
+      }
+    } catch (error) {
+      throw new InternalServerErrorException("No se pudo obtener la imagen de la publicacion");
     }
   }
 
@@ -629,32 +748,6 @@ export class PostsService {
     }
 
     return `/posts/${newFileNameImage}`;
-  }
-
-  async getImagesPost(slugPost: string) {
-
-    const post = await Post.findOne({ where: { slug: slugPost } });
-
-    if(!post) throw new NotFoundException("Publicación no encontrado");  
-
-    try {
-
-      const response = await this.httpService.axiosRef.get(`${this.configService.get<string>("s3AwsUrl") + post.thumbnail}`, { responseType: 'arraybuffer' });
-
-      const buffer = Buffer.from(response.data, 'binary');
-
-      return {
-        statusCode: HttpStatus.OK,
-        message: "Imagenes encontradas",
-        data: {
-          filename: post.thumbnail.split("/")[2],
-          type: response.headers['content-type'],
-          image: buffer.toString('base64')
-        }
-      }
-    } catch (error) {
-      throw new InternalServerErrorException("No se pudo obtener la imagen de la publicacion");
-    }
   }
 
   private createTitle(title: string): string {

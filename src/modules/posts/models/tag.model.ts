@@ -1,4 +1,4 @@
-import { BelongsToMany, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Post } from "./post.models";
 
 @Table({
