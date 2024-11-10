@@ -1,5 +1,4 @@
 @let listPostsVar = listPosts();
-@let urlImagesVar = urlImages();
 
 <div class="container-lg py-5">
 
@@ -23,42 +22,7 @@
     <div class="row">
       @for (post of listPostsVar; track $index) {
         <div class="col-lg-6">
-          <div class="card mb-4">
-            <img class="card-img-top" [src]="urlImagesVar + post.thumbnail" alt="imagen de post"/>
-            <div class="card-body">
-              <div class="small text-muted">{{post.createdAt | date: 'longDate'}}</div>
-              <div class="d-flex flex-wrap w-50">
-
-                @for (tag of post.tags; track $index) {
-                  <span class="badge text-bg-success m-1">{{tag.name}}</span>
-                }
-              </div>
-              <h2 class="card-title">{{post.title}}</h2>
-              <p class="card-text text-truncate">{{post.content}}</p>
-              <div class="container-fluid d-flex justify-content-between">
-                <div class="row">
-                  <div class="col d-flex">
-                    <a class="bg-success-subtle rounded-start text-bg-info p-2 text-decoration-none">
-                      <i class='bx bxs-like'></i>
-                      <span class="ms-1">{{post.likes}}</span>
-                    </a>
-                    <a class="bg-success-subtle rounded-end text-bg-info p-2 text-decoration-none">
-                      <i class='bx bxs-dislike'></i>
-                      <span class="ms-1">{{post.dislikes}}</span>
-                    </a>
-                    <a class="bg-success-subtle rounded text-bg-info p-2 text-decoration-none mx-2">
-                      <i class='bx bxs-show'></i>
-                      <span class="ms-1">{{post.views}}</span>
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  <button class="btn btn-primary mx-1" [routerLink]="['/manage-posts/edit', post.slug]">Editar</button>
-                  <button class="btn btn-danger" (click)="deletePost(post.slug)">Eliminar</button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <app-card-post [post]="post" [isActionsButtons]="true"/>
         </div>
       }
     </div>

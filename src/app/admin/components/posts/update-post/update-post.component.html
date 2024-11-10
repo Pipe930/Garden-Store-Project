@@ -1,0 +1,120 @@
+@let chipsVar = chips();
+@let alertMessageVar = alertMessage();
+<!-- @let filteredSuggestionsVar = filteredSuggestions(); -->
+
+<div class="container-fluid d-flex justify-content-between mb-3">
+  <h2>Crear Publicación</h2>
+  <button class="btn btn-primary" type="button" [routerLink]="['/admin/posts/list']">Volver</button>
+</div>
+
+<form novalidate [formGroup]="updatePostForm" (ngSubmit)="updatePost()">
+  @if(alertMessageVar){
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Error!</strong> Este titulo de producto ya existe
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  }
+  <div class="mb-3">
+    <label for="title" class="form-label">Titulo</label>
+    <input type="text" class="form-control" id="title" formControlName="title" [ngClass]="{
+      'is-invalid': title.invalid && (title.dirty || title.touched)
+    }">
+    @if (title.getError("required")) {
+      <span class="invalid-feedback">Este campo es requerido</span>
+    }
+    @if (title.getError("minlength")) {
+      <span class="invalid-feedback">Tiene que tener un minimo de 4 caracteres</span>
+    }
+    @if (title.getError("maxlength")) {
+      <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+    }
+  </div>
+  <div class="mb-3">
+    <label for="subtitle" class="form-label">Subtitulo</label>
+    <input type="text" class="form-control" id="subtitle" formControlName="subtitle" [ngClass]="{
+      'is-invalid': subtitle.invalid && (subtitle.dirty || subtitle.touched)
+    }">
+    @if (subtitle.getError("required")) {
+      <span class="invalid-feedback">Este campo es requerido</span>
+    }
+    @if (subtitle.getError("minlength")) {
+      <span class="invalid-feedback">Tiene que tener un minimo de 4 caracteres</span>
+    }
+    @if (subtitle.getError("maxlength")) {
+      <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+    }
+  </div>
+  <div class="mb-3">
+    <div class="row">
+      <div class="col">
+        <label for="image" class="form-label">Portada</label>
+        <input class="form-control" type="file" id="image" accept="image/*" formControlName="thumbnail" (change)="changeImage($event)">
+      </div>
+      <div class="col">
+        <div class="form__container-img-preview">
+          <img src="../../../../assets/imgs/upload-image_2023-04-11-023334_kxuh.png" width="500" height="500" class="form__image-preview img-thumbnail" #imagePreview>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="flexCheckDefault" formControlName="published">
+    <label class="form-check-label" for="flexCheckDefault">
+      Publicado
+    </label>
+    <p class="form-text">Esta opción permite dejar la publicación sea visible o no para los usuarios</p>
+  </div>
+  <div class="mb-3">
+    <label for="content" class="form-label">Contenido</label>
+    <textarea class="form-control" id="content" rows="5" formControlName="content"></textarea>
+  </div>
+  <div class="mb-3">
+    <label for="" class="form-label">Etiquetas</label>
+    <div class="chips-container">
+
+      @for (chip of chipsVar; track $index) {
+        <span class="chip bg-success-subtle">
+          {{ chip.name }}
+          <button class="close-btn" (click)="removeChip(chip)">
+            <i class='bx bxs-x-circle'></i>
+          </button>
+        </span>
+      }
+
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Escribe para añadir..."
+        (input)="onInputChange($event)"
+        (keydown.enter)="addChip(inputValue())"
+        [ngClass]="{
+          'is-invalid': validTags()
+        }"
+      />
+      @if (validTags()) {
+        <span class="invalid-feedback">Tienes que elegir por lo menos una etiqueta</span>
+      }
+      @if (filteredSuggestions.length > 0) {
+        <select class="form-select" multiple size="4">
+
+          @for (suggestion of filteredSuggestions; track $index) {
+            <option (click)="addChip(suggestion.name)" class="autocomplete-item">
+              {{ suggestion.name }}
+            </option>
+          }
+        </select>
+      }
+
+    </div>
+  </div>
+  <div class="input-group mb-3">
+    <label class="input-group-text" for="inputGroupSelect01">Usuario</label>
+    <select class="form-select" size="5" id="inputGroupSelect01" formControlName="idUser">
+      @for (user of listUsers(); track $index) {
+        <option [value]="user.idUser">{{user.firstName}} {{user.lastName}}</option>
+      }
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-success" [disabled]="updatePostForm.invalid">Crear Publicación</button>
+</form>

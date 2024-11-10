@@ -17,6 +17,7 @@ import { TableComponent } from '@shared/table/table.component';
 export class ListAccessControlComponent implements OnInit {
 
   private readonly _router = inject(Router);
+  private readonly _accessControlService = inject(AccessControlService);
 
   public listRoles = signal<Role[]>([]);
   public listPermission = signal<Permission[]>([]);
@@ -26,7 +27,6 @@ export class ListAccessControlComponent implements OnInit {
   public isLoadingRole = signal<boolean>(false);
   public isLoadingPermission = signal<boolean>(false);
 
-  private readonly _accessControlService = inject(AccessControlService)
 
   ngOnInit(): void {
 

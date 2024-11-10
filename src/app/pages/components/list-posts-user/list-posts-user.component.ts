@@ -1,23 +1,20 @@
-import { DatePipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AlertService } from '@core/services/alert.service';
 import { environment } from '@env/environment.development';
 import { Post } from '@pages/interfaces/post';
 import { PostService } from '@pages/services/post.service';
-import Swal from 'sweetalert2';
+import { CardPostComponent } from '@shared/card-post/card-post.component';
 
 @Component({
   selector: 'app-list-posts-user',
   standalone: true,
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, CardPostComponent],
   templateUrl: './list-posts-user.component.html',
   styleUrl: './list-posts-user.component.scss'
 })
 export class ListPostsUserComponent implements OnInit {
 
   private readonly _postService = inject(PostService);
-  private readonly _alertService = inject(AlertService);
 
   public urlImages = signal<string>(environment.apiImages);
   public listPosts = signal<Post[]>([]);
@@ -26,24 +23,5 @@ export class ListPostsUserComponent implements OnInit {
     this._postService.getAllPostsByUser().subscribe((response) => {
       this.listPosts.set(response.data);
     })
-  }
-
-  public deletePost(slug: string): void{
-
-    Swal.fire({
-      title: "¿Estas seguro de eliminar esta publicación?",
-      text: "Se borrara permanentemente y no podrás revertir esta acción",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si, eliminar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this._postService.deletePost(slug).subscribe(() => {
-          this._alertService.success("Post Eliminado", "Post eliminado correctamente");
-        });
-      }
-    });
   }
 }

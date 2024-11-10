@@ -1,10 +1,4 @@
-
-type Comment = {
-
-  idComment: number;
-  comment: string;
-  idUser: number;
-}
+import { ReactionEnum } from "@core/enums/reaction.enum";
 
 type TagType = {
   idTag: number;
@@ -25,7 +19,6 @@ export interface Post {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
-  comments: Comment[];
   tags: TagType[];
 }
 
@@ -77,6 +70,23 @@ export interface TagResponse {
   data: Tag;
 }
 
+export interface CreateReaction {
+  idPost: number;
+  reaction: ReactionEnum;
+}
+
+export interface Reaciton {
+  idReaction: number;
+  reaction: ReactionEnum;
+  idPost: number;
+  idUser: number;
+}
+
+export interface ReactionResponse {
+  statusCode: number;
+  data: Reaciton;
+}
+
 export const postJson: Post = {
 
   idPost: 0,
@@ -92,6 +102,5 @@ export const postJson: Post = {
   createdAt: new Date(),
   updatedAt: new Date(),
   deletedAt: new Date(),
-  comments: [],
   tags: []
 }

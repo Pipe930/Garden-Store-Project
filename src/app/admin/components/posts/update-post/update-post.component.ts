@@ -1,31 +1,36 @@
+import { CreatePost } from '@admin/interfaces/post-table';
+import { UserInterface } from '@admin/interfaces/user';
+import { PostService } from '@admin/services/post.service';
+import { UserService } from '@admin/services/user.service';
 import { NgClass } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AlertService } from '@core/services/alert.service';
-import { Tag, UpdatePost } from '@pages/interfaces/post';
-import { PostService } from '@pages/services/post.service';
+import { Tag } from '@pages/interfaces/post';
 
 @Component({
-  selector: 'app-update-post-user',
+  selector: 'app-update-post',
   standalone: true,
   imports: [RouterLink, ReactiveFormsModule, NgClass],
-  templateUrl: './update-post-user.component.html',
-  styleUrl: './update-post-user.component.scss'
+  templateUrl: './update-post.component.html',
+  styleUrl: './update-post.component.scss'
 })
-export class UpdatePostUserComponent {
+export class UpdatePostComponent {
 
   private readonly _postService = inject(PostService);
   private readonly _builder = inject(FormBuilder);
   private readonly _alertService = inject(AlertService);
   private readonly _router = inject(Router);
+  private readonly _userService = inject(UserService);
   private readonly _activatedRouter = inject(ActivatedRoute);
 
-  private readonly slugPost = this._activatedRouter.snapshot.params["slug"];
+  private readonly idPost = this._activatedRouter.snapshot.params["id"];
   public chips = signal<Tag[]>([]);
   public inputValue = signal<string>('');
   public listTags = signal<Tag[]>([]);
+  public listUsers = signal<UserInterface[]>([]);
   public filteredSuggestions: Tag[] = [];
   public validTags = signal<boolean>(false);
   public imagePreview = viewChild.required<ElementRef>('imagePreview');
@@ -43,31 +48,38 @@ export class UpdatePostUserComponent {
     thumbnail: this._builder.control(""),
     published: this._builder.control(false),
     content: this._builder.control("", [Validators.required, Validators.minLength(5)]),
+    idUser: this._builder.control("", [Validators.required])
   })
 
   ngOnInit(): void {
 
-    this._postService.getPostBySlug(this.slugPost).subscribe(response => {
+    this._postService.getPostById(this.idPost).subscribe(response => {
 
       this.chips.set(response.data.tags);
       this.updatePostForm.get('title')?.setValue(response.data.title);
       this.updatePostForm.get('subtitle')?.setValue(response.data.subtitle);
       this.updatePostForm.get('content')?.setValue(response.data.content);
       this.updatePostForm.get('published')?.setValue(response.data.published);
+      this.updatePostForm.get('idUser')?.setValue(response.data.idUser);
       this.updatePostForm.updateValueAndValidity();
+
+      this._postService.getImagePost(response.data.slug).subscribe((image) => {
+
+        this.imageBase64 = image.data.image;
+        this.nameImage = image.data.filename;
+        this.type = image.data.type;
+        this.imagePreview().nativeElement.src = `data:${this.type};base64,${this.imageBase64}`;
+      })
     });
 
     this._postService.getAllTags().subscribe(response => {
       this.listTags.set(response.data);
     });
 
-    this._postService.getImagePost(this.slugPost).subscribe((image) => {
+    this._userService.getAllUsers().subscribe(response => {
+      this.listUsers.set(response.data);
+    });
 
-      this.imageBase64 = image.data.image;
-      this.nameImage = image.data.filename;
-      this.type = image.data.type;
-      this.imagePreview().nativeElement.src = `data:${this.type};base64,${this.imageBase64}`;
-    })
   }
 
   public updatePost(): void {
@@ -78,7 +90,7 @@ export class UpdatePostUserComponent {
       return;
     }
 
-    let postForm: UpdatePost;
+    let postForm: CreatePost;
     const { thumbnail, ...form } = this.updatePostForm.value;
 
     if(thumbnail !== ""){
@@ -104,9 +116,9 @@ export class UpdatePostUserComponent {
       }
     }
 
-    this._postService.updatePost(this.slugPost, postForm).subscribe(() => {
+    this._postService.updatePost(postForm, this.idPost).subscribe(() => {
       this._alertService.success("Publicación Creada", "La publicación ha sido creada correctamente");
-      this._router.navigate(['/manage-posts/list'])
+      this._router.navigate(['/admin/posts/list'])
     }, (error) => {
 
       if(error.status === HttpStatusCode.Conflict){

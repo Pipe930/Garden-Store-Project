@@ -1,4 +1,3 @@
-@let urlImagesVar = urlImages();
 @let currentPageVar = currentPage();
 @let totalPageVar = totalPages();
 @let validSessionVar = validSession();
@@ -17,41 +16,7 @@
 
                 @for (post of listPostsVar; track $index) {
                   <div class="col-lg-6">
-                      <div class="card mb-4">
-                          <img class="card-img-top" [ngSrc]="urlImagesVar + post.thumbnail" height="300" width="700" alt="imagen de publicacion" priority/>
-                          <div class="card-body">
-                              <div class="small text-muted">{{post.createdAt | date: 'longDate'}}</div>
-                              <div class="d-flex flex-wrap w-100">
-
-                                @for (tag of post.tags; track $index) {
-                                  <span class="badge text-bg-success me-1 my-2">{{tag.name}}</span>
-                                }
-                              </div>
-                              <h2 class="card-title h4">{{post.title}}</h2>
-                              <p class="card-text text-truncate">{{post.content}}</p>
-                              <div class="container-fluid d-flex justify-content-between">
-                                <div class="row">
-                                  <div class="col d-flex">
-                                    <a class="bg-success-subtle rounded-start text-bg-info p-2 text-decoration-none">
-                                      <i class='bx bxs-like'></i>
-                                      <span class="ms-1">{{post.likes}}</span>
-                                    </a>
-                                    <a class="bg-success-subtle rounded-end text-bg-info p-2 text-decoration-none">
-                                      <i class='bx bxs-dislike'></i>
-                                      <span class="ms-1">{{post.dislikes}}</span>
-                                    </a>
-                                    <a class="bg-success-subtle rounded text-bg-info p-2 text-decoration-none mx-2">
-                                      <i class='bx bxs-show'></i>
-                                      <span class="ms-1">{{post.views}}</span>
-                                    </a>
-                                  </div>
-                                </div>
-                                <div>
-                                  <a class="btn btn-primary" [routerLink]="['/detail-blog', post.slug]">Ver →</a>
-                                </div>
-                              </div>
-                          </div>
-                      </div>
+                    <app-card-post [post]="post"/>
                   </div>
                 } @empty {
                   <span class="fs-5 mb-4 text-center">No se han encontrado publicaciones</span>

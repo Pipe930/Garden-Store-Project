@@ -1,14 +1,16 @@
+@let cartVar = cart();
+
 <div class="cart">
   <div class="cart__container">
     <div class="cart__sub-contianer">
 
-      @if(cart().items.length !== 0 && cart().priceTotal !== 0){
+      @if(cartVar.items.length !== 0 && cartVar.priceTotal !== 0){
         <div class="cart__left">
           <div>
-            <h2 class="cart__title-left">Carro | {{cart().quantityTotal}} Productos</h2>
+            <h2 class="cart__title-left">Carro | {{cartVar.quantityTotal}} Productos</h2>
             <hr>
           </div>
-          @for (product of cart().items; track $index) {
+          @for (product of cartVar.items; track $index) {
             <div class="cart__container-listproduct">
               <div class="cart__product-info">
                 <h3>{{product.product.title | titlecase}}</h3>
@@ -29,18 +31,18 @@
               <div class="cart__product-prices">
                 @if (product.product.priceDiscount === 0) {
 
-                  <h3>$ {{product.product.price | currency: 'CLP'}}</h3>
+                  <h3>$ {{product.product.price | number}}</h3>
                   <p>Precio de Referencia</p>
                 }
 
                 @if(product.product.priceDiscount !== 0){
 
-                  <s><h3>$ {{product.product.price | currency: 'CLP'}}</h3></s>
+                  <s><h3>$ {{product.product.price | number}}</h3></s>
                   <p>Precio de Referencia</p>
                 }
 
                 @if(product.product.priceDiscount !== 0) {
-                  <h3>$ {{product.product.priceDiscount | currency: 'CLP'}}</h3>
+                  <h3>$ {{product.product.priceDiscount | number}}</h3>
                   <p>Precio de Descuento</p>
                 }
               </div>
@@ -55,7 +57,7 @@
           <div class="cart__container-total">
             <div class="cart__total-price">
               <p>Precio Total</p>
-              <span>$ {{cart().priceTotal | currency: 'CLP'}}</span>
+              <span>$ {{cartVar.priceTotal | number}}</span>
             </div>
             <div class="d-grid gap-2">
               <button class="btn btn-outline-success cart__btn-view-products" [routerLink]="['/products']">Seguir Comprando</button>
@@ -68,11 +70,11 @@
         </div>
       }
     </div>
-    @if (cart().items.length === 0 && cart().priceTotal === 0) {
+    @if (cartVar.items.length === 0 && cartVar.priceTotal === 0) {
 
       <div class="cart__container-message">
         <h2 class="cart__message-empty">No tienes productos en tu carrito</h2>
-        <a [routerLink]="['/products']" class="cart__message-link">Ver Productos</a>
+        <button [routerLink]="['/products']" class="btn btn-primary">Ver Productos</button>
       </div>
     }
   </div>

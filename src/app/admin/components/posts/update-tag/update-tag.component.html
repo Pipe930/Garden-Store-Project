@@ -1,0 +1,47 @@
+@let alertMessageVar = alertMessage();
+
+<div class="container__container-title">
+  <h2 class="container__container-title">Actualizar Etiqueta</h2>
+  <button class="container__btn btn btn-primary" [routerLink]="['/admin/posts/list']">Volver</button>
+</div>
+
+<div class="container__container-form">
+
+
+  <form novalidate class="container-form__form" [formGroup]="updateTagForm" (ngSubmit)="updateTag()">
+
+    @if(alertMessageVar){
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> Este nombre de etiqueta ya existe
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    }
+    <div class="mb-3">
+      <label for="nameInput" class="form-label">Nombre Etiqueta</label>
+      <input type="text" class="form-control form__input" id="nameInput" formControlName="name" [ngClass]="{
+        'is-invalid': name.invalid && (name.dirty || name.touched)
+      }">
+      @if(name.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(name.getError("minlength")){
+        <span class="invalid-feedback">Tiene que tener un minimo de 4 caracteres</span>
+      }
+      @if(name.getError("maxlength")){
+        <span class="invalid-feedback">Tiene que tener un maximo de 100 caracteres</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Descripción (Opcional)</label>
+      <textarea class="form-control" id="description" rows="3" formControlName="description" [ngClass]="{
+        'is-invalid': description.invalid && (description.dirty || description.touched)
+      }"></textarea>
+      @if(description.getError("maxlength")){
+        <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+      }
+    </div>
+    <button type="submit" class="form__btn-create btn btn-success" [disabled]="updateTagForm.invalid">
+      Guardar
+    </button>
+  </form>
+</div>

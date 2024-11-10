@@ -1,0 +1,43 @@
+@let postVar = post();
+@let urlImagesVar = urlImages();
+
+<div class="card mb-4">
+    <img class="card-img-top" [ngSrc]="urlImagesVar + postVar.thumbnail" height="300" width="700" alt="imagen de publicacion" priority/>
+    <div class="card-body">
+        <div class="small text-muted">{{postVar.createdAt | date: 'longDate'}}</div>
+        <div class="d-flex flex-wrap w-100">
+
+          @for (tag of postVar.tags; track $index) {
+            <span class="badge text-bg-success me-1 my-2">{{tag.name}}</span>
+          }
+        </div>
+        <h2 class="card-title h4">{{postVar.title}}</h2>
+        <p class="card-text text-truncate">{{postVar.content}}</p>
+        <div class="container-fluid d-flex justify-content-between">
+          <div class="row">
+            <div class="col d-flex">
+              <a class="bg-success-subtle rounded-start text-bg-info p-2 text-decoration-none">
+                <i class='bx bxs-like'></i>
+                <span class="ms-1">{{postVar.likes}}</span>
+              </a>
+              <a class="bg-success-subtle rounded-end text-bg-info p-2 text-decoration-none">
+                <i class='bx bxs-dislike'></i>
+                <span class="ms-1">{{postVar.dislikes}}</span>
+              </a>
+              <a class="bg-success-subtle rounded text-bg-info p-2 text-decoration-none mx-2">
+                <i class='bx bxs-show'></i>
+                <span class="ms-1">{{postVar.views}}</span>
+              </a>
+            </div>
+          </div>
+          <div>
+            @if(isActionsButtons()){
+              <button class="btn btn-primary mx-1" [routerLink]="['/manage-posts/edit', postVar.slug]">Editar</button>
+              <button class="btn btn-danger" (click)="deletePost(postVar.slug)">Eliminar</button>
+            }@else {
+              <a class="btn btn-primary" [routerLink]="['/detail-blog', postVar.slug]">Ver →</a>
+            }
+          </div>
+        </div>
+    </div>
+</div>

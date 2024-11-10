@@ -2,12 +2,12 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { Cart, cartJson } from '../../interfaces/cart';
 import { RouterLink } from '@angular/router';
-import { CurrencyPipe, TitleCasePipe } from '@angular/common';
+import { DecimalPipe, TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [RouterLink, TitleCasePipe, CurrencyPipe],
+  imports: [RouterLink, TitleCasePipe, DecimalPipe],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })

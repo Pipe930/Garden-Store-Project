@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
-import { CreatePost, ListPostsResponse, ListTagResponse, Post, PostResponse, UpdatePost } from '@pages/interfaces/post';
+import { CreatePost, CreateReaction, ListPostsResponse, ListTagResponse, Post, PostResponse, ReactionResponse, UpdatePost } from '@pages/interfaces/post';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -74,5 +74,17 @@ export class PostService {
 
   public deletePost(slug: string): Observable<any>{
     return this._http.delete(`${this.urlApi}/user/${slug}`);
+  }
+
+  public likePost(createReaction: CreateReaction): Observable<any>{
+    return this._http.post(`${this.urlApi}/like`, createReaction);
+  }
+
+  public dislikePost(createReaction: CreateReaction): Observable<any>{
+    return this._http.post(`${this.urlApi}/dislike`, createReaction);
+  }
+
+  public getReactionUser(idPost: number): Observable<ReactionResponse>{
+    return this._http.get<ReactionResponse>(`${this.urlApi}/reaction/${idPost}`);
   }
 }

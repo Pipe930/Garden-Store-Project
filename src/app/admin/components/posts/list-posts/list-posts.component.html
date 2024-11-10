@@ -1,0 +1,36 @@
+@let listPostsVar = listPosts();
+@let listTagsVar = listTags();
+@let columnsPostVar = columnsPost();
+@let columnsTagVar = columnsTag();
+@let isLoadingPostVar = isLoadingPost();
+@let isLoadingTagsVar = isLoadingTag();
+
+
+<ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="roles-tab" data-bs-toggle="pill" data-bs-target="#posts" type="button" role="tab" aria-controls="posts" aria-selected="true">Publicaciones</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="permisos-tab" data-bs-toggle="pill" data-bs-target="#tags" type="button" role="tab" aria-controls="tags" aria-selected="false">Etiquetas</button>
+  </li>
+</ul>
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab" tabindex="0">
+    <div class="container__container-title">
+      <h2 class="container__title">Lista Publicaciones</h2>
+      <button class="container__btn btn btn-success" [routerLink]="['/admin/posts/post/create']">
+        Crear Publicación
+      </button>
+    </div>
+    <app-table [messageNoContent]="'roles'" [dataRows]="listPostsVar" [tableColumns]="columnsPostVar" [showActionButton]="true" (eventEdit)="editPost($event)" [isLoading]="isLoadingPostVar"></app-table>
+  </div>
+  <div class="tab-pane fade" id="tags" role="tabpanel" aria-labelledby="tags-tab" tabindex="0">
+    <div class="container__container-title">
+      <h2 class="container__title">Lista Etiquetas</h2>
+      <button class="container__btn btn btn-success" [routerLink]="['/admin/posts/tag/create']">
+        Crear Etiqueta
+      </button>
+    </div>
+    <app-table [messageNoContent]="'permisos'" [dataRows]="listTagsVar" [tableColumns]="columnsTagVar" [showActionButton]="true" (eventEdit)="editTag($event)" [isLoading]="isLoadingTagsVar"></app-table>
+  </div>
+</div>
