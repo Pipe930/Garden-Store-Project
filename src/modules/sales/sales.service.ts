@@ -207,15 +207,11 @@ export class SalesService {
   }
 
   private calculateIvaPrice(priceTotal: number): number {
-
     return priceTotal - this.calculateNetPrice(priceTotal);
   }
 
   private calculateNetPrice(priceTotal: number): number {
-
-    let percentageIva = 19 / 100;
-    let netPrice = priceTotal - priceTotal * percentageIva;
-    return netPrice;
+    return priceTotal - priceTotal * 0.19;
   }
 
   private async validateStatusSale(status: string, sale: Sale): Promise<void> {

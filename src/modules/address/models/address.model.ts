@@ -2,6 +2,7 @@ import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table 
 import { Commune } from "./locates.model";
 import { User } from "src/modules/users/models/user.model";
 import { Branch } from "src/modules/branch/models/branch.model";
+import { Supplier } from "src/modules/suppliers/models/supplier.model";
 
 @Table({
     tableName: "address",
@@ -62,6 +63,9 @@ export class Address extends Model<Address> {
 
     @HasMany(() => AddressUser)
     declare addressUser: AddressUser[];
+
+    @HasMany(() => Supplier)
+    declare supplier: Supplier[];
 
     @HasOne(() => Branch)
     declare branch: Branch;

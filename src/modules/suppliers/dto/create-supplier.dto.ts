@@ -1,11 +1,17 @@
 import { Transform } from "class-transformer";
-import { IsEmail, IsNotEmpty, IsNumber, IsString, IsUrl, Matches, Max, Min } from "class-validator";
+import { IsEmail, IsNotEmpty, IsNumber, IsPositive, IsString, IsUrl, Matches, Max, Min } from "class-validator";
 
 export class CreateSupplierDto {
 
     @IsString()
     @IsNotEmpty()
-    readonly name: string;
+    readonly fullName: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @Transform(({value}) => value.trim())
+    @Matches(/^\d{8}-[\dkK]$/, { message: "El rut no es valido" })
+    readonly rut: string;
 
     @IsString()
     @IsNotEmpty()
@@ -19,12 +25,6 @@ export class CreateSupplierDto {
     readonly email: string;
 
     @IsNumber()
-    @Min(0.0)
-    @Max(5.0)
-    readonly rating: number;
-
-    @IsString()
-    @Transform(({value}) => value.trim())
-    @IsUrl()
-    readonly website: string;
+    // @IsPositive()
+    readonly idAddress: number;
 }

@@ -13,10 +13,6 @@ export class CreatePurchaseDto {
     @Min(1000)
     readonly totalPrice: number;
 
-    @IsNumber()
-    @Min(100)
-    readonly ivaPrice: number;
-
     @IsOptional()
     @IsEnum(StatusSaleEnum)
     @IsNotEmpty()
@@ -31,7 +27,7 @@ export class CreatePurchaseDto {
 
     @IsString()
     @IsNotEmpty()
-    readonly invoiveNumber: string;
+    readonly invoiceNumber: string;
 
     @IsNumber()
     readonly idSupplier: number;
@@ -41,7 +37,7 @@ export class CreatePurchaseDto {
 
     @IsArray()
     @Type(() => ListProductsPurchase)
-    readonly listProducts: ListProductsPurchase[];
+    readonly products: ListProductsPurchase[];
 }
 
 export class ListProductsPurchase {

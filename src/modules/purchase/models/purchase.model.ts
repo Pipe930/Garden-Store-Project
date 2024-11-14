@@ -10,9 +10,7 @@ import { StatusSaleEnum } from "src/core/enums/statusSale.enum";
 @Table({
     tableName: 'purchases',
     modelName: 'Purchase',
-    timestamps: true,
-    createdAt: true,
-    updatedAt: false
+    timestamps: true
 })
 export class Purchase extends Model {
 
@@ -83,7 +81,7 @@ export class Purchase extends Model {
         allowNull: false,
         field: 'invoice_number',
         validate: {
-            len: [10, 20]
+            len: [6, 20]
         }
     })
     declare invoiceNumber: string;

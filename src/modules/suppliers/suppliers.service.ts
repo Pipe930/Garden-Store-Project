@@ -4,12 +4,13 @@ import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { Supplier } from './models/supplier.model';
 import { Op } from 'sequelize';
+import { Address } from '../address/models/address.model';
 
 @Injectable()
 export class SuppliersService {
   async create(createSupplierDto: CreateSupplierDto): Promise<ResponseData> {
 
-    const { name, website, phone, email, rating } = createSupplierDto;
+    const { fullName, rut, phone, email, idAddress } = createSupplierDto;
 
     const supplierFind = await Supplier.findOne(
       { 
@@ -21,11 +22,13 @@ export class SuppliersService {
         }
       }
     );
+    const addressFind = await Address.findByPk(idAddress);
 
+    if(!addressFind) throw new NotFoundException("La direccion no existe");
     if(supplierFind) throw new ConflictException("El proveedor ya existe");
 
     try {
-      await Supplier.create({ name, website, phone, email, rating });
+      await Supplier.create({ fullName, rut, phone, email, idAddress });
     } catch (error) {
       throw new InternalServerErrorException("Error al crear el proveedor");
     }
@@ -63,19 +66,21 @@ export class SuppliersService {
 
   async update(id: number, updateSupplierDto: UpdateSupplierDto): Promise<ResponseData> {
 
-    const { name, website, phone, email, rating } = updateSupplierDto;
+    const { fullName, rut, phone, email, idAddress } = updateSupplierDto;
 
     const supplier = await Supplier.findByPk(id);
+    const addressFind = await Address.findByPk(idAddress);
 
     if(!supplier) throw new NotFoundException("El proveedor no existe");
+    if(!addressFind) throw new NotFoundException("La direccion no existe");
 
     try {
 
-      supplier.name = name;
-      supplier.website = website;
+      supplier.fullName = fullName;
+      supplier.rut = rut;
       supplier.phone = phone;
       supplier.email = email;
-      supplier.rating = rating;
+      supplier.idAddress = idAddress;
 
       await supplier.save();
     } catch (error) {

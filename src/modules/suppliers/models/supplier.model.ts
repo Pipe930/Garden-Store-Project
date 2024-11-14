@@ -1,5 +1,6 @@
-import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { Purchase } from "../../purchase/models/purchase.model";
+import { Address } from "src/modules/address/models/address.model";
 
 @Table({
     tableName: 'suppliers',
@@ -19,12 +20,24 @@ export class Supplier extends Model {
     @Column({
         type: DataType.STRING(100),
         allowNull: false,
+        field: 'full_name',
         validate: {
             len: [3, 100],
             notEmpty: true
         }
     })
-    declare name: string;
+    declare fullName: string;
+
+    @Column({
+        type: DataType.STRING(10),
+        allowNull: false,
+        unique: true,
+        validate: {
+            is: /^\d{8}-[\dkK]$/,
+            notEmpty: true
+        }
+    })
+    declare rut: string;
 
     @Column({
         type: DataType.STRING(12),
@@ -48,24 +61,13 @@ export class Supplier extends Model {
     })
     declare email: string;
 
+    @ForeignKey(() => Address)
     @Column({
-        type: DataType.FLOAT,
+        type: DataType.INTEGER,
         allowNull: false,
-        validate: {
-            min: 0,
-            max: 5
-        }
+        field: 'id_address'
     })
-    declare rating: number;
-
-    @Column({
-        type: DataType.STRING(255),
-        allowNull: true,
-        validate: {
-            isUrl: true
-        }
-    })
-    declare website: string;
+    declare idAddress: number;
 
     @HasMany(() => Purchase)
     declare purchases: Purchase[];

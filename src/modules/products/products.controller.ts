@@ -58,6 +58,16 @@ export class ProductsController {
     return this.productsService.searchProduct(searchProductDto);
   }
 
+  @Get('offer')
+  findOffer() {
+    return this.productsService.findAllProductsOffer();
+  }
+
+  @Post('offer')
+  createOffer(@Body() searchProduct: SearchProductDto) {
+    return this.productsService.searchProductsOffer(searchProduct);
+  }
+
   @Get('category/:id')
   findByCategory(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findProductByCategory(id);

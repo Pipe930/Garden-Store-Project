@@ -18,14 +18,13 @@ export class PurchaseService {
     const {
       quantityTotal,
       totalPrice,
-      ivaPrice,
       status,
       discountsAplicated,
       methodPayment,
-      invoiveNumber,
+      invoiceNumber,
       idSupplier,
       idEmployee,
-      listProducts
+      products
     } = createPurchaseDto;
 
     const supplierExists = await Supplier.findByPk(idSupplier);
@@ -33,41 +32,47 @@ export class PurchaseService {
 
     if(!supplierExists) throw new NotFoundException("El proveedor no existe");
     if(!employeeExists) throw new NotFoundException("El empleado no existe");
-
-    const purchase = Purchase.build({
-      quantityTotal,
-      totalPrice,
-      ivaPrice,
-      status,
-      discountsAplicated,
-      methodPayment,
-      invoiveNumber,
-      idSupplier,
-      idEmployee
-    });
-
-    const productsParserList = [];
-
-    listProducts.forEach(async (product) => {
-
-      const productExists = await Product.findByPk(product.idProduct);
-
-      if(!productExists) throw new BadRequestException("El producto ingresado no existe");
-
-      const newPurchaseProduct = PurchaseProduct.build({
-        quantity: product.quantity,
-        idProduct: product.idProduct,
-        idPurchase: purchase.id
+    
+    try {
+      
+      const purchase = Purchase.build({
+        quantityTotal,
+        totalPrice,
+        ivaPrice: totalPrice - totalPrice * 0.19,
+        status,
+        discountsAplicated,
+        methodPayment,
+        invoiceNumber,
+        idSupplier,
+        idEmployee
       });
-
-      productsParserList.push(newPurchaseProduct);
-    });
-
-    productsParserList.forEach(async (product) => {
-      await product.save();
-    });
-
-    await purchase.save();
+  
+      const productsParserList = [];
+  
+      products.forEach(async (product) => {
+  
+        const productExists = await Product.findByPk(product.idProduct);
+  
+        if(!productExists) throw new BadRequestException("El producto ingresado no existe");
+  
+        const newPurchaseProduct = PurchaseProduct.build({
+          quantity: product.quantity,
+          idProduct: product.idProduct,
+          idPurchase: purchase.id
+        });
+  
+        productsParserList.push(newPurchaseProduct);
+      });
+  
+      productsParserList.forEach(async (product) => {
+        await product.save();
+      });
+  
+      await purchase.save();
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException("Error al crear la compra");
+    }
 
     return {
       message: "Compra creada con éxito",

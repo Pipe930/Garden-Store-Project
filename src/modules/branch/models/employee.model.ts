@@ -68,7 +68,7 @@ export class Employee extends Model {
         unique: true,
         validate: {
             is: /^\d{8}-[\dkK]$/, 
-            len: [10, 11]
+            len: [10, 10]
         }
     })
     declare rut: string;

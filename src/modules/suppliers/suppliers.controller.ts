@@ -5,7 +5,6 @@ import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { ResourcesEnum } from 'src/core/enums/resourses.enum';
 import { ActionsEnum } from 'src/core/enums/actions.enum';
 import { Auth } from 'src/core/decorators/auth.decorator';
-
 @Controller('suppliers')
 export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
