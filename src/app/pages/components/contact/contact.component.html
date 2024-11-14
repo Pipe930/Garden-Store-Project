@@ -1,0 +1,55 @@
+<div class="container">
+
+  <div class="container__container-fluid">
+    <h2 class="container__title">Formulario de Contacto</h2>
+    <div class="container__container-text">
+      <p class="container__text"><b>¿Necesitas Ayuda?</b></p>
+      <p class="container__text">Rellena el siguiente formulario y te podemos ayudar con tu problema</p>
+    </div>
+
+    <form action="" novalidate class="container__form" [formGroup]="formContact" (ngSubmit)="sendEmail()">
+      <div class="row">
+        <div class="col">
+          <fieldset class="mb-3">
+            <label for="name" class="form-label"><b>Nombre</b></label>
+            <input type="text" id="name" class="form-control" formControlName="full_name" [ngClass]="{
+              'is-invalid': full_name.invalid && (full_name.dirty || full_name.touched)
+            }">
+
+            @if(full_name.getError('required')){
+              <span class="invalid-feedback">Este campo es requerido</span>
+            }
+            @if(full_name.getError('minlength')){
+              <span class="invalid-feedback">Tiene que ser minimo de 4 caracteres</span>
+            }
+            @if(full_name.getError('maxlength')){
+              <span class="invalid-feedback">Tiene que ser minimo de 60 caracteres</span>
+            }
+          </fieldset>
+        </div>
+        <div class="col">
+          <fieldset class="mb-3">
+            <label for="inputEmail" class="form-label"><b>Correo</b></label>
+            <input type="email" id="inputEmail" class="form-control" formControlName="email" [ngClass]="{
+              'is-invalid': email.invalid && (email.dirty || email.touched)
+            }">
+            @if(email.getError('required')){
+              <span class="invalid-feedback">Este campo es requerido</span>
+            }
+            @if(email.getError('email')){
+              <span class="invalid-feedback">Tiene que ingresar un correo valido</span>
+            }
+            @if(email.getError('maxlength')){
+              <span class="invalid-feedback">Tiene que ser maximo 255 caracteres</span>
+            }
+          </fieldset>
+        </div>
+      </div>
+      <fieldset class="mb-3">
+        <label for="message" class="form-label"><b>Mensaje</b></label>
+        <textarea id="message" rows="9" class="form-control" formControlName="message"></textarea>
+      </fieldset>
+      <button type="submit" class="btn btn-success px-4">Enviar</button>
+    </form>
+  </div>
+</div>

@@ -32,7 +32,7 @@ export interface Product {
   description: string;
   createAt: Date;
   updateAt: Date;
-  images: Array<imageType>;
+  images: imageType[];
   category: TypeCategory;
   offer: TypeOffer;
 }
@@ -42,7 +42,7 @@ export interface ResponseProducts {
   message: string;
   currentPage: number;
   totalPages: number;
-  data: Array<Product>;
+  data: Product[];
 }
 
 export interface ResponseProduct {

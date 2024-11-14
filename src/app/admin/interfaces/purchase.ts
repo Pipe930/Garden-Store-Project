@@ -1,25 +1,11 @@
 import { DataType } from "@core/enums/dataType.enum";
+import { MethodPaymentEnum } from "@core/enums/method-payment.enum";
+import { StatusPurchaseEnum } from "@core/enums/statusPruchase.enum";
 import { TableColumns } from "@core/interfaces/table";
-
-export enum StatusPurchaseEnum {
-
-  PENDING = 'PENDIENTE',
-  PAID = 'PAGADO',
-  CANCELED = 'CANCELADO'
-}
-
-export enum MethodPaymentEnum {
-
-  CREDIT_CARD = 'Tarjeta de crédito',
-  DEBIT_CARD = 'Tarjeta de débito',
-  PAYPAL = 'Paypal',
-  MERCADO_PAGO = 'Mercado Pago',
-  TRANSFER = 'Transferencia',
-  CASH = 'Efectivo'
-}
 
 interface ProductPurchase {
   idProduct: number;
+  priceUnit: number;
   quantity: number;
 }
 
@@ -32,10 +18,10 @@ export interface Purchase {
   status: string;
   discountsAplicated: number;
   methodPayment: string;
-  invoiveNumber: string;
+  invoiceNumber: string;
   idSupplier: number;
   idEmployee: number;
-  listProducts: ProductPurchase[];
+  products: ProductPurchase[];
 }
 
 export interface ListPurchaseResponse {
@@ -50,13 +36,13 @@ export interface CreatePurchase {
   quantityTotal: number;
   totalPrice: number;
   ivaPrice: number;
-  status: string;
+  status: StatusPurchaseEnum;
   discountsAplicated: number;
-  methodPayment: string;
-  invoiveNumber: string;
+  methodPayment: MethodPaymentEnum;
+  invoiceNumber: string;
   idSupplier: number;
   idEmployee: number;
-  listProducts: ProductPurchase[];
+  products: ProductPurchase[];
 }
 
 export const columnsPurchase: TableColumns[] = [
@@ -82,7 +68,7 @@ export const columnsPurchase: TableColumns[] = [
     header: "Método de pago"
   },
   {
-    fieldName: "actions",
+    fieldName: "action",
     dataType: DataType.ACTION,
     header: "Acciones"
   }

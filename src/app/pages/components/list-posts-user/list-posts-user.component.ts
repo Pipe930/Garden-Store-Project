@@ -9,8 +9,7 @@ import { CardPostComponent } from '@shared/card-post/card-post.component';
   selector: 'app-list-posts-user',
   standalone: true,
   imports: [RouterLink, CardPostComponent],
-  templateUrl: './list-posts-user.component.html',
-  styleUrl: './list-posts-user.component.scss'
+  templateUrl: './list-posts-user.component.html'
 })
 export class ListPostsUserComponent implements OnInit {
 

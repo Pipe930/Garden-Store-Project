@@ -17,6 +17,7 @@
     </div>
   </div>
 
+  <hr>
   <div class="container-fluid">
 
     <div class="row">
@@ -24,6 +25,8 @@
         <div class="col-lg-6">
           <app-card-post [post]="post" [isActionsButtons]="true"/>
         </div>
+      } @empty {
+        <h4 class="text-center py-4">No tienes publicaciones registradas</h4>
       }
     </div>
   </div>

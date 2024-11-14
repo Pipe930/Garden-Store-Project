@@ -5,11 +5,11 @@ import { TableColumns } from "@core/interfaces/table";
 export interface Supplier {
 
   idSupplier: number;
-  name: string;
+  fullName: string;
+  rut: string;
   phone: string;
   email: string;
-  rating: number;
-  website?: string;
+  idAddress: number;
 }
 
 export interface ListSuppliersResponse {
@@ -28,18 +28,18 @@ export interface SupplierResponse {
 
 export interface CreateSupplier {
 
-  name: string;
+  fullName: string;
+  rut: string;
   phone: string;
   email: string;
-  rating: number;
-  website?: string;
+  idAddress: number;
 }
 
 export const columnsSupplier: TableColumns[] = [
 
   {
     dataType: DataType.STRING,
-    fieldName: 'name',
+    fieldName: 'fullName',
     header: 'Nombre',
   },
   {
@@ -54,8 +54,8 @@ export const columnsSupplier: TableColumns[] = [
   },
   {
     dataType: DataType.NUMBER,
-    fieldName: 'rating',
-    header: 'Rating',
+    fieldName: 'rut',
+    header: 'Rut',
   },
   {
     dataType: DataType.ACTION,

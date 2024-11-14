@@ -66,6 +66,10 @@ export class ProductsService {
     return this._http.get<ResponseProducts>(`${this.urlApiProducts}/category/${id_category}`);
   }
 
+  public getAllProductsOffer():Observable<ResponseProducts>{
+    return this._http.get<ResponseProducts>(`${this.urlApiProducts}/offer`);
+  }
+
   private validPage(totalPages: number, currentPage: number):void{
 
     if(currentPage === totalPages){

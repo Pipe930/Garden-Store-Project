@@ -10,8 +10,7 @@ import { CardPostComponent } from '@shared/card-post/card-post.component';
   selector: 'app-list-posts',
   standalone: true,
   imports: [RouterLink, CardPostComponent],
-  templateUrl: './list-posts.component.html',
-  styleUrl: './list-posts.component.scss'
+  templateUrl: './list-posts.component.html'
 })
 export class ListPostsComponent implements OnInit {
 
@@ -23,8 +22,8 @@ export class ListPostsComponent implements OnInit {
 
   public isLoading = signal<boolean>(false);
   public cardsPlaceholder = signal<string[]>(new Array(4).fill(''));
-  public currentPage = signal<number>(1);
-  public totalPages = signal<number>(3);
+  public currentPage = signal<number>(0);
+  public totalPages = signal<number>(0);
   public validSession = signal<boolean>(false);
   public listTags = signal<Tag[]>([]);
   public listPosts = signal<Post[]>([]);

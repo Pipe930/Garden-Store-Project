@@ -1,4 +1,4 @@
-import { StatusPurchaseEnum } from '@admin/interfaces/purchase';
+import { StatusPurchaseEnum } from '@core/enums/statusPruchase.enum';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -56,10 +56,7 @@ export class PurchaseConfirmComponent {
           this._purchaseService.updateStatusPurchase(this.voucherConfirmObject.idSale, this.updateSale).subscribe(() => {
               localStorage.removeItem("voucher");
           });
-
-
         }
-
       })
     });
 

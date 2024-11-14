@@ -14,6 +14,7 @@ import { TransbankService } from '@pages/services/transbank.service';
 import { Branch } from '@admin/interfaces/branch';
 import { PurchaseService } from '@pages/services/purchase.service';
 import { BranchService } from '@admin/services/branch.service';
+import { environment } from '@env/environment.development';
 
 @Component({
   selector: 'app-purchase',
@@ -286,7 +287,7 @@ export class PurchaseComponent implements OnInit {
           buyOrder: uuid.substring(1, 25),
           sessionId: arrayTokenUser![2],
           amount: this.cart().priceTotal,
-          returnUrl: "http://localhost:4200/purchase-confirm"
+          returnUrl: `${environment.domain}/purchase-confirm`,
         }
 
         this._transbankService.createTransationTransbank(transation).subscribe(result => {

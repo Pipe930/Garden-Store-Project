@@ -1,26 +1,27 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { CardComponent } from '@shared/card/card.component';
-import { Product } from '@pages/interfaces/product';
-import { Category } from '@pages/interfaces/category';
-import { ProductsService } from '@pages/services/products.service';
 import { ViewportScroller } from '@angular/common';
-import { SearchComponent } from '@shared/search/search.component';
+import { HttpStatusCode } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
 import { SearchInterface } from '@core/interfaces/search';
+import { Category } from '@pages/interfaces/category';
+import { Product } from '@pages/interfaces/product';
+import { ProductsService } from '@pages/services/products.service';
+import { CardComponent } from '@shared/card/card.component';
+import { SearchComponent } from '@shared/search/search.component';
 
 @Component({
-  selector: 'app-list-products',
+  selector: 'app-list-products-offer',
   standalone: true,
   imports: [CardComponent, SearchComponent],
-  templateUrl: './list-products.component.html',
-  styleUrl: './list-products.component.scss'
+  templateUrl: './list-products-offer.component.html',
+  styleUrl: './list-products-offer.component.scss'
 })
-export class ListProductsComponent implements OnInit {
+export class ListProductsOfferComponent {
 
   private readonly _productsService = inject(ProductsService);
   private readonly _viewportScroller = inject(ViewportScroller);
 
-  public listProducts = signal<Array<Product>>([]);
-  public listCategories = signal<Array<Category>>([]);
+  public listProducts = signal<Product[]>([]);
+  public listCategories = signal<Category[]>([]);
   public currentPage = signal<number>(1);
   public isLoading = signal<boolean>(false);
 
@@ -28,13 +29,18 @@ export class ListProductsComponent implements OnInit {
 
     this._productsService.getAllCategories().subscribe(result => {
       this.listCategories.set(result.data);
-    })
+    });
 
-    this._productsService.getAllProducts();
-    this._productsService.products$.subscribe(result => {
-      this.listProducts.set(result);
+    this._productsService.getAllProductsOffer().subscribe(result => {
+      if(result.statusCode === HttpStatusCode.Ok) this.listProducts.set(result.data);
       this.isLoading.set(true);
     })
+
+    // this._productsService.getAllProducts();
+    // this._productsService.products$.subscribe(result => {
+    //   this.listProducts.set(result);
+    //   this.isLoading.set(true);
+    // })
   }
 
   public nextPage():void{

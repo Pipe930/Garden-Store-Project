@@ -150,6 +150,14 @@ export const navbarData: Array<Sidenav> = [
       {
         routerLink: "posts/list",
         label: "Publicaciones y Etiquetas"
+      },
+      {
+        routerLink: "posts/post/create",
+        label: "Crear Publicación"
+      },
+      {
+        routerLink: "posts/tag/create",
+        label: "Crear Etiqueta"
       }
     ]
   }

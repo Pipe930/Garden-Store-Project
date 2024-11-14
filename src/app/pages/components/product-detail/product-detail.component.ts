@@ -1,10 +1,10 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, signal, Signal, viewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { Product, productJson } from '@pages/interfaces/product';
 import { ProductsService } from '@pages/services/products.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '@core/services/session.service';
 import { AlertService } from '@core/services/alert.service';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, ViewportScroller } from '@angular/common';
 import { register } from 'swiper/element';
 import { CartService } from '@pages/services/cart.service';
 import { environment } from '@env/environment.development';
@@ -21,29 +21,27 @@ register();
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss'
 })
-export class ProductDetailComponent {
+export class ProductDetailComponent implements OnInit {
 
   private readonly _productsService = inject(ProductsService);
-  private readonly _activated = inject(ActivatedRoute);
+  private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _cartService = inject(CartService);
   private readonly _router = inject(Router);
   private readonly _sessionService = inject(SessionService);
   private readonly _alertService = inject(AlertService);
+  private readonly _viewportScroller = inject(ViewportScroller);
 
-  public swiperElement: Signal<ElementRef> = viewChild.required("swiper");
+  public swiperElement = viewChild.required<ElementRef>("swiper");
 
-  private slug = "";
   public urlImage = signal<string>("");
   public product = signal<Product>(productJson);
-  public productList = signal<Array<Product>>([]);
+  public productList = signal<Product[]>([]);
   public quantity = signal<number>(1);
+  private slug = this._activatedRoute.snapshot.params["slug"];
 
   ngOnInit(): void {
 
-    this._activated.params.subscribe(params => {
-      this.slug = params["slug"];
-    });
-
+    this._viewportScroller.scrollToPosition([0, 0]);
     this._productsService.getProduct(this.slug).subscribe(result => {
       this.product.set(result.data);
       this.loadImages(result.data);
@@ -86,7 +84,6 @@ export class ProductDetailComponent {
 
   public addCart(id_product: number):void{
 
-
     if(!this._sessionService.validSession()){
 
       this._alertService.info("Debes Inciar Sesion", "Para poder agregar productos al carrito inicia sesion");
@@ -108,7 +105,7 @@ export class ProductDetailComponent {
 
       this._alertService.toastSuccess("El producto se agrego al carrito");
       this._router.navigate(["/cart"]);
-    }, (error) => {
+    }, () => {
       this._alertService.error("Error", "No se agrego el producto al carrito");
     })
 

@@ -12,6 +12,8 @@ import { PostDetailComponent } from './components/post-detail/post-detail.compon
 import { ListPostsUserComponent } from './components/list-posts-user/list-posts-user.component';
 import { CreatePostUserComponent } from './components/create-post-user/create-post-user.component';
 import { UpdatePostUserComponent } from './components/update-post-user/update-post-user.component';
+import { ListProductsOfferComponent } from './components/list-products-offer/list-products-offer.component';
+import { ContactComponent } from './components/contact/contact.component';
 
 export const routesPages: Routes = [
 
@@ -27,6 +29,10 @@ export const routesPages: Routes = [
       {
         path: "products",
         component: ListProductsComponent
+      },
+      {
+        path: "products/offer",
+        component: ListProductsOfferComponent
       },
       {
         path: "product/:slug",
@@ -59,6 +65,10 @@ export const routesPages: Routes = [
       {
         path: "detail-blog/:slug",
         component: PostDetailComponent
+      },
+      {
+        path: "contact",
+        component: ContactComponent
       },
       {
         path: "manage-posts",

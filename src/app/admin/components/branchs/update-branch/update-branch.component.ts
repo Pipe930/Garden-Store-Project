@@ -73,7 +73,6 @@ export class UpdateBranchComponent implements OnInit {
   }
 
   public createProductBranch(): void {
-    console.log(this.createProductBranchForm.value);
 
     if(this.createProductBranchForm.invalid){
       this.createProductBranchForm.markAllAsTouched();

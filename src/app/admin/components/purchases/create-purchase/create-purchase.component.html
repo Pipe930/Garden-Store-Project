@@ -1,1 +1,169 @@
-<p>create-purchase works!</p>
+@let optionsStatusVar = optionsStatus();
+@let optionsMethodPaymentVar = optionsMethodPayment();
+@let listEmployeesVar = listEmployees();
+@let listSuppliersVar = listSuppliers();
+@let listProductsVar = listProducts();
+
+<div class="container__container-title">
+  <h2 class="container__container-title">Crear Compra</h2>
+  <button class="container__btn btn btn-primary" [routerLink]="['/admin/purchases/list']">Volver</button>
+</div>
+
+<div class="container__container-form">
+  <form novalidate class="container-form__form" [formGroup]="createPurchaseForm" (ngSubmit)="createPurchase()">
+
+    <div class="container-fluid">
+      <div class="mb-3">
+        <label for="invoiceNumberInput" class="form-label">Numero de Factura</label>
+        <input type="text" class="form-control form__input" id="invoiceNumberInput" formControlName="invoiceNumber" [ngClass]="{
+          'is-invalid': invoiceNumber.invalid && (invoiceNumber.dirty || invoiceNumber.touched)
+        }">
+        @if(invoiceNumber.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+      </div>
+      <div class="row">
+        <div class="mb-3 col">
+          <label for="quantityTotalInput" class="form-label">Cantidad Total</label>
+          <input type="number" class="form-control form__input" id="quantityTotalInput" formControlName="quantityTotal" [ngClass]="{
+            'is-invalid': quantityTotal.invalid && (quantityTotal.dirty || quantityTotal.touched)
+          }">
+          @if(quantityTotal.getError("required")){
+            <span class="invalid-feedback">Este campo es requerido</span>
+          }
+          @if(quantityTotal.getError("min")){
+            <span class="invalid-feedback">Tiene que ser minimo 1 producto</span>
+          }
+        </div>
+        <div class="mb-3 col">
+          <label for="totalPriceInput" class="form-label">Precio Total Pagado</label>
+          <input type="number" class="form-control form__input" id="totalPriceInput" formControlName="totalPrice" [ngClass]="{
+            'is-invalid': totalPrice.invalid && (totalPrice.dirty || totalPrice.touched)
+          }">
+          @if(totalPrice.getError("required")){
+            <span class="invalid-feedback">Este campo es requerido</span>
+          }
+          @if(totalPrice.getError("min")){
+            <span class="invalid-feedback">Tiene que ser minimo $1000 pesos</span>
+          }
+        </div>
+      </div>
+      <div class="mb-3 d-flex flex-column">
+        <label class="form-label">Estado del Pago</label>
+        @for (option of optionsStatusVar; track $index) {
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" [id]="'optionRadio' + $index" formControlName="status" [value]="option">
+            <label class="form-check-label" [for]="'optionRadio' + $index">
+              {{option | titlecase}}
+            </label>
+          </div>
+        }
+      </div>
+      <div class="mb-3">
+        <label for="discountsAplicatedInput" class="form-label">Descuento Aplicado</label>
+        <input type="number" class="form-control form__input" id="discountsAplicatedInput" formControlName="discountsAplicated" [ngClass]="{
+          'is-invalid': discountsAplicated.invalid && (discountsAplicated.dirty || discountsAplicated.touched)
+        }">
+        @if(discountsAplicated.getError("required")){
+          <span class="invalid-feedback">Este campo es requerido</span>
+        }
+        @if(discountsAplicated.getError("min")){
+          <span class="invalid-feedback">Tiene que ser minimo 0</span>
+        }
+      </div>
+      <div class="input-group mb-3">
+        <label for="description" class="input-group-text">Metodo de Pago</label>
+        <select class="form-select" formControlName="methodPayment">
+          @for (method of optionsMethodPaymentVar; track $index) {
+            <option [value]="method">{{method}}</option>
+          }
+        </select>
+      </div>
+      <div class="input-group mb-3">
+        <label for="description" class="input-group-text">Empleado</label>
+        <select class="form-select" formControlName="idEmployee">
+          @for (employee of listEmployeesVar; track $index) {
+            <option [value]="employee.idEmployee">{{employee.firstName}} {{employee.lastName}}</option>
+          }
+        </select>
+      </div>
+      <div class="input-group mb-3">
+        <label for="description" class="input-group-text">Proveedor</label>
+        <select class="form-select" formControlName="idSupplier">
+          @for (supplier of listSuppliersVar; track $index) {
+            <option [value]="supplier.idSupplier">{{supplier.fullName}}</option>
+          }
+        </select>
+      </div>
+      <section class="container-information__container-card">
+        <article class="card border-secondary">
+          <div class="card-header d-flex justify-content-between align-content-center">
+            <h5 class="card-title">Productos</h5>
+            <button class="btn btn-success" type="button" (click)="addProductForm()">Agregar Producto</button>
+          </div>
+          <div class="list-group">
+            <div formArrayName="products" class="container-fluid pt-4">
+              @for (control of productsArray.controls; track $index) {
+                <div class="row" [formGroupName]="$index">
+                  <div class="col align-content-center">
+                    <select class="form-select" formControlName="idProduct" [ngClass]="{
+                      'is-invalid': control.get('idProduct')?.invalid && control.get('idProduct')?.touched
+                    }">
+                      @for (product of listProductsVar; track $index) {
+                        <option value="{{product.idProduct}}">{{product.title}}</option>
+                      }
+                    </select>
+                    @if(control.get('idProduct')?.invalid && control.get('idProduct')?.touched){
+                      <span class="invalid-feedback">Este campo es requerido</span>
+                    }
+                  </div>
+                  <div class="col">
+                    <div class="form-floating mb-3">
+                      <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com" formControlName="priceUnit" [ngClass]="{
+                        'is-invalid': control.get('priceUnit')?.invalid && control.get('priceUnit')?.touched
+                      }">
+                      <label for="floatingInput">Precio Unitario</label>
+
+                      @if(control.get('priceUnit')?.getError('required')){
+                        <span class="invalid-feedback">Este campo es requerido</span>
+                      }
+                      @if(control.get('priceUnit')?.getError('min')){
+                        <span class="invalid-feedback">Tiene que ser un valor positivo</span>
+                      }
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-floating mb-3">
+                      <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com" formControlName="quantity" [ngClass]="{
+                        'is-invalid': control.get('quantity')?.invalid && control.get('quantity')?.touched
+                      }">
+                      <label for="floatingInput">Cantidad</label>
+
+                      @if(control.get('quantity')?.getError('required')){
+                        <span class="invalid-feedback">Este campo es requerido</span>
+                      }
+                      @if(control.get('quantity')?.getError('min')){
+                        <span class="invalid-feedback">Tiene que ser un valor positivo</span>
+                      }
+                    </div>
+                  </div>
+                  <div class="col-auto align-content-center">
+                    <button type="button" class="btn btn-danger" (click)="removeProductForm($index)">
+                      <i class='bx bxs-trash'></i>
+                    </button>
+                  </div>
+                </div>
+              }
+              @if(createPurchaseForm.get('products')?.hasError('duplicateProduct')){
+                <p class="text-danger">No pueden haber productos repetidos en la lista</p>
+              }
+            </div>
+          </div>
+        </article>
+      </section>
+      <button type="submit" class="form__btn-create btn btn-success" [disabled]="createPurchaseForm.invalid">
+        Guardar
+      </button>
+    </div>
+  </form>
+</div>

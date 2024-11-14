@@ -1,7 +1,5 @@
 @let alertMessageVar = alertMessage();
-@let calificationValueVar = calificationValue();
-@let tooltipVisibleVar = tooltipVisible();
-
+@let listAddressVar = listAddress();
 
 <div class="container__container-title">
   <h2 class="container__container-title">Crear Proveedor</h2>
@@ -20,18 +18,33 @@
     }
     <div class="mb-3">
       <label for="nameInput" class="form-label">Nombre Proveedor</label>
-      <input type="text" class="form-control form__input" id="nameInput" formControlName="name" [ngClass]="{
-        'is-invalid': name.invalid && (name.dirty || name.touched)
+      <input type="text" class="form-control form__input" id="nameInput" formControlName="fullName" [ngClass]="{
+        'is-invalid': fullName.invalid && (fullName.dirty || fullName.touched)
       }">
-      @if(name.getError("required")){
+      @if(fullName.getError("required")){
         <span class="invalid-feedback">Este campo es requerido</span>
       }
-      @if(name.getError("minlength")){
+      @if(fullName.getError("minlength")){
         <span class="invalid-feedback">Tiene que tener un minimo de 4 caracteres</span>
       }
-      @if(name.getError("maxlength")){
+      @if(fullName.getError("maxlength")){
         <span class="invalid-feedback">Tiene que tener un maximo de 100 caracteres</span>
       }
+    </div>
+    <div class="mb-3">
+      <label for="rutInput" class="form-label">Rut</label>
+      <input type="text" id="rutInput" class="form-control" formControlName="rut" [ngClass]="{
+        'is-invalid': rut.invalid && (rut.dirty || rut.touched)
+      }">
+      @if(rut.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(rut.getError("pattern")){
+        <span class="invalid-feedback">Tiene que ingresar un rut valido</span>
+      }
+      <div id="passwordHelpBlock" class="form-text">
+        Ingrese su rut sin puntos y con guion
+      </div>
     </div>
     <div class="mb-3">
       <label for="phone" class="form-label">Telefono</label>
@@ -63,32 +76,14 @@
         <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
       }
     </div>
-    <div class="mb-3 position-relative">
-      <label for="calification" class="form-label">Calificación</label>
-      <input
-        type="range"
-        class="form-range custom-range"
-        min="0"
-        max="5"
-        step="0.1"
-        id="calification"
-        formControlName="rating"
-        [value]="calificationValueVar"
-        (mouseover)="showTooltip()"
-        (mouseout)="hideTooltip()"
-        (input)="updateTooltipPosition($event)"
-      />
-      <span
-        class="range-tooltip"
-        [style.display]="tooltipVisibleVar ? 'block' : 'none'"
-        [style.left.%]="calificationValueVar * 20"
-      >
-        {{ calificationValueVar }}
-      </span>
-    </div>
-    <div class="mb-3">
-      <label for="nameInput" class="form-label">Sitio Web (Opcional)</label>
-      <input type="url" class="form-control form__input" id="nameInput" formControlName="website">
+    <div class="input-group mb-3">
+      <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#createAddressModal">Crear Direccion</button>
+      <label for="description" class="input-group-text">Direccion</label>
+      <select class="form-select" formControlName="idAddress">
+        @for (address of listAddressVar; track $index) {
+          <option [value]="address.idAddress">{{address.addressName}}</option>
+        }
+      </select>
     </div>
     <button type="submit" class="form__btn-create btn btn-success" [disabled]="updateSupplierForm.invalid">
       Guardar

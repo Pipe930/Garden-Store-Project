@@ -15,8 +15,7 @@ import { PostService } from '@pages/services/post.service';
   selector: 'app-post-detail',
   standalone: true,
   imports: [DatePipe, ReactiveFormsModule, NgClass, TitleCasePipe],
-  templateUrl: './post-detail.component.html',
-  styleUrl: './post-detail.component.scss'
+  templateUrl: './post-detail.component.html'
 })
 export class PostDetailComponent implements OnInit {
 
