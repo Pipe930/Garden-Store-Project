@@ -160,5 +160,16 @@ export const navbarData: Array<Sidenav> = [
         label: "Crear Etiqueta"
       }
     ]
+  },
+  {
+    routerLink: "orders",
+    icon: "bx bxs-package",
+    label: "Pedidos",
+    items: [
+      {
+        routerLink: "orders/list",
+        label: "Lista Pedidos"
+      }
+    ]
   }
 ]

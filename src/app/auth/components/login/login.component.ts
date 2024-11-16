@@ -70,6 +70,10 @@ export class LoginComponent {
         return;
       }
 
+      this._authService.getRolesUser().subscribe((response) => {
+        sessionStorage.setItem('roles', JSON.stringify(response.data));
+      });
+
       this._alertService.success("Inicio de sesion exitoso", "Bienvenido");
       this._router.navigate(['/']);
     })
@@ -97,8 +101,23 @@ export class LoginComponent {
     ).subscribe(() => {
 
       this._alertService.success("Verificación exitosa", "La verifucación ha sido exitosa");
+      this._authService.getRolesUser().subscribe((response) => {
+        sessionStorage.setItem('roles', JSON.stringify(response.data));
+      });
       this._router.navigate(['/admin/dashboard']);
     });
+  }
+
+  public resendOTP(): void {
+
+    this._authService.resendOTP({ idUser: this.idUser }).pipe(
+      catchError(() => {
+          this._alertService.error("Error al reenviar", "No se ha podido reenviar el código de verificación");
+          return EMPTY;
+      })
+    ).subscribe(() => {
+        this._alertService.success("Código reenviado", "Se ha reenviado un código de verificación a tu correo");
+    })
   }
 
   onInput(event: Event, index: number) {

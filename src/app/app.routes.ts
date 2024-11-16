@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '@core/guards/auth.guard';
+import { hasRoleGuard } from '@core/guards/has-role.guard';
 
 export const routes: Routes = [
 
@@ -12,7 +14,9 @@ export const routes: Routes = [
   },
   {
     path: "admin",
-    loadChildren: () => import("./admin/admin.routes").then(m => m.routesAdmin)
+    loadChildren: () => import("./admin/admin.routes").then(m => m.routesAdmin),
+    canActivate: [authGuard, hasRoleGuard],
+    data: { roles: ["administrador"] }
   },
   {
     path: "**",

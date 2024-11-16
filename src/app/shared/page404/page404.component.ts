@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Location } from '@angular/common';
+import { Component, inject } from '@angular/core';
 
 @Component({
   selector: 'app-page404',
   standalone: true,
-  imports: [RouterLink],
+  imports: [],
   template: `
   <div class="container-fluid container-page">
     <div class="container__fluid">
       <h2 class="fluid__title">404 | Pagina no Encontrada</h2>
       <div class="fluid__container-btn">
-        <button class="btn btn-success" [routerLink]="['/']">Volver al Inicio</button>
+        <button class="btn btn-success" (click)="goBack()">Volver al Inicio</button>
       </div>
     </div>
   </div>
@@ -45,5 +45,17 @@ import { RouterLink } from '@angular/router';
   ]
 })
 export class Page404Component {
+
+  private readonly _location = inject(Location);
+
+  public goBack(): void {
+
+    if(window.history.length > 1){
+      this._location.back();
+      return;
+    };
+
+    window.location.href = '/';
+  }
 
 }

@@ -6,7 +6,7 @@ import { Cart, cartJson } from '@pages/interfaces/cart';
 import { AddressService } from '@pages/services/address.service';
 import { Address, addressObject, CreateAddress } from '@pages/interfaces/address';
 import { Commune, Province, Region } from '@pages/interfaces/locates';
-import { CreateVoucher, TransationTransbank, TypePaimentEnum, TypeRetirementEnum, Voucher, VoucherConfirm, VoucherObject } from '@pages/interfaces/purchase';
+import { CreateVoucher, TransationTransbank, TypeRetirementEnum, Voucher, VoucherConfirm, VoucherObject } from '@pages/interfaces/purchase';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common';
 import { SessionService } from '@core/services/session.service';
@@ -54,9 +54,6 @@ export class PurchaseComponent implements OnInit {
   public activeSelectedAddress: boolean = false;
   public activeErrorNumber: boolean = false;
 
-  public creditCard: string = TypePaimentEnum.CREDIT_CARD;
-  public debitCard: string = TypePaimentEnum.DEBIT_CARD;
-  public marketPayment: string = TypePaimentEnum.MARKET_PAYMENT;
   public retirementStorePickup: string = TypeRetirementEnum.STORE_PICKUP;
   public retirementHomeDelivery: string = TypeRetirementEnum.HOME_DELIVERY;
 
@@ -329,7 +326,7 @@ export class PurchaseComponent implements OnInit {
             }
 
             localStorage.setItem("voucher", JSON.stringify(newVoucherObject));
-          })
+          });
 
           let form = document.createElement("form");
           form.method = "POST";

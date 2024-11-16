@@ -5,6 +5,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ConfirmTransbank, TransbankInfo, TypeRetirementEnum, TypeStatusTransbankEnum, UpdateVoucher, VoucherConfirm } from '@pages/interfaces/purchase';
 import { PurchaseService } from '@pages/services/purchase.service';
 import { TransbankService } from '@pages/services/transbank.service';
+import { MethodPaymentEnum } from '@core/enums/method-payment.enum';
 
 @Component({
   selector: 'app-purchase-confirm',
@@ -40,6 +41,7 @@ export class PurchaseConfirmComponent {
             this.updateSale = {
 
               status: StatusPurchaseEnum.PAID,
+              methodPayment: this.typeCard(),
               shipping: {
                 informationShipping: "Envio para cliente a domicilio",
                 shippingCost: 0,
@@ -49,7 +51,8 @@ export class PurchaseConfirmComponent {
           } else if(this.voucherConfirmObject.typeRetirement === TypeRetirementEnum.STORE_PICKUP){
 
             this.updateSale = {
-              status: StatusPurchaseEnum.PAID
+              status: StatusPurchaseEnum.PAID,
+              methodPayment: this.typeCard(),
             }
           }
 
@@ -67,13 +70,13 @@ export class PurchaseConfirmComponent {
     let typeCard = "";
 
     if(this.transbankInfo.payment_type_code === 'VD'){
-        typeCard = "Débito";
+        typeCard = MethodPaymentEnum.DEBIT_CARD;
     }else if(this.transbankInfo.payment_type_code === 'BV' || this.transbankInfo.payment_type_code === 'VC'
             || this.transbankInfo.payment_type_code === 'YES' || this.transbankInfo.payment_type_code === 'S2'
             || this.transbankInfo.payment_type_code === 'NC' || this.transbankInfo.payment_type_code === 'VN'){
-        typeCard = "Crédito";
+        typeCard = MethodPaymentEnum.CREDIT_CARD;
     }else if(this.transbankInfo.payment_type_code === 'PV'){
-        typeCard = "Débito Prepago";
+        typeCard = MethodPaymentEnum.TRANSFER;
     }
 
     return typeCard;

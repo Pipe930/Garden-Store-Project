@@ -3,7 +3,6 @@ import { HomeComponent } from './components/home/home.component';
 import { ListProductsComponent } from './components/list-products/list-products.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { CartComponent } from './components/cart/cart.component';
-import { authenticationGuard } from '../core/guards/authentication.guard';
 import { PurchaseComponent } from './components/purchase/purchase.component';
 import { PurchaseConfirmComponent } from './components/purchase-confirm/purchase-confirm.component';
 import { AccountComponent } from './components/account/account.component';
@@ -14,6 +13,7 @@ import { CreatePostUserComponent } from './components/create-post-user/create-po
 import { UpdatePostUserComponent } from './components/update-post-user/update-post-user.component';
 import { ListProductsOfferComponent } from './components/list-products-offer/list-products-offer.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { authGuard } from '@core/guards/auth.guard';
 
 export const routesPages: Routes = [
 
@@ -41,22 +41,22 @@ export const routesPages: Routes = [
       {
         path: "cart",
         component: CartComponent,
-        canActivate: [authenticationGuard]
+        canActivate: [authGuard]
       },
       {
         path: "purchase",
         component: PurchaseComponent,
-        canActivate: [authenticationGuard]
+        canActivate: [authGuard]
       },
       {
         path: "purchase-confirm",
         component: PurchaseConfirmComponent,
-        canActivate: [authenticationGuard]
+        canActivate: [authGuard]
       },
       {
         path: "account",
         component: AccountComponent,
-        canActivate: [authenticationGuard]
+        canActivate: [authGuard]
       },
       {
         path: "blog",
@@ -86,8 +86,7 @@ export const routesPages: Routes = [
             component: UpdatePostUserComponent
           }
         ],
-        canActivate: [authenticationGuard]
-
+        canActivate: [authGuard]
       }
     ]
   }

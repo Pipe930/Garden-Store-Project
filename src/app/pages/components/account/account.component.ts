@@ -134,6 +134,7 @@ export class AccountComponent {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Si, eliminar",
+      cancelButtonText: "No, Cancelar"
     }).then((result) => {
       if (result.isConfirmed) {
         this._profileService.deleteAccount(this.deleteAccountForm.value).subscribe(() => {
@@ -155,6 +156,7 @@ export class AccountComponent {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Si, eliminar",
+      cancelButtonText: "No, Cancelar"
     }).then((result) => {
       if (result.isConfirmed) {
         this._addressService.deleteAddress(idAddress).subscribe(() => {
@@ -204,6 +206,7 @@ export class AccountComponent {
       this.updateFormAddress.get("name")?.setValue(result.data.name);
       this.updateFormAddress.get("addressName")?.setValue(result.data.address.addressName);
       this.updateFormAddress.get("numDepartment")?.setValue(result.data.address.numDepartment);
+      this.updateFormAddress.get("description")?.setValue(result.data.address.description);
       this.updateFormAddress.get("city")?.setValue(result.data.address.city);
       this.updateFormAddress.updateValueAndValidity();
 

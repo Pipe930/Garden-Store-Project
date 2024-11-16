@@ -1,0 +1,11 @@
+@let listOrdersVar = listOrders();
+@let columnsOrderVar = columnsOrder();
+@let isLoadingVar = isLoading();
+
+<div class="container__container-title">
+  <h2 class="container__title">Pedidos</h2>
+  <!-- <button class="container__btn btn btn-success" [routerLink]="['/admin/employees/create']">
+    Crear Empleado
+  </button> -->
+</div>
+<app-table [messageNoContent]="'pedidos'" [dataRows]="listOrdersVar" [tableColumns]="columnsOrderVar" [showActionButton]="true" (eventEdit)="editOrder($event)" [isLoading]="isLoadingVar"></app-table>

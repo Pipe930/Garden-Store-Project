@@ -58,12 +58,6 @@ export enum TypeStatusTransbankEnum {
   FAILED = 'FAILED'
 }
 
-export enum TypePaimentEnum {
-  DEBIT_CARD = 'debit-card',
-  CREDIT_CARD = 'credit-card',
-  MARKET_PAYMENT = 'market-payment'
-}
-
 export interface TransationTransbank {
 
   buyOrder: string;
@@ -142,6 +136,7 @@ export interface Shipping {
 export interface UpdateVoucher {
 
   status: string;
+  methodPayment: string;
   shipping?: Shipping;
 }
 

@@ -70,7 +70,10 @@
               }
             </div>
           </div>
-          <button type="button" (click)="sendOTP()" class="btn btn-primary" data-bs-dismiss="modal">Enviar Codigo</button>
+          <div class="container-fluid d-flex justify-content-between">
+            <button type="button" (click)="sendOTP()" class="btn btn-success" data-bs-dismiss="modal">Enviar Codigo</button>
+            <button type="button" (click)="resendOTP()" class="btn btn-primary" data-bs-dismiss="modal">Reenviar Codigo</button>
+          </div>
         </form>
       </div>
     </div>

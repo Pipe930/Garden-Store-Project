@@ -3,10 +3,11 @@ import { inject, Injectable } from '@angular/core';
 import { FormRegister, RegisterResponse } from '@auth/interfaces/register';
 import { map, Observable } from 'rxjs';
 import { environment } from '@env/environment.development';
-import { FormLogin, LoginAdminResponse, LoginResponse, RefreshTokenResponse } from '@auth/interfaces/login';
+import { FormLogin, LoginResponse, RefreshTokenResponse } from '@auth/interfaces/login';
 import { ForgotPasswordResponse, FormForgotPassword, FormForgotPasswordConfirm } from '@auth/interfaces/forgot-password';
 import { ActivateAccountInterface, ResponseActivateAccount } from '@auth/interfaces/activate';
-import { VerifyOTPInterface } from '@admin/interfaces/user';
+import { ResendOTPInterface, VerifyOTPInterface } from '@admin/interfaces/user';
+import { ListRoleResponse } from '@admin/interfaces/role';
 
 @Injectable({
   providedIn: 'root'
@@ -34,8 +35,12 @@ export class AuthService {
     );
   }
 
+  public getRolesUser(): Observable<ListRoleResponse>{
+    return this._http.get<ListRoleResponse>(`${this.urlApi}/roles/user`);
+  }
+
   public verifyOTP(verifyOtp: VerifyOTPInterface):Observable<LoginResponse>{
-    return this._http.post<LoginResponse>(`${this.urlApi}/verifyOTP`, verifyOtp)    .pipe(
+    return this._http.post<LoginResponse>(`${this.urlApi}/verifyOTP`, verifyOtp).pipe(
       map((response) => {
 
         if(response && 'accessToken' in response.data && 'refreshToken' in response.data){
@@ -45,6 +50,10 @@ export class AuthService {
         return response;
       })
     );;
+  }
+
+  public resendOTP(resendOTP: ResendOTPInterface):Observable<any>{
+    return this._http.post(`${this.urlApi}/resendOTP`, resendOTP);
   }
 
   public forgotPassword(formForgotPassword: FormForgotPassword): Observable<ForgotPasswordResponse>{

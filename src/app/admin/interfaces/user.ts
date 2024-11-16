@@ -43,8 +43,11 @@ export interface CreateUserForm {
 }
 
 export interface VerifyOTPInterface {
-
   otp: string;
+  idUser: number;
+}
+
+export interface ResendOTPInterface {
   idUser: number;
 }
 

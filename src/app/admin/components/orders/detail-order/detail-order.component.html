@@ -1,0 +1,63 @@
+<div class="container__container-title">
+  <h2 class="container__container-title">Información de Envio</h2>
+  <button class="container__btn btn btn-primary" [routerLink]="['/admin/orders/list']">Volver</button>
+</div>
+
+<div class="container__container-form">
+  <form novalidate class="container-form__form" [formGroup]="updateShippingForm" (ngSubmit)="updateShipping()">
+
+    <div class="mb-3">
+      <label for="informationShippingInput" class="form-label">Informacion de Envio</label>
+      <input type="text" class="form-control form__input" id="informationShippingInput" formControlName="informationShipping" [ngClass]="{
+        'is-invalid': informationShipping.invalid && (informationShipping.dirty || informationShipping.touched)
+      }">
+      @if(informationShipping.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(informationShipping.getError("minlength")){
+        <span class="invalid-feedback">Tiene que tener un minimo de 4 caracteres</span>
+      }
+      @if(informationShipping.getError("maxlength")){
+        <span class="invalid-feedback">Tiene que tener un maximo de 100 caracteres</span>
+      }
+    </div>
+    <div class="input-group mb-3">
+      <label class="input-group-text" for="inputGroupSelect01">Estado</label>
+      <select class="form-select" id="inputGroupSelect01" formControlName="status">
+        <option selected>Seleccionar...</option>
+        @for (status of listStatusShipping(); track $index) {
+          <option [value]="status">{{status}}</option>
+        }
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="shippingDateInput" class="form-label">Fecha de Envio</label>
+      <input type="datetime" class="form-control form__input" id="shippingDateInput" formControlName="shippingDate">
+    </div>
+    <div class="mb-3">
+      <label for="deliveryDateInput" class="form-label">Fecha de Entrega</label>
+      <input type="datetime" class="form-control form__input" id="deliveryDateInput" formControlName="deliveryDate">
+    </div>
+    <div class="mb-3">
+      <label for="trackingNumberInput" class="form-label">Numero de Factura</label>
+      <input type="text" class="form-control form__input" id="trackingNumberInput" formControlName="trackingNumber" [ngClass]="{
+        'is-invalid': trackingNumber.invalid && (trackingNumber.dirty || trackingNumber.touched)
+      }">
+    </div>
+    <div class="mb-3">
+      <label for="shippingCostInput" class="form-label">Costo de Envio</label>
+      <input type="number" class="form-control form__input" id="shippingCostInput" formControlName="shippingCost" [ngClass]="{
+        'is-invalid': shippingCost.invalid && (shippingCost.dirty || shippingCost.touched)
+      }">
+      @if(shippingCost.getError("required")){
+        <span class="invalid-feedback">Este campo es requerido</span>
+      }
+      @if(shippingCost.getError("min")){
+        <span class="invalid-feedback">El costo minimo es 0 pesos</span>
+      }
+    </div>
+    <button type="submit" class="form__btn-create btn btn-success" [disabled]="updateShippingForm.invalid">
+      Guardar
+    </button>
+  </form>
+</div>

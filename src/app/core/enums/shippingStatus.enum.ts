@@ -1,0 +1,6 @@
+export enum ShippingStatusEnum {
+  PREPARATION = 'PREPARANDO',
+  PENDING = 'PENDIENTE',
+  SHIPPED = 'ENVIADO',
+  DELIVERED = 'ENTREGADO'
+}

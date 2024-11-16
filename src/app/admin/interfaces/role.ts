@@ -1,11 +1,12 @@
 import { DataType } from "@core/enums/dataType.enum";
 import { TableColumns } from "@core/interfaces/table";
+import { Permission } from "./permission";
 
 
 export interface Role {
   idRole: number;
   name: string;
-  permissions: any[];
+  permissions: Permission[];
 }
 
 export interface ListRoleResponse {
