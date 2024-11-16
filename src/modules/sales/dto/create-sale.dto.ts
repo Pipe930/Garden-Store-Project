@@ -1,6 +1,6 @@
 import { IsEnum, IsNumber, IsOptional, IsPositive, Min } from "class-validator";
+import { MethodPaymentEnum } from "src/core/enums/statusPurchase.enum";
 import { WithdrawalEnum } from "src/core/enums/statusShipping.enum";
-
 
 export class CreateSaleDto {
 

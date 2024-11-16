@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, UseGuards, Req, Put } from '@nestjs/common';
+import { Body, Controller, Post, Get, UseGuards, Req, Put, Param, ParseIntPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthGuard } from 'src/core/guards/auth.guard';
@@ -27,6 +27,12 @@ export class AuthController {
     @Post('login')
     login(@Body() loginUserDto: LoginUserDto){
         return this.authService.login(loginUserDto);
+    }
+
+    @Get('roles/user')
+    @UseGuards(AuthGuard)
+    getRolesUser(@Req() request: RequestJwt){
+        return this.authService.findOneUserRoles(request.user.idUser);
     }
 
     @Get('profile')

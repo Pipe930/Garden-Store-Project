@@ -103,6 +103,19 @@ export class AuthService {
         };
     }
 
+    async findOneUserRoles(idUser: number): Promise<ResponseData>{
+
+        const roles = await this.usersService.getUserRoles(idUser);
+    
+        if(roles.length === 0) return { message: "El usuario no tiene roles asignados", statusCode: HttpStatus.NO_CONTENT }
+        
+        return {
+            statusCode: HttpStatus.OK,
+            data: roles
+        };
+    
+    }
+
     async verifyOTP(verifyOTP: VerifyOtpDto): Promise<ResponseData>{
         
         const { otp, idUser } = verifyOTP;
@@ -114,8 +127,8 @@ export class AuthService {
         });
 
         if(!OTPfind) throw new NotFoundException("Este usuario no tiene un OTP");
-        if(new Date().getTime() > OTPfind.expiresAt.getTime()) throw new BadRequestException("El OTP a expirado");
-        if(!this.passwordService.checkPassword(otp, OTPfind.otp)) throw new BadRequestException("El OTP no es valido");
+        if(new Date().getTime() > OTPfind.expiresAt.getTime()) throw new BadRequestException("El codigo de verificación a expirado");
+        if(!this.passwordService.checkPassword(otp, OTPfind.otp)) throw new BadRequestException("El codigo de verificación no es valido");
 
         await OTPfind.destroy();
 

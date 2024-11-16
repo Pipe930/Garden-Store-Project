@@ -8,17 +8,16 @@ import { Sale } from '../sales/models/sale.model';
 
 @Injectable()
 export class ShippingsService {
+
   async create(createShippingDto: CreateShippingDto): Promise<ResponseData> {
 
-    const { informationShipping, shippingCost, withdrawal, idAddress } = createShippingDto;
+    const { informationShipping, shippingCost, idAddress } = createShippingDto;
 
     try {
 
       const newShipping = await Shipping.create({
         informationShipping,
         shippingCost,
-        status: ShippingStatusEnum.PREPARATION,
-        withdrawal,
         idAddress
       })
 
@@ -33,23 +32,52 @@ export class ShippingsService {
     }
   }
 
-  async updateStateShipping(idShipping: number, shippingStatusDto: UpdateShippingDto): Promise<ResponseData> {
+  async findAll(): Promise<ResponseData> {
+
+    const shippings = await Shipping.findAll();
+
+    if(shippings.length === 0) return { message: "No tenemos publicaciones registrados", statusCode: HttpStatus.NO_CONTENT }
+
+    return {
+      data: shippings,
+      statusCode: HttpStatus.OK
+    };
+  }
+
+  async findOne(idShipping: string): Promise<ResponseData> {
+
+    const shipping = await Shipping.findByPk(idShipping);
+
+    if(!shipping) throw new NotFoundException("No se encontro el envio");
+
+    return {
+      data: shipping,
+      statusCode: HttpStatus.OK
+    };
+  }
+
+  async updateStateShipping(idShipping: string, shippingStatusDto: UpdateShippingDto): Promise<ResponseData> {
+
+    const { status, informationShipping, shippingCost } = shippingStatusDto;
+
+    const sale = await Sale.findByPk(idShipping);
+    const shipping = await Shipping.findByPk(idShipping);
+
+    if(!shipping) throw new NotFoundException("No se encontro el envio");
+    if(!sale) throw new NotFoundException("No se encontro el envio");
+    if(sale.statusOrder === ShippingStatusEnum.DELIVERED) throw new BadRequestException("El envio ya fue entregado");
 
     try {
 
-      const sale = await Sale.findByPk(idShipping);
-      const shipping = await Shipping.findByPk(idShipping);
-
-      if(!shipping) throw new NotFoundException("No se encontro el envio");
-      if(!sale) throw new NotFoundException("No se encontro el envio");
-      if(sale.statusOrder === ShippingStatusEnum.DELIVERED) throw new BadRequestException("El envio ya fue entregado");
-
-      sale.statusOrder = shippingStatusDto.status;
+      sale.statusOrder = status;
+      shipping.informationShipping = informationShipping;
+      shipping.shippingCost = shippingCost;
 
       if(sale.statusOrder === ShippingStatusEnum.DELIVERED) shipping.deliveryDate = new Date();
       if(sale.statusOrder === ShippingStatusEnum.SHIPPED) shipping.shippingDate = new Date();
 
       await sale.save();
+      await shipping.save();
 
       return {
         message: "Se actualizo el estado del envio",

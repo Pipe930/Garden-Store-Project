@@ -14,6 +14,8 @@ import { StatusSaleEnum } from 'src/core/enums/statusSale.enum';
 import { ShippingStatusEnum, WithdrawalEnum } from 'src/core/enums/statusShipping.enum';
 import { ProductsService } from '../products/products.service';
 import { randomUUID } from 'crypto';
+import UAParser from 'ua-parser-js';
+import { DeviceUsedEnum } from 'src/core/enums/deviceUsed.enum';
 
 @Injectable()
 export class SalesService {
@@ -24,7 +26,7 @@ export class SalesService {
     private readonly productService: ProductsService
   ) {}
 
-  async create(createSaleDto: CreateSaleDto, idUser: number):Promise<ResponseData> {
+  async create(createSaleDto: CreateSaleDto, idUser: number, userAgent: string):Promise<ResponseData> {
 
     let { priceTotal, productsQuantity, discountApplied, withdrawal, idBranch } = createSaleDto;
 
@@ -49,6 +51,7 @@ export class SalesService {
         productsQuantity,
         discountApplied,
         withdrawal,
+        deviceUsed: this.getDeviceType(userAgent),
         status: StatusSaleEnum.PENDING,
         idUser,
         idBranch
@@ -71,7 +74,7 @@ export class SalesService {
       cartUser.priceTotalDiscount = 0;
 
       await cartUser.save();
-      
+
       return {
         statusCode: HttpStatus.CREATED,
         message: 'Venta creada con exito',
@@ -112,10 +115,22 @@ export class SalesService {
       data: sales
     };
   }
+  
+  async findOne(idSale: string): Promise<ResponseData> {
+
+    const sale = await Sale.findByPk(idSale);
+
+    if(!sale) throw new NotFoundException('No se encontro la venta');
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: sale
+    };
+  }
 
   async updateStatusSale(idSale: string, updateSaleDto: UpdateSaleDto): Promise<ResponseData> {
 
-    const { status, shipping } = updateSaleDto;
+    const { status, methodPayment, shipping } = updateSaleDto;
 
     const sale = await Sale.findByPk(idSale);
 
@@ -123,6 +138,7 @@ export class SalesService {
     if(sale.statusPayment === StatusSaleEnum.PAID) throw new BadRequestException('La venta ya se encuentra pagada');
 
     sale.statusPayment = status;
+    sale.methodPayment = methodPayment;
 
     try {      
       
@@ -138,11 +154,8 @@ export class SalesService {
       await sale.save();
 
     } catch (error) {
-
-      console.log(error);
       throw new InternalServerErrorException('Error al actualizar el estado de la venta');
     }
-
 
     return {
 
@@ -189,7 +202,6 @@ export class SalesService {
         data: responseTransbank.data
       }
     } catch (error) {
-
       throw new BadRequestException('No se pudo confirmar la transaccion');
     }
   }
@@ -239,6 +251,18 @@ export class SalesService {
   
       sale.statusOrder = status;
       await sale.save();
+    }
+  }
+  
+  private getDeviceType(userAgent: string): DeviceUsedEnum {
+    
+    const parser = new UAParser(userAgent);
+    const deviceType = parser.getDevice().type || 'desktop';
+  
+    switch (deviceType) {
+      case 'mobile': return DeviceUsedEnum.MOBILE;
+      case 'tablet': return DeviceUsedEnum.TABLET;
+      default: return DeviceUsedEnum.DESKTOP; // Por defecto, si no se identifica como móvil o tablet
     }
   }
 }

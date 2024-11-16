@@ -16,7 +16,13 @@ export class SalesController {
   @Post()
   @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.CREATE] }])
   create(@Body() createSaleDto: CreateSaleDto, @Req() request: RequestJwt) {
-    return this.salesService.create(createSaleDto, request.user.idUser);
+    return this.salesService.create(createSaleDto, request.user.idUser, request.headers['user-agent']);
+  }
+
+  @Get('detail/:idSale')
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.READ] }])
+  findOne(@Param('idSale', ParseUUIDPipe) idSale: string) {
+    return this.salesService.findOne(idSale);
   }
 
   @Get('user')

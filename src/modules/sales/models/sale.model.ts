@@ -6,6 +6,8 @@ import { Shipping } from "src/modules/shippings/models/shipping.model";
 import { StatusSaleEnum } from "src/core/enums/statusSale.enum";
 import { ShippingStatusEnum, WithdrawalEnum } from "src/core/enums/statusShipping.enum";
 import { Branch } from "src/modules/branch/models/branch.model";
+import { MethodPaymentEnum } from "src/core/enums/statusPurchase.enum";
+import { DeviceUsedEnum } from "src/core/enums/deviceUsed.enum";
 
 @Table({
     tableName: 'sales',
@@ -51,6 +53,20 @@ export class Sale extends Model {
         }
     })
     declare priceTotal: number;
+
+    @Column({
+        type: DataType.ENUM(...Object.values(MethodPaymentEnum)),
+        allowNull: true,
+        field: 'method_payment'
+    })
+    declare methodPayment: string;
+
+    @Column({
+        type: DataType.ENUM(...Object.values(DeviceUsedEnum)),
+        allowNull: false,
+        field: 'device_used'
+    })
+    declare deviceUsed: string;
 
     @Column({
         type: DataType.INTEGER,

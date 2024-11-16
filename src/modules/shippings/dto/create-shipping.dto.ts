@@ -12,9 +12,6 @@ export class CreateShippingDto {
     @IsPositive()
     shippingCost: number;
 
-    @IsEnum(WithdrawalEnum)
-    withdrawal: string;
-
     @IsNumber()
     idAddress: number;
 }

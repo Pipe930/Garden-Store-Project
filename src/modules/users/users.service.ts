@@ -49,7 +49,6 @@ export class UsersService {
         });
       }
     } catch (error) {
-
       throw new InternalServerErrorException("Error al crear el usuario");
     }
 
@@ -174,7 +173,6 @@ export class UsersService {
 
       await user.save();
     } catch (error) {
-      console.log(error);
       throw new InternalServerErrorException("Error al actualizar el usuario");
     }
 
@@ -196,6 +194,23 @@ export class UsersService {
         },
         {
           model: Permission
+        }
+      ]
+    });
+    
+    return roles;
+  }
+
+  async getUserRoles(idUser: number): Promise<Role[]>{
+
+    const roles = await Role.findAll<Role>({
+      include: [
+        {
+          model: User,
+          where: {
+            idUser
+          },
+          attributes: []
         }
       ]
     });
