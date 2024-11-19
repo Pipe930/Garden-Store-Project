@@ -36,7 +36,7 @@ export class ShippingsService {
 
     const shippings = await Shipping.findAll();
 
-    if(shippings.length === 0) return { message: "No tenemos publicaciones registrados", statusCode: HttpStatus.NO_CONTENT }
+    if(shippings.length === 0) return { message: "No tenemos envios registrados", statusCode: HttpStatus.NO_CONTENT }
 
     return {
       data: shippings,

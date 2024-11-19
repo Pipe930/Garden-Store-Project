@@ -74,7 +74,7 @@ export class ProductsService {
       offset
     });
     
-    if(products.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT }
+    if(products.length === 0) return { message: "No tenemos productos registrados", statusCode: HttpStatus.NO_CONTENT }
     
     const currentPage = page ? +page : 0;
     const totalPages = Math.ceil(await Product.count() / limit);
@@ -105,7 +105,7 @@ export class ProductsService {
     const currentPage = page ? +page : 0;
     const totalPages = Math.ceil(await Product.count() / limit);
 
-    if(products.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT }
+    if(products.length === 0) return { message: "No tenemos productos registrados", statusCode: HttpStatus.NO_CONTENT }
 
     return {
       statusCode: HttpStatus.OK,

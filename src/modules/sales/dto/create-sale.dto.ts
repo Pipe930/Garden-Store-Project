@@ -1,5 +1,4 @@
 import { IsEnum, IsNumber, IsOptional, IsPositive, Min } from "class-validator";
-import { MethodPaymentEnum } from "src/core/enums/statusPurchase.enum";
 import { WithdrawalEnum } from "src/core/enums/statusShipping.enum";
 
 export class CreateSaleDto {
@@ -22,4 +21,17 @@ export class CreateSaleDto {
     @IsNumber()
     @IsOptional()
     readonly idBranch: number;
+}
+
+export class SaleAnalytics {
+    readonly transaction_amount: number;
+    readonly payment_method: number;
+    readonly quantity: number;
+    readonly customer_age: number;
+    readonly account_age_days: number;
+    readonly transaction_hour: number;
+    readonly product_category: number;
+    readonly device_used_desktop: number;
+    readonly device_used_mobile: number;
+    readonly device_used_tablet: number;
 }

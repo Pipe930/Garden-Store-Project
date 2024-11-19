@@ -60,7 +60,7 @@ export class CommentsService {
       ]
     });
 
-    if(comments.length === 0) return { message: "Esta publicacion no tiene comentarios", statusCode: HttpStatus.NO_CONTENT }
+    if(comments.length === 0) return { message: "Esta publicación no tiene comentarios", statusCode: HttpStatus.NO_CONTENT }
 
     return {
       statusCode: HttpStatus.OK,

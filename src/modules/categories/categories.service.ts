@@ -33,7 +33,7 @@ export class CategoriesService {
 
     const categories = await Category.findAll<Category>();
 
-    if(categories.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT }
+    if(categories.length === 0) return { message: "No tenemos categorias registradas", statusCode: HttpStatus.NO_CONTENT }
 
     return {
       statusCode: HttpStatus.OK,

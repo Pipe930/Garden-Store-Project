@@ -27,7 +27,7 @@ export class BranchService {
 
     const branches = await Branch.findAll();
 
-    if(branches.length === 0) return { message: "No tenemos sucursales registrados", statusCode: HttpStatus.NO_CONTENT };
+    if(branches.length === 0) return { message: "No tenemos sucursales registradas", statusCode: HttpStatus.NO_CONTENT };
     
     return {
       statusCode: 200,

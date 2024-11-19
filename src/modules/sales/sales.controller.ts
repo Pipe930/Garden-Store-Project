@@ -19,6 +19,18 @@ export class SalesController {
     return this.salesService.create(createSaleDto, request.user.idUser, request.headers['user-agent']);
   }
 
+  @Get()
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.READ] }])
+  findAll() {
+    return this.salesService.findAll();
+  }
+
+  @Get('analytics/:idSale')
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.READ] }])
+  getSaleAnalytics(@Param('idSale', ParseUUIDPipe) idSale: string) {
+    return this.salesService.saleAnalytics(idSale);
+  }
+
   @Get('detail/:idSale')
   @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.READ] }])
   findOne(@Param('idSale', ParseUUIDPipe) idSale: string) {

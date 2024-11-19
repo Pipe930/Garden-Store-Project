@@ -39,7 +39,7 @@ export class OffersService {
 
     const offers = await Offer.findAll();
 
-    if(offers.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.NO_CONTENT };
+    if(offers.length === 0) return { message: "No tenemos ofertas registradas", statusCode: HttpStatus.NO_CONTENT };
 
     return {
       statusCode: HttpStatus.OK,

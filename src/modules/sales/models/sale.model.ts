@@ -131,7 +131,6 @@ export class Sale extends Model {
     declare shipping: Shipping;
 }
 
-
 @Table({
     tableName: 'sale_product',
     modelName: 'SaleProduct',

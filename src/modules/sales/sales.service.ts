@@ -1,5 +1,5 @@
 import { BadRequestException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { CreateSaleDto } from './dto/create-sale.dto';
+import { CreateSaleDto, SaleAnalytics } from './dto/create-sale.dto';
 import { Sale, SaleProduct } from './models/sale.model';
 import { Cart } from '../cart/models/cart.model';
 import { Item } from '../cart/models/item.model';
@@ -16,6 +16,8 @@ import { ProductsService } from '../products/products.service';
 import { randomUUID } from 'crypto';
 import UAParser from 'ua-parser-js';
 import { DeviceUsedEnum } from 'src/core/enums/deviceUsed.enum';
+import { User } from '../users/models/user.model';
+import { MethodPaymentEnum } from 'src/core/enums/statusPurchase.enum';
 
 @Injectable()
 export class SalesService {
@@ -85,6 +87,18 @@ export class SalesService {
     }
   }
 
+  async findAll(): Promise<ResponseData> {
+
+    const sales = await Sale.findAll();
+
+    if(sales.length === 0) return { message: "No se encontraron ventas", statusCode: HttpStatus.NO_CONTENT }
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: sales
+    };
+  }
+
   async findUserSales(idUser: number): Promise<ResponseData> {
 
     const sales = await Sale.findAll({
@@ -118,7 +132,30 @@ export class SalesService {
   
   async findOne(idSale: string): Promise<ResponseData> {
 
-    const sale = await Sale.findByPk(idSale);
+    const sale = await Sale.findByPk(idSale, 
+      {
+        include: [
+          {
+            model: SaleProduct,
+            include: [
+              {
+                model: Product,
+                attributes: ['title', 'price']
+              }
+            ],
+            attributes: ['quantity']
+          },
+          {
+            model: Shipping
+          },
+          {
+            model: User,
+            as: 'user',
+            attributes: ['firstName', 'lastName', 'email', 'phone']
+          }
+        ]
+      }
+    );
 
     if(!sale) throw new NotFoundException('No se encontro la venta');
 
@@ -126,6 +163,54 @@ export class SalesService {
       statusCode: HttpStatus.OK,
       data: sale
     };
+  }
+
+  async saleAnalytics(idSale: string): Promise<ResponseData> {
+
+    const sale = await Sale.findByPk(idSale, {
+      include: [
+        {
+          model: SaleProduct,
+          include: [
+            {
+              model: Product,
+              attributes: ['idCategory']
+            }
+          ]
+        }
+      ]
+    });
+
+    
+    if(!sale) throw new NotFoundException('No se encontro la venta');
+    
+    const user = await User.findByPk(sale.idUser);
+
+    const accountAgeDays = new Date().getDate() - user.createdAt.getDate();
+
+    const jsonAnalytics: SaleAnalytics = {
+
+      transaction_amount: sale.priceTotal,
+      payment_method: this.numberPaymentMethod(sale.methodPayment),
+      quantity: sale.productsQuantity,
+      customer_age: 20,
+      account_age_days: accountAgeDays,
+      transaction_hour: sale.createdAt.getHours(),
+      product_category: sale.saleProducts[0].product.idCategory,
+      device_used_desktop: sale.deviceUsed === DeviceUsedEnum.DESKTOP ? 1 : 0,
+      device_used_mobile: sale.deviceUsed === DeviceUsedEnum.MOBILE ? 1 : 0,
+      device_used_tablet: sale.deviceUsed === DeviceUsedEnum.TABLET ? 1 : 0
+    }
+
+    const resultAnalytics = await this.httpService.axiosRef.post('http://127.0.0.1:8000/model/', jsonAnalytics);
+
+    if(resultAnalytics.status !== 200) throw new BadRequestException('Error al analizar la venta');
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Analisis de la venta realizado con exito',
+      data: resultAnalytics.data
+    }
   }
 
   async updateStatusSale(idSale: string, updateSaleDto: UpdateSaleDto): Promise<ResponseData> {
@@ -206,6 +291,16 @@ export class SalesService {
     }
   }
 
+  private numberPaymentMethod(methodPayment: string): number {
+
+    switch (methodPayment) {
+      case MethodPaymentEnum.DEBIT_CARD: return 1;
+      case MethodPaymentEnum.CREDIT_CARD: return 2;
+      case MethodPaymentEnum.TRANSFER: return 3;
+      default: return 0;
+    }
+  }
+
   private headerRequestTransbank() {
     
     return {
@@ -262,7 +357,7 @@ export class SalesService {
     switch (deviceType) {
       case 'mobile': return DeviceUsedEnum.MOBILE;
       case 'tablet': return DeviceUsedEnum.TABLET;
-      default: return DeviceUsedEnum.DESKTOP; // Por defecto, si no se identifica como móvil o tablet
+      default: return DeviceUsedEnum.DESKTOP;
     }
   }
 }
