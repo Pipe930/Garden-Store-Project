@@ -171,5 +171,16 @@ export const navbarData: Array<Sidenav> = [
         label: "Lista Pedidos"
       }
     ]
+  },
+  {
+    routerLink: "sales",
+    icon: "bx bx-trending-up",
+    label: "Ventas",
+    items: [
+      {
+        routerLink: "sales/list",
+        label: "Lista Ventas"
+      }
+    ]
   }
 ]

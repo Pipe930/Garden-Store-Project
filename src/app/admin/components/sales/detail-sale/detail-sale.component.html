@@ -1,0 +1,59 @@
+@let saleVar = sale();
+
+<div class="container__container-title">
+  <h2 class="container__container-title">Detalle de Venta</h2>
+
+  <div>
+    <button type="button" class="btn btn-dark mx-2" (click)="analyzeSale()">Analisar Venta</button>
+    <button type="button" class="container__btn btn btn-primary" [routerLink]="['/admin/sales/list']">Volver</button>
+  </div>
+</div>
+
+<div class="container__container-information">
+  <section class="container-information__container-card">
+    <article class="card border-secondary">
+      <div class="card-header">
+        <h5 class="card-title">Información de Venta</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Costo Total: ${{saleVar.priceTotal | number}}</li>
+        <li class="list-group-item">Cantidad de Productos: {{saleVar.productsQuantity}}</li>
+        <li class="list-group-item">Descuento Aplicado: {{saleVar.discountApplied}}</li>
+        <li class="list-group-item">Dispositivo Utilizado: {{saleVar.deviceUsed | deviceTranslate}}</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="container-information__container-card">
+    <article class="card border-secondary">
+      <div class="card-header">
+        <h5 class="card-title">Información del Cliente</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Nombre Completo: {{saleVar.user.firstName | titlecase}} {{saleVar.user.lastName | titlecase}}</li>
+        <li class="list-group-item">Correo: {{saleVar.user.email}}</li>
+        <li class="list-group-item">Telefono: {{saleVar.user.phone}}</li>
+      </ul>
+    </article>
+  </section>
+
+
+  <section class="container-information__container-card">
+    <article class="card border-secondary">
+      <div class="card-header">
+        <h5 class="card-title">Productos</h5>
+      </div>
+      <ul class="list-group">
+        @for (product of saleVar.saleProducts; track $index) {
+          <li class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{product.product.title | titlecase}}</h5>
+              <small>${{product.product.price | number}}</small>
+            </div>
+            <p class="mb-1">Cantidad: {{product.quantity}}</p>
+          </li>
+        }
+      </ul>
+    </article>
+  </section>
+</div>

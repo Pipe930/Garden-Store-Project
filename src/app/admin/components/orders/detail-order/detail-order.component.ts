@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ShippingStatusEnum } from '@core/enums/shippingStatus.enum';
 import { AlertService } from '@core/services/alert.service';
+import { catchError, EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-detail-order',
@@ -84,7 +85,14 @@ export class DetailOrderComponent implements OnInit {
       shippingCost: this.updateShippingForm.value.shippingCost
     }
 
-    this._orderService.updateOrder(this.idShipping, shippingJson).subscribe(() => {
+    this._orderService.updateOrder(this.idShipping, shippingJson).pipe(
+      catchError((error) => {
+
+        this._alertService.error("Error al actualizar", error.error.message);
+
+        return EMPTY;
+      })
+    ).subscribe(() => {
       this._alertService.success("Envio Actualizado", "El envio fue actualizado correctamente");
       this._router.navigate(['/admin/orders/list']);
     });

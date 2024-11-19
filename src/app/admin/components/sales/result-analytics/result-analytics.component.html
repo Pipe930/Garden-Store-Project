@@ -1,0 +1,80 @@
+<div class="contianer">
+
+  <button [routerLink]="['/admin/sales/list']" class="btn btn-dark">Volver</button>
+
+  <div class="container-fluid container__container-fluid text-center">
+
+    <h2 class="container-fluid__title">Resultados del Análisis</h2>
+
+    @if (isValidSale()) {
+
+      <div class="container-fluid__card bg-success">
+
+        <div class="card__container-icon">
+          <i class='bx bxs-check-circle card__icon'></i>
+        </div>
+        <p class="card__text">Análisis Terminado</p>
+        <span class="card__subtitle">La transacción analisada es legitima</span>
+      </div>
+    } @else {
+      <div class="container-fluid__card bg-danger bg-success">
+
+        <div class="card__container-icon">
+          <i class='bx bxs-error-circle card__icon'></i>
+        </div>
+        <p class="card__text">Análisis Terminado</p>
+        <span class="card__subtitle">La transacción analisada es fraudulenta</span>
+      </div>
+    }
+
+  </div>
+
+  <table class="table table-responsive table-striped">
+
+    <thead>
+      <tr>
+        <th>
+          <h5>Resultados del Análisis <i class='bx bx-check-square'></i></h5>
+        </th>
+        <th class="d-flex justify-content-end">
+          <button class="btn btn-dark">Exportar PDF</button>
+        </th>
+      </tr>
+    </thead>
+    <tbody class="text-center">
+
+      <tr>
+        <td>
+          Codigo
+        </td>
+
+        <td>
+          {{sale().idSale}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Usuario
+        </td>
+
+        <td>
+          {{sale().user.firstName}} {{sale().user.lastName}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Es Legitima
+        </td>
+
+        <td>
+          @if (isValidSale() ) {
+            <span class="text-success">Si</span>
+          }
+          @else {
+            <span class="text-danger">No</span>
+          }
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

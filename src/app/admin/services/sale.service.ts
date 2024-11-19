@@ -1,4 +1,4 @@
-import { SaleResponse } from '@admin/interfaces/sale';
+import { ListSaleResponse, SaleResponse } from '@admin/interfaces/sale';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment.development';
@@ -14,5 +14,13 @@ export class SaleService {
 
   public getSale(code: string): Observable<SaleResponse> {
     return this._http.get<SaleResponse>(`${this.urlApi}/detail/${code}`);
+  }
+
+  public getAllSales(): Observable<ListSaleResponse> {
+    return this._http.get<ListSaleResponse>(this.urlApi);
+  }
+
+  public analyzeSale(code: string): Observable<any> {
+    return this._http.get(`${this.urlApi}/analytics/${code}`);
   }
 }

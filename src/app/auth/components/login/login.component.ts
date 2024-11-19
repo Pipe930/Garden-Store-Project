@@ -100,10 +100,10 @@ export class LoginComponent {
       })
     ).subscribe(() => {
 
-      this._alertService.success("Verificación exitosa", "La verifucación ha sido exitosa");
       this._authService.getRolesUser().subscribe((response) => {
         sessionStorage.setItem('roles', JSON.stringify(response.data));
       });
+      this._alertService.success("Verificación exitosa", "La verifucación ha sido exitosa");
       this._router.navigate(['/admin/dashboard']);
     });
   }

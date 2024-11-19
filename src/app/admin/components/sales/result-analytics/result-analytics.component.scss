@@ -1,0 +1,47 @@
+@import '../../../../../themes/variables.scss';
+
+.contianer{
+
+  .container__container-fluid{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .container-fluid__title{
+
+      margin: 1rem 0;
+      font-weight: 900;
+    }
+
+    .container-fluid__card{
+
+
+      width: 500px;
+      color: $color-light;
+      padding: 4rem 0;
+      margin: 3rem 0;
+      border-radius: 10px;
+
+      .card__container-icon{
+
+        .card__icon{
+
+          font-size: 5rem;
+        }
+
+        margin-bottom: 1rem;
+      }
+
+      .card__text{
+
+        font-weight: 900;
+        font-size: 1.3rem;
+      }
+    }
+
+    .container-fluid__card.container-fluid__card--danger-color{
+      background-color: $color-danger;
+    }
+  }
+}

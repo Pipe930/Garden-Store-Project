@@ -54,6 +54,10 @@ export const routesAdmin: Routes = [
       {
         path: "orders",
         loadChildren: () => import('./components/orders/orders.routes').then(m => m.routesOrders)
+      },
+      {
+        path: "sales",
+        loadChildren: () => import('./components/sales/sales.routes').then(m => m.routesSales)
       }
     ]
   }

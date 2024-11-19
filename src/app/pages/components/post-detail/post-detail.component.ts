@@ -33,6 +33,7 @@ export class PostDetailComponent implements OnInit {
   public comments = signal<Comment[]>([]);
   public urlImage = signal<string>('');
   public selectedOption = signal<string | null>(null);
+  public formUpdateActivated = signal<boolean>(false);
 
   public slugPost = this._activatedRoute.snapshot.params["slug"];
 
