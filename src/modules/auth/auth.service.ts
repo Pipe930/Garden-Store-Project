@@ -369,8 +369,8 @@ export class AuthService {
 
         const user = await User.findByPk<User>(idUser);
 
-        await this.validateUser(email, phone);
         if(!user) throw new NotFoundException("Usuario no encontrado");
+        if(user.email !== email || user.phone !== phone) await this.validateUser(email, phone);
 
         user.firstName = firstName;
         user.lastName = lastName;

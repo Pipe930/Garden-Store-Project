@@ -23,6 +23,7 @@ import { Post } from "src/modules/posts/models/post.models";
 import { Comment } from "src/modules/comments/models/comment.model";
 import { PostTag, Tag } from "src/modules/posts/models/tag.model";
 import { Reaction } from "src/modules/posts/models/reaction.model";
+import { Review } from "src/modules/reviews/models/review.model";
 
 export const ArrayModels: Array<any> = [
     User,
@@ -59,5 +60,6 @@ export const ArrayModels: Array<any> = [
     Comment,
     Tag,
     PostTag,
-    Reaction
+    Reaction,
+    Review
 ]
