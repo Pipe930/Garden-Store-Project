@@ -137,6 +137,7 @@
 
         font-size: 24px;
         margin-bottom: 3rem;
+        border-radius: 10px;
       }
 
       .slider__slider-wrapper{
@@ -159,8 +160,8 @@
           align-items: center;
           justify-content: space-between;
           width: 100%;
-          top: 0;
-          right: 1;
+          top: 50%;
+          // right: 1;
           z-index: 5;
         }
       }

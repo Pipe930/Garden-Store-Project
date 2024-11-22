@@ -4,17 +4,18 @@ import { ProductsService } from '@pages/services/products.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '@core/services/session.service';
 import { AlertService } from '@core/services/alert.service';
-import { DecimalPipe, ViewportScroller } from '@angular/common';
+import { DecimalPipe, TitleCasePipe, ViewportScroller } from '@angular/common';
 import { register } from 'swiper/element';
 import { CartService } from '@pages/services/cart.service';
 import { environment } from '@env/environment.development';
 import { CardComponent } from '@shared/card/card.component';
+import { ReviewComponent } from '@shared/review/review.component';
 register();
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CardComponent, DecimalPipe],
+  imports: [CardComponent, DecimalPipe, ReviewComponent, TitleCasePipe],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],

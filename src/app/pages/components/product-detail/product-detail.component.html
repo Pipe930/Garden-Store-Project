@@ -19,7 +19,7 @@
       </div>
 
       <div class="product__description-product">
-        <h2 class="description-product__title">{{productVar.title}}</h2>
+        <h2 class="description-product__title">{{productVar.title | titlecase}}</h2>
         <div class="description-product__stock">
           <p><strong>ID</strong> {{productVar.idProduct}}</p>
           <p>Quedan {{productVar.stock}} unidades</p>
@@ -77,7 +77,7 @@
     </div>
 
     <div class="product__slider">
-      <h3 class="slider__title">Productos Relacionados</h3>
+      <h3 class="slider__title bg-success text-white py-3 text-center">Productos Relacionados</h3>
       <div class="slider__slider-wrapper">
         <swiper-container #swiper pagination="false" effect="coverflow" grab-cursor="false" slides-per-group="4" slides-per-view="4" speed="1200">
           @for (productCategory of productList(); track $index) {
@@ -89,14 +89,20 @@
           }
         </swiper-container>
         <div class="slider__container-btns">
-          <button (click)="prevSwiper()" class="slider__btn-next">
+          <button (click)="prevSwiper()" class="slider__btn-next btn btn-dark">
             <i class='bx bx-chevron-left bx-md'></i>
           </button>
-          <button (click)="nextSwiper()" class="slider__btn-prev">
+          <button (click)="nextSwiper()" class="slider__btn-prev btn btn-dark">
             <i class='bx bx-chevron-right bx-md'></i>
           </button>
         </div>
       </div>
+    </div>
+
+    <div class="container-fluid">
+      @if (productVar.idProduct !== 0) {
+        <app-review [idProduct]="productVar.idProduct"></app-review>
+      }
     </div>
   </div>
 </div>

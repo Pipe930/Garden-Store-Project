@@ -51,7 +51,7 @@ export class RegisterComponent {
     this._authService.register(this.formRegister.value).pipe(
       catchError((error) => {
 
-        if(error.error.statusCode === HttpStatusCode.BadRequest){
+        if(error.error.statusCode === HttpStatusCode.Conflict){
 
           this.activateMessage.set(true);
           this.message.set(error.error.message);

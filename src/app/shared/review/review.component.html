@@ -1,0 +1,146 @@
+@let listReviewsVar = listReviews();
+@let startsVar = stars();
+@let ratingVar = rating();
+
+<div class="container-fluid mt-5">
+  <div class="card p-4">
+    <h4 class="fw-bold">Reseñas de Clientes</h4>
+    <div class="row">
+      <div class="col-md-2 text-center">
+        <div class="average-rating">
+          <div class="stars text-warning">
+            @for (star of averageStars(); track $index) {
+              <i [class]="'bx ' + ($index < averageRating() ? 'bxs-star' : 'bx-star')"></i>
+            }
+          </div>
+          <p class="mt-2">
+            Basado en <strong>{{ listReviewsVar.length }} reseñas</strong>
+          </p>
+        </div>
+      </div>
+      <!-- Barra de progreso -->
+      <div class="col-md-6">
+        @for (bar of progressBars; track $index) {
+          <div class="progress-rating">
+            <div class="d-flex align-items-center">
+              <div class="stars text-warning">
+                @for (star of bar.stars; track $index) {
+                  ★
+                }
+              </div>
+              <div class="progress w-100 mx-2">
+                <div
+                  class="progress-bar bg-warning"
+                  role="progressbar"
+                  [style.width]="bar.percentage + '%'"
+                  [attr.aria-valuenow]="bar.percentage"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+              <span>({{ bar.count }})</span>
+            </div>
+          </div>
+        }
+      </div>
+      <!-- Botón Cancelar -->
+      <div class="col-md-4 text-end">
+        <button class="btn btn-outline-success" data-bs-toggle="collapse" data-bs-target="#createReview" aria-expanded="false" aria-controls="createReview">
+          Escribir Reseña
+        </button>
+      </div>
+      <!-- Rating Promedio -->
+    </div>
+    <div class="collapse mt-4" id="createReview">
+      <div class="card card-body">
+        <h5 class="fw-bold mb-4">Añadir Reseña</h5>
+        <form novalidate [formGroup]="createReviewForm" (ngSubmit)="createReview()">
+
+          <div class="mb-3">
+            <label for="titleInput" class="form-label">Titulo</label>
+            <input type="text" class="form-control" id="titleInput" formControlName="title" [ngClass]="{
+              'is-invalid': title.invalid && (title.dirty || title.touched)
+            }">
+
+            @if (title.getError("required")) {
+              <span class="invalid-feedback">Este campo es requerido</span>
+            }
+            @if (title.getError("maxlength")) {
+              <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+            }
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Clasificación</label>
+            <div class="rating-container">
+              <div class="btn-group" role="group" aria-label="Product rating">
+                @for (star of startsVar; track $index) {
+                  <button
+                    type="button"
+                    class="btn btn-outline-warning"
+                    [class.active]="star <= ratingVar"
+                    (click)="setRating(star)">
+                    <i class='bx bxs-star'></i>
+                  </button>
+                }
+              </div>
+            </div>
+            @if(ratingIsValid()){
+              <p class="text-danger mt-1">Este campo es requerido</p>
+            }
+          </div>
+          <div class="mb-3">
+            <label for="reviewInput" class="form-label">Reseña</label>
+            <textarea id="reviewInput" class="form-control" rows="5" formControlName="content" [ngClass]="{
+              'is-invalid': content.invalid && (content.dirty || content.touched)
+            }"></textarea>
+            @if (content.getError("required")) {
+              <span class="invalid-feedback">Este campo es requerido</span>
+            }
+            @if (content.getError("maxlength")) {
+              <span class="invalid-feedback">Tiene que tener un maximo de 255 caracteres</span>
+            }
+          </div>
+          <button type="submit" class="btn btn-success">Añadir Reseña</button>
+        </form>
+      </div>
+    </div>
+    <!-- Filtro -->
+    <div class="mt-4">
+      <label for="sortReviews" class="form-label fw-bold">Ordenar por:</label>
+      <select id="sortReviews" class="form-select">
+        <option value="recent">Más Recientes</option>
+        <option value="ratingHigh">Mejor Calificación</option>
+        <option value="ratingLow">Peor Calificación</option>
+      </select>
+    </div>
+    <hr>
+
+    @for (review of listReviewsVar; track $index) {
+      <div>
+
+        <div class="d-flex my-3">
+            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="Imagen de Usuario" /></div>
+            <div class="ms-3">
+              <div class="d-flex">
+                <div class="stars text-warning">
+
+                  @for (star of generateStars(review.rating); track $index) {
+                    <i [class]="star"></i>
+                  }
+                </div>
+                <span class="mx-2">{{review.createdAt | date: 'dd/MM/yyyy'}}</span>
+              </div>
+              {{review.user.firstName}} {{review.user.lastName}}
+            </div>
+        </div>
+        <div class="ms-3">
+          <h6 class="fw-bold">{{review.title}}</h6>
+          <p>{{review.content}}</p>
+        </div>
+      </div>
+    } @empty {
+      <div class="text-center">
+        <p>Este producto no tiene reseñas</p>
+      </div>
+    }
+</div>
