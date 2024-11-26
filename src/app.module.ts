@@ -26,6 +26,7 @@ import { SuppliersModule } from './modules/suppliers/suppliers.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
+import { PrinterModule } from './printer/printer.module';
 
 @Module({
   imports: [
@@ -63,7 +64,8 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
     SuppliersModule,
     PostsModule,
     CommentsModule,
-    ReviewsModule
+    ReviewsModule,
+    PrinterModule
   ],
   providers: [
     {

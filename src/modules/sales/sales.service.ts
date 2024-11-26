@@ -18,6 +18,9 @@ import UAParser from 'ua-parser-js';
 import { DeviceUsedEnum } from 'src/core/enums/deviceUsed.enum';
 import { User } from '../users/models/user.model';
 import { MethodPaymentEnum } from 'src/core/enums/statusPurchase.enum';
+import { PrinterService } from 'src/printer/printer.service';
+import { buildReport } from './documents/build.report';
+import { GeneratePDFDto } from './dto/generatePDF.dto';
 
 @Injectable()
 export class SalesService {
@@ -25,7 +28,8 @@ export class SalesService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    private readonly productService: ProductsService
+    private readonly productService: ProductsService,
+    private readonly printerService: PrinterService
   ) {}
 
   async create(createSaleDto: CreateSaleDto, idUser: number, userAgent: string):Promise<ResponseData> {
@@ -167,6 +171,8 @@ export class SalesService {
 
   async saleAnalytics(idSale: string): Promise<ResponseData> {
 
+    const startTime = Date.now();
+
     const sale = await Sale.findByPk(idSale, {
       include: [
         {
@@ -201,16 +207,33 @@ export class SalesService {
       device_used_mobile: sale.deviceUsed === DeviceUsedEnum.MOBILE ? 1 : 0,
       device_used_tablet: sale.deviceUsed === DeviceUsedEnum.TABLET ? 1 : 0
     }
-
+    
     const resultAnalytics = await this.httpService.axiosRef.post('http://127.0.0.1:8000/model/', jsonAnalytics);
 
     if(resultAnalytics.status !== 200) throw new BadRequestException('Error al analizar la venta');
 
+    const endTime = Date.now();
+    const duration = (endTime - startTime) / 1000;
+
+    const responseData = {
+      ...resultAnalytics.data,
+      duration
+    }
+
     return {
       statusCode: HttpStatus.OK,
       message: 'Analisis de la venta realizado con exito',
-      data: resultAnalytics.data
+      data: responseData
     }
+  }
+
+  async generatePdfSale(generatePdfDto: GeneratePDFDto): Promise<PDFKit.PDFDocument> {
+
+    const { idSale, timeAnalytics, result } = generatePdfDto;
+
+    const docDefinition = await buildReport(idSale, timeAnalytics, result);
+
+    return this.printerService.createPDF(docDefinition);
   }
 
   async updateStatusSale(idSale: string, updateSaleDto: UpdateSaleDto): Promise<ResponseData> {

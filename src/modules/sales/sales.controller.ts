@@ -1,13 +1,14 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Req, Put, ParseIntPipe, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Req, Put, ParseUUIDPipe, Res } from '@nestjs/common';
 import { SalesService } from './sales.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
-import { AuthGuard } from 'src/core/guards/auth.guard';
 import { CreateTransbankDto } from './dto/create-transbank.dto';
 import { UpdateSaleDto } from './dto/update-status-sale.dto';
 import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
 import { Auth } from 'src/core/decorators/auth.decorator';
 import { ResourcesEnum } from 'src/core/enums/resourses.enum';
 import { ActionsEnum } from 'src/core/enums/actions.enum';
+import { Response } from 'express';
+import { GeneratePDFDto } from './dto/generatePDF.dto';
 
 @Controller('sales')
 export class SalesController {
@@ -35,6 +36,17 @@ export class SalesController {
   @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.READ] }])
   findOne(@Param('idSale', ParseUUIDPipe) idSale: string) {
     return this.salesService.findOne(idSale);
+  }
+
+  @Post('generatePDF')
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.READ] }])
+  async generatePDF(@Body() generatePdfDto: GeneratePDFDto, @Res() response: Response) {
+
+    const pdfDoc = await this.salesService.generatePdfSale(generatePdfDto);
+    response.setHeader('Content-Type', 'application/pdf');
+
+    pdfDoc.pipe(response);
+    pdfDoc.end();
   }
 
   @Get('user')

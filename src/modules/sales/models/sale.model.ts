@@ -148,7 +148,6 @@ export class SaleProduct extends Model {
 
     @ForeignKey(() => Sale)
     @Column({
-        primaryKey: true,
         type: DataType.UUID,
         field: 'id_sale'
     })
@@ -156,7 +155,6 @@ export class SaleProduct extends Model {
 
     @ForeignKey(() => Product)
     @Column({
-        primaryKey: true,
         type: DataType.INTEGER,
         field: 'id_product'
     })
