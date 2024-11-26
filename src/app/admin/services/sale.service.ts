@@ -23,4 +23,8 @@ export class SaleService {
   public analyzeSale(code: string): Observable<any> {
     return this._http.get(`${this.urlApi}/analytics/${code}`);
   }
+
+  public generatePDF(idSale: string, timeAnalytics: string, result: number): Observable<any> {
+    return this._http.post(`${this.urlApi}/generatePDF`, { idSale, timeAnalytics, result }, { responseType: 'blob' });
+  }
 }

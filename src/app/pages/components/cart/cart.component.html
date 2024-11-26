@@ -1,80 +1,93 @@
 @let cartVar = cart();
+@let isLoagingVar = isLoading();
 
 <div class="cart">
   <div class="cart__container">
-    <div class="cart__sub-contianer">
 
-      @if(cartVar.items.length !== 0 && cartVar.priceTotal !== 0){
-        <div class="cart__left">
-          <div>
-            <h2 class="cart__title-left">Carro | {{cartVar.quantityTotal}} Productos</h2>
-            <hr>
-          </div>
-          @for (product of cartVar.items; track $index) {
-            <div class="cart__container-listproduct">
-              <div class="cart__product-info">
-                <h3>{{product.product.title | titlecase}}</h3>
-                <h3>{{product.product.category.name}}</h3>
-                <p>{{product.product.brand}}</p>
-                <div class="cart__container-btns">
-                  <div class="container-listproduct__quantity">
-                    <button (click)="substractProduct(product.product.idProduct)" class="btn btn-success">-</button>
-                    <p class="cart__quantity">{{product.quantity}}</p>
-                    <button (click)="addProduct(product.product.idProduct)" class="btn btn-success">+</button>
+    @defer (when isLoagingVar) {
+      <div class="cart__sub-contianer">
+
+        @if(cartVar.items.length !== 0 && cartVar.priceTotal !== 0){
+          <div class="cart__left">
+            <div>
+              <h2 class="cart__title-left">Carro | {{cartVar.quantityTotal}} Productos</h2>
+              <hr>
+            </div>
+            @for (product of cartVar.items; track $index) {
+              <div class="cart__container-listproduct">
+                <div class="cart__product-info">
+                  <h3>{{product.product.title | titlecase}}</h3>
+                  <h3>{{product.product.category.name}}</h3>
+                  <p>{{product.product.brand}}</p>
+                  <div class="cart__container-btns">
+                    <div class="container-listproduct__quantity">
+                      <button (click)="substractProduct(product.product.idProduct)" class="btn btn-success">-</button>
+                      <p class="cart__quantity">{{product.quantity}}</p>
+                      <button (click)="addProduct(product.product.idProduct)" class="btn btn-success">+</button>
+                    </div>
+                    <button (click)="removeProduct(product.product.idProduct)" class="cart__btn-remove">
+                      <i class='bx bx-trash'></i>
+                      Eliminar
+                    </button>
                   </div>
-                  <button (click)="removeProduct(product.product.idProduct)" class="cart__btn-remove">
-                    <i class='bx bx-trash'></i>
-                    Eliminar
-                  </button>
+                </div>
+                <div class="cart__product-prices">
+                  @if (product.product.priceDiscount === 0) {
+
+                    <h3>$ {{product.product.price | number}}</h3>
+                    <p>Precio de Referencia</p>
+                  }
+
+                  @if(product.product.priceDiscount !== 0){
+
+                    <s><h3>$ {{product.product.price | number}}</h3></s>
+                    <p>Precio de Referencia</p>
+                  }
+
+                  @if(product.product.priceDiscount !== 0) {
+                    <h3>$ {{product.product.priceDiscount | number}}</h3>
+                    <p>Precio de Descuento</p>
+                  }
                 </div>
               </div>
-              <div class="cart__product-prices">
-                @if (product.product.priceDiscount === 0) {
+            }
+            <hr>
+            <button (click)="clearCart()" class="cart__btn-clear">Limpiar Carrito</button>
+          </div>
+          <div class="cart__right">
+            <h2 class="cart__title-right">Total</h2>
+            <hr>
+            <div class="cart__container-total">
+              <div class="cart__total-price">
+                <p>Precio Total</p>
+                <span>$ {{cartVar.priceTotal | number}}</span>
+              </div>
+              <div class="d-grid gap-2">
+                <button class="btn btn-outline-success cart__btn-view-products" [routerLink]="['/products']">Seguir Comprando</button>
+                <button class="btn btn-primary cart__btn-purchase" [routerLink]="['/purchase']">Pagar</button>
+              </div>
+              <div class="cart__container-address">
 
-                  <h3>$ {{product.product.price | number}}</h3>
-                  <p>Precio de Referencia</p>
-                }
-
-                @if(product.product.priceDiscount !== 0){
-
-                  <s><h3>$ {{product.product.price | number}}</h3></s>
-                  <p>Precio de Referencia</p>
-                }
-
-                @if(product.product.priceDiscount !== 0) {
-                  <h3>$ {{product.product.priceDiscount | number}}</h3>
-                  <p>Precio de Descuento</p>
-                }
               </div>
             </div>
-          }
-          <hr>
-          <button (click)="clearCart()" class="cart__btn-clear">Limpiar Carrito</button>
-        </div>
-        <div class="cart__right">
-          <h2 class="cart__title-right">Total</h2>
-          <hr>
-          <div class="cart__container-total">
-            <div class="cart__total-price">
-              <p>Precio Total</p>
-              <span>$ {{cartVar.priceTotal | number}}</span>
-            </div>
-            <div class="d-grid gap-2">
-              <button class="btn btn-outline-success cart__btn-view-products" [routerLink]="['/products']">Seguir Comprando</button>
-              <button class="btn btn-primary cart__btn-purchase" [routerLink]="['/purchase']">Pagar</button>
-            </div>
-            <div class="cart__container-address">
-
-            </div>
           </div>
+        }
+      </div>
+      @if (cartVar.items.length === 0 && cartVar.priceTotal === 0) {
+
+        <div class="cart__container-message">
+          <h2 class="cart__message-empty">No tienes productos en tu carrito</h2>
+          <button [routerLink]="['/products']" class="btn btn-primary">Ver Productos</button>
         </div>
       }
-    </div>
-    @if (cartVar.items.length === 0 && cartVar.priceTotal === 0) {
 
+    } @placeholder {
       <div class="cart__container-message">
-        <h2 class="cart__message-empty">No tienes productos en tu carrito</h2>
-        <button [routerLink]="['/products']" class="btn btn-primary">Ver Productos</button>
+        <div class="d-flex justify-content-center py-lg-5">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
       </div>
     }
   </div>

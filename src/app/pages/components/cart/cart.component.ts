@@ -16,6 +16,7 @@ export class CartComponent implements OnInit {
   private readonly _cartService = inject(CartService);
 
   public cart = signal<Cart>(cartJson);
+  public isLoading = signal<boolean>(false);
 
   ngOnInit(): void {
     this.updateCart();
@@ -25,6 +26,10 @@ export class CartComponent implements OnInit {
     this._cartService.getCartUser();
     this._cartService.cartCurrent$.subscribe(result => {
       this.cart.set(result);
+    })
+
+    this._cartService.isLoading.subscribe(result => {
+      this.isLoading.set(result);
     })
   }
 
@@ -66,7 +71,7 @@ export class CartComponent implements OnInit {
   }
 
   public clearCart():void{
-    this._cartService.clearCart().subscribe(result => {
+    this._cartService.clearCart().subscribe(() => {
       this.updateCart();
     })
   }

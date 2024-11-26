@@ -1,3 +1,10 @@
+@let cartVar = cart();
+@let listCommunesVar = listCommune();
+@let listProvincesVar = listProvince();
+@let listRegionsVar = listRegions();
+@let listAddressVar = listAddress();
+@let listBranchsVar = listBranchs();
+
 <div class="purchase">
 
   <section class="purchase__dispatch">
@@ -54,10 +61,10 @@
           <div class="accordion-left__accordion">
 
             <div class="accordion-left__container-left">
-              <label class="accordion-left__label">Seleccione una Sucursal</label>
-              <select class="accordion-left__select" (change)="selectBranch($event)">
+              <label class="form-label">Seleccione una Sucursal</label>
+              <select class="form-select" (change)="selectBranch($event)">
                 <option value="" class="accordion-left__option">Sucursal</option>
-                @for (branch of listBranchs(); track $index) {
+                @for (branch of listBranchsVar; track $index) {
                   <option [value]="branch.idBranch" class="accordion-left__option">{{branch.name | titlecase}}</option>
                 }
               </select>
@@ -99,7 +106,7 @@
 
             <div class="accordion-right__container-list">
 
-              @for (address of listAddress(); track $index) {
+              @for (address of listAddressVar; track $index) {
                 <article class="container-list__address">
 
                   <label [htmlFor]="address.idAddress" class="address__label" (change)="selectedAddress(address)">
@@ -112,113 +119,116 @@
 
             <div class="accordion-right__container-btn">
 
-              <button type="button" class="accordion-right__btn-create-address btn btn-success" (click)="toggleFormAddress()">Crear Nueva Dirección</button>
+              <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#createAddressForm" aria-expanded="false" aria-controls="createAddressForm">
+                Crear Dirección
+              </button>
             </div>
 
+            <div class="collapse" id="createAddressForm">
+              <div class="card card-body">
+                <div class="accordion-right__form-create-address">
 
-            @if (isFormCreateAddress) {
-              <div class="accordion-right__form-create-address">
+                  <h3 class="accordion-right__title">Crea tu nueva dirección</h3>
 
-                <h3 class="accordion-right__title">Crea tu nueva dirección</h3>
+                  <div class="accordion-right__map"></div>
 
-                <div class="accordion-right__map"></div>
+                  <form novalidate [formGroup]="formCreateAddress" (ngSubmit)="createAddress()" class="accordion-right__form">
 
-                <form novalidate [formGroup]="formCreateAddress" (ngSubmit)="createAddress()" class="accordion-right__form">
+                    <fieldset class="mb-3">
+                      <label for="nameAddress" class="form-label">Nombre de la Dirección</label>
+                      <input type="text" class="form-control" id="nameAddress" formControlName="name" [ngClass]="{
+                        'is-invalid': name.invalid && (name.dirty || name.touched)
+                      }">
 
-                  <fieldset class="mb-3">
-                    <label for="nameAddress" class="form-label">Nombre de la Dirección</label>
-                    <input type="text" class="form-control" id="nameAddress" formControlName="name" [ngClass]="{
-                      'is-invalid': name.invalid && (name.dirty || name.touched)
-                    }">
-
-                    @if (name.getError('required')) {
-                      <span class="invalid-feedback">Este campo es requerido</span>
-                    }
-
-                    @if (name.getError('maxlength')) {
-                      <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
-                    }
-                  </fieldset>
-                  <fieldset class="mb-3">
-                    <label for="addressName" class="form-label">Calle y Numero</label>
-                    <input type="text" class="form-control" id="addressName" formControlName="addressName" [ngClass]="{
-                      'is-invalid': addressName.invalid && (addressName.dirty || addressName.touched)
-                    }">
-
-                    @if (addressName.getError('required')) {
-                      <span class="invalid-feedback">Este campo es requerido</span>
-                    }
-
-                    @if (addressName.getError('maxlength')) {
-                      <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
-                    }
-                  </fieldset>
-
-                  <fieldset class="mb-3">
-                    <label for="city" class="form-label">Ciudad</label>
-                    <input type="text" class="form-control" id="city" formControlName="city" [ngClass]="{
-                      'is-invalid': city.invalid && (city.dirty || city.touched)
-                    }">
-
-                    @if (city.getError('required')) {
-                      <span class="invalid-feedback">Este campo es requerido</span>
-                    }
-
-                    @if (city.getError('maxlength')) {
-                      <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
-                    }
-                  </fieldset>
-
-                  <fieldset class="mb-3">
-                    <label for="numDepartment" class="form-label">Numero Departamento (Opcional)</label>
-                    <input type="text" class="form-control" id="numDepartment" formControlName="numDepartment" [ngClass]="{
-                      'is-invalid': numDepartment.invalid && (numDepartment.dirty || numDepartment.touched)
-                    }">
-
-                    @if (numDepartment.getError('maxlength')) {
-                      <span class="invalid-feedback">Tiene que tener maximo 40 caracteres</span>
-                    }
-                  </fieldset>
-
-                  <fieldset class="mb-3">
-                    <label for="description" class="form-label">Piso / Oficina / Apto / Depto</label>
-                    <textarea class="form-control" id="description" rows="8" formControlName="description" placeholder="Descripción de la ubicación. Ej: departamento, torre, oficina"></textarea>
-                  </fieldset>
-
-                  <fieldset class="form__control">
-                    <label for="" class="form__text">Región</label>
-                    <select class="form-select" formControlName="region" (change)="changeRegion($event)">
-                      <option selected>Región</option>
-                      @for (region of listRegions(); track $index) {
-                        <option [value]="region.idRegion">{{region.name}}</option>
+                      @if (name.getError('required')) {
+                        <span class="invalid-feedback">Este campo es requerido</span>
                       }
-                    </select>
-                  </fieldset>
-                  <fieldset class="form__control">
-                    <label for="" class="form__text">Provincia</label>
-                    <select class="form-select" formControlName="province" (change)="changeProvince($event)">
-                      <option value="">Provincia</option>
-                      @for (province of listProvince(); track $index) {
-                        <option [value]="province.idProvince">{{province.name}}</option>
+
+                      @if (name.getError('maxlength')) {
+                        <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
                       }
-                    </select>
-                  </fieldset>
-                  <fieldset class="form__control">
-                    <label for="" class="form__text">Comuna</label>
-                    <select class="form-select" formControlName="commune">
-                      <option value="">Comuna</option>
-                      @for (commune of listCommune(); track $index) {
+                    </fieldset>
+                    <fieldset class="mb-3">
+                      <label for="addressName" class="form-label">Calle y Numero</label>
+                      <input type="text" class="form-control" id="addressName" formControlName="addressName" [ngClass]="{
+                        'is-invalid': addressName.invalid && (addressName.dirty || addressName.touched)
+                      }">
 
-                        <option [value]="commune.idCommune">{{commune.name}}</option>
+                      @if (addressName.getError('required')) {
+                        <span class="invalid-feedback">Este campo es requerido</span>
                       }
-                    </select>
-                  </fieldset>
 
-                  <button class="form__btn-create btn btn-success" type="submit">Guardar Dirección</button>
-                </form>
+                      @if (addressName.getError('maxlength')) {
+                        <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                      }
+                    </fieldset>
 
+                    <fieldset class="mb-3">
+                      <label for="city" class="form-label">Ciudad</label>
+                      <input type="text" class="form-control" id="city" formControlName="city" [ngClass]="{
+                        'is-invalid': city.invalid && (city.dirty || city.touched)
+                      }">
+
+                      @if (city.getError('required')) {
+                        <span class="invalid-feedback">Este campo es requerido</span>
+                      }
+
+                      @if (city.getError('maxlength')) {
+                        <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                      }
+                    </fieldset>
+
+                    <fieldset class="mb-3">
+                      <label for="numDepartment" class="form-label">Numero Departamento (Opcional)</label>
+                      <input type="text" class="form-control" id="numDepartment" formControlName="numDepartment" [ngClass]="{
+                        'is-invalid': numDepartment.invalid && (numDepartment.dirty || numDepartment.touched)
+                      }">
+
+                      @if (numDepartment.getError('maxlength')) {
+                        <span class="invalid-feedback">Tiene que tener maximo 40 caracteres</span>
+                      }
+                    </fieldset>
+
+                    <fieldset class="mb-3">
+                      <label for="description" class="form-label">Piso / Oficina / Apto / Depto</label>
+                      <textarea class="form-control" id="description" rows="8" formControlName="description" placeholder="Descripción de la ubicación. Ej: departamento, torre, oficina"></textarea>
+                    </fieldset>
+
+                    <fieldset class="mb-3">
+                      <label for="" class="form-label">Región</label>
+                      <select class="form-select" formControlName="region" (change)="changeRegion($event)">
+                        <option selected>Región</option>
+                        @for (region of listRegionsVar; track $index) {
+                          <option [value]="region.idRegion">{{region.name}}</option>
+                        }
+                      </select>
+                    </fieldset>
+                    <fieldset class="mb-3">
+                      <label for="" class="form-label">Provincia</label>
+                      <select class="form-select" formControlName="province" (change)="changeProvince($event)">
+                        <option value="">Provincia</option>
+                        @for (province of listProvincesVar; track $index) {
+                          <option [value]="province.idProvince">{{province.name}}</option>
+                        }
+                      </select>
+                    </fieldset>
+                    <fieldset class="mb-3">
+                      <label for="" class="form-label">Comuna</label>
+                      <select class="form-select" formControlName="commune">
+                        <option value="">Comuna</option>
+                        @for (commune of listCommunesVar; track $index) {
+
+                          <option [value]="commune.idCommune">{{commune.name}}</option>
+                        }
+                      </select>
+                    </fieldset>
+
+                    <button class="form__btn-create btn btn-success" type="submit">Guardar Dirección</button>
+                  </form>
+
+                </div>
               </div>
-            }
+            </div>
 
             <div class="accordion-right__person-resive">
 
@@ -276,7 +286,7 @@
 
     <div class="container-cart__container-products">
       <div class="container-cart__list-products">
-        @for (product of cart().items; track $index) {
+        @for (product of cartVar.items; track $index) {
           <div class="list-products__product">
 
             <h3>{{product.product.title}}</h3>
@@ -330,7 +340,7 @@
         </div>
         <div class="purchase-info__total-price">
           <h4>Precio Total</h4>
-          <span>$ {{cart().priceTotal | currency: 'CLP'}}</span>
+          <span>$ {{cartVar.priceTotal | currency: 'CLP'}}</span>
         </div>
 
         <div class="purchase-info__container-btn-purchase">

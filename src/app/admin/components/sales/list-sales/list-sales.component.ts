@@ -1,5 +1,6 @@
 import { columnsSale, Sale } from '@admin/interfaces/sale';
 import { SaleService } from '@admin/services/sale.service';
+import { HttpStatusCode } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TableColumns } from '@core/interfaces/table';
@@ -23,8 +24,9 @@ export class ListSalesComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this._saleService.getAllSales().subscribe((repsonse) => {
-      this.listSales.set(repsonse.data);
+    this._saleService.getAllSales().subscribe((response) => {
+      if(response.statusCode === HttpStatusCode.Ok) this.listSales.set(response.data);
+      this.isLoading.set(false);
     })
   }
 

@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { Cart, cartJson, FormAddCart, FormRemoveCart, ResponseCart } from '../interfaces/cart';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +14,12 @@ export class CartService {
 
   private cartCurrent = new BehaviorSubject<Cart>(cartJson);
   public cartCurrent$ = this.cartCurrent.asObservable();
+  public isLoading = new Subject<boolean>();
 
   public getCartUser():void{
     this._http.get<ResponseCart>(`${this.urlApiCart}/user`).subscribe(result => {
       this.cartCurrent.next(result.data);
+      this.isLoading.next(true);
     });
   }
 

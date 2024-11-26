@@ -37,7 +37,7 @@ export class DetailSaleComponent implements OnInit {
 
     let timerInterval: any;
     Swal.fire({
-      title: "Analisando Transaccion",
+      title: "Analizando Transacción",
       html: "Esto puede tomar unos segundos",
       timerProgressBar: true,
       didOpen: () => {
@@ -56,7 +56,8 @@ export class DetailSaleComponent implements OnInit {
 
       if(response.statusCode === HttpStatusCode.Ok){
 
-        localStorage.setItem('analytics prediction', JSON.stringify(response.data.prediccion));
+        localStorage.setItem('analytics prediction', JSON.stringify(response.data.prediccion[0]));
+        localStorage.setItem('duration prediction', JSON.stringify(response.data.duration));
         localStorage.setItem('sale', JSON.stringify(this.sale()));
         this._alertService.success('Análisis de venta', 'Se ha realizado el análisis de la venta correctamente');
         this._router.navigate(['/admin/sales/result-analysis', this.idSale]);
