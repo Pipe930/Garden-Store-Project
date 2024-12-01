@@ -2,10 +2,13 @@ import { StatusPurchaseEnum } from '@core/enums/statusPruchase.enum';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ConfirmTransbank, TransbankInfo, TypeRetirementEnum, TypeStatusTransbankEnum, UpdateVoucher, VoucherConfirm } from '@pages/interfaces/purchase';
+import { TypeRetirementEnum, UpdateVoucher, VoucherConfirm } from '@pages/interfaces/purchase';
 import { PurchaseService } from '@pages/services/purchase.service';
 import { TransbankService } from '@pages/services/transbank.service';
 import { MethodPaymentEnum } from '@core/enums/method-payment.enum';
+import { ConfirmTransbank, TransbankInfo, TypeStatusTransbankEnum } from '@pages/interfaces/transbank';
+import { PaypalService } from '@pages/services/paypal.service';
+import { CommitPaypal } from '@pages/interfaces/paypal';
 
 @Component({
   selector: 'app-purchase-confirm',
@@ -19,6 +22,7 @@ export class PurchaseConfirmComponent {
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _transbankService = inject(TransbankService);
   private readonly _purchaseService = inject(PurchaseService);
+  private readonly _paypalService = inject(PaypalService);
 
   public transbankInfo: ConfirmTransbank = TransbankInfo;
   public voucherConfirmObject!: VoucherConfirm;
@@ -26,9 +30,12 @@ export class PurchaseConfirmComponent {
 
   ngOnInit(): void {
 
-    this._activatedRoute.queryParams.subscribe((params) => {
+    const queryParams = this._activatedRoute.snapshot.queryParamMap;
 
-      this._transbankService.confirmTransationTransbank(params["token_ws"]).subscribe(result => {
+    console.log(queryParams.has("token"));
+
+    if(queryParams.has("token_ws")){
+      this._transbankService.confirmTransationTransbank(queryParams.get("token_ws")!).subscribe(result => {
 
         if(result.data.status === TypeStatusTransbankEnum.AUTHORIZED){
 
@@ -61,11 +68,49 @@ export class PurchaseConfirmComponent {
           });
         }
       })
-    });
+    }
+
+    if(queryParams.has("token") || queryParams.has("PayerID")){
+
+      const paypalCommit: CommitPaypal = {
+        token: queryParams.get("token")!,
+        PayerID: queryParams.get("PayerID")!
+      }
+
+      this._paypalService.commitPaypal(paypalCommit).subscribe(() => {
+
+        this.voucherConfirmObject = JSON.parse(localStorage.getItem("voucher")!);
+
+        if(this.voucherConfirmObject.typeRetirement === TypeRetirementEnum.HOME_DELIVERY){
+
+          this.updateSale = {
+
+            status: StatusPurchaseEnum.PAID,
+            methodPayment: MethodPaymentEnum.PAYPAL,
+            shipping: {
+              informationShipping: "Envio para cliente a domicilio",
+              shippingCost: 0,
+              idAddress: this.voucherConfirmObject.address.idAddress
+            }
+          }
+        } else if(this.voucherConfirmObject.typeRetirement === TypeRetirementEnum.STORE_PICKUP){
+
+          this.updateSale = {
+            status: StatusPurchaseEnum.PAID,
+            methodPayment: MethodPaymentEnum.PAYPAL,
+          }
+        }
+
+        this._purchaseService.updateStatusPurchase(this.voucherConfirmObject.idSale, this.updateSale).subscribe(() => {
+            localStorage.removeItem("voucher");
+        });
+      });
+    }
+
 
   }
 
-  public typeCard():string{
+  public typeCard():string {
 
     let typeCard = "";
 
@@ -82,3 +127,4 @@ export class PurchaseConfirmComponent {
     return typeCard;
   }
 }
+

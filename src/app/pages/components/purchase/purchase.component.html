@@ -8,273 +8,261 @@
 <div class="purchase">
 
   <section class="purchase__dispatch">
-    <header class="dispatch__header">
-      <div class="dispatch__container-progress">
+    <app-progress #progress>
+      <app-progress-step>
+        @if (isSelectAddress){
+          <div class="purchase__container-accordions">
+            <h2 class="purchase__subtitle">Seleccionar tipo de entrega</h2>
 
-        <ul class="dispatch__list">
-          <li class="dispatch__item">
-            <div>
-              <p>1</p>
-            </div>
-            <div>
-              <p>Tipo de Retiro</p>
-            </div>
-          </li>
+            <div class="purchase__accordion-left" [ngClass]="{
+              'selected': displayDispatchShop
+            }" (click)="toggleDispatchShop()">
 
-          <li class="dispatch__item">
-            <div>
-              <p>2</p>
-            </div>
-            <div>
-              <p>Pago</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </header>
+              <label for="dispatch-shop" class="accordion-left__label">
+                <div class="accordion-left__container">
 
-    @if (isSelectAddress) {
-      <div class="purchase__container-accordions">
-        <h2 class="purchase__subtitle">Seleccionar tipo de entrega</h2>
+                  <div class="accordion-left__container-input">
+                    <input type="radio" class="accordion-left__input-radio" id="dispatch-shop" name="type-dispatch">
+                    Retiro en Tienda
+                  </div>
+                  <div class="accordion-left__text">
 
-        <div class="purchase__accordion-left" [ngClass]="{
-          'selected': displayDispatchShop
-        }" (click)="toggleDispatchShop()">
-
-          <label for="dispatch-shop" class="accordion-left__label">
-            <div class="accordion-left__container">
-
-              <div class="accordion-left__container-input">
-                <input type="radio" class="accordion-left__input-radio" id="dispatch-shop" name="type-dispatch">
-                Retiro en Tienda
-              </div>
-              <div class="accordion-left__text">
-
-                <p>Costo <span>$0</span></p>
-              </div>
-            </div>
-          </label>
-
-        </div>
-
-        @if(displayDispatchShop){
-          <div class="accordion-left__accordion">
-
-            <div class="accordion-left__container-left">
-              <label class="form-label">Seleccione una Sucursal</label>
-              <select class="form-select" (change)="selectBranch($event)">
-                <option value="" class="accordion-left__option">Sucursal</option>
-                @for (branch of listBranchsVar; track $index) {
-                  <option [value]="branch.idBranch" class="accordion-left__option">{{branch.name | titlecase}}</option>
-                }
-              </select>
-            </div>
-            <div class="accordion-left__container-right">
-              <h2 class="container-right__title">¿Quien retirara el producto?</h2>
-
-              <label for="the-same-person-branch" class="container-right__label">
-                <input type="radio" name="person-select" id="the-same-person-branch" class="container-right__input-radio" (change)="selectRetirePerson($event)" value="same-person">
-                La misma persona que compra
+                    <p>Costo <span>$0</span></p>
+                  </div>
+                </div>
               </label>
-              <label for="another-person-withdraw-branch" class="container-right__label">
-                <input type="radio" name="person-select" id="another-person-withdraw-branch" class="container-right__input-radio" (change)="selectRetirePerson($event)" value="other-person">
-                Otra persona retirará
-              </label>
-            </div>
-          </div>
-        }
-        <div class="purchase__accordion-right" (click)="toggleDispatchSend()">
 
-          <label for="dispatch-send" class="accordion-right__label" [ngClass]="{
-            'selected': displayDispatchSend
-          }">
-
-            <div class="accordion-right__container">
-              <input type="radio" class="accordion-left__input-radio" id="dispatch-send" name="type-dispatch">
-              Despacho a Domicilio
-              <div class="accordion-left__text">
-
-              </div>
-            </div>
-          </label>
-        </div>
-
-        @if (displayDispatchSend) {
-          <div class="accordion-right__accordion">
-
-            <h2 class="accordion-right__subtitle">Dirección de Despacho</h2>
-
-            <div class="accordion-right__container-list">
-
-              @for (address of listAddressVar; track $index) {
-                <article class="container-list__address">
-
-                  <label [htmlFor]="address.idAddress" class="address__label" (change)="selectedAddress(address)">
-                    <input type="radio" name="select-address" [id]="address.idAddress" class="address__input-radio">
-                    {{address.address.addressName | titlecase}}, {{address.address.commune.name}}
-                  </label>
-                </article>
-              }
             </div>
 
-            <div class="accordion-right__container-btn">
+            @if(displayDispatchShop){
+              <div class="accordion-left__accordion">
 
-              <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#createAddressForm" aria-expanded="false" aria-controls="createAddressForm">
-                Crear Dirección
-              </button>
-            </div>
+                <div class="accordion-left__container-left">
+                  <label class="form-label">Seleccione una Sucursal</label>
+                  <select class="form-select" (change)="selectBranch($event)">
+                    <option value="" class="accordion-left__option">Sucursal</option>
+                    @for (branch of listBranchsVar; track $index) {
+                      <option [value]="branch.idBranch" class="accordion-left__option">{{branch.name | titlecase}}</option>
+                    }
+                  </select>
+                </div>
+                <div class="accordion-left__container-right">
+                  <h5 class="mb-4">¿Quien retirara el producto?</h5>
 
-            <div class="collapse" id="createAddressForm">
-              <div class="card card-body">
-                <div class="accordion-right__form-create-address">
-
-                  <h3 class="accordion-right__title">Crea tu nueva dirección</h3>
-
-                  <div class="accordion-right__map"></div>
-
-                  <form novalidate [formGroup]="formCreateAddress" (ngSubmit)="createAddress()" class="accordion-right__form">
-
-                    <fieldset class="mb-3">
-                      <label for="nameAddress" class="form-label">Nombre de la Dirección</label>
-                      <input type="text" class="form-control" id="nameAddress" formControlName="name" [ngClass]="{
-                        'is-invalid': name.invalid && (name.dirty || name.touched)
-                      }">
-
-                      @if (name.getError('required')) {
-                        <span class="invalid-feedback">Este campo es requerido</span>
-                      }
-
-                      @if (name.getError('maxlength')) {
-                        <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
-                      }
-                    </fieldset>
-                    <fieldset class="mb-3">
-                      <label for="addressName" class="form-label">Calle y Numero</label>
-                      <input type="text" class="form-control" id="addressName" formControlName="addressName" [ngClass]="{
-                        'is-invalid': addressName.invalid && (addressName.dirty || addressName.touched)
-                      }">
-
-                      @if (addressName.getError('required')) {
-                        <span class="invalid-feedback">Este campo es requerido</span>
-                      }
-
-                      @if (addressName.getError('maxlength')) {
-                        <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
-                      }
-                    </fieldset>
-
-                    <fieldset class="mb-3">
-                      <label for="city" class="form-label">Ciudad</label>
-                      <input type="text" class="form-control" id="city" formControlName="city" [ngClass]="{
-                        'is-invalid': city.invalid && (city.dirty || city.touched)
-                      }">
-
-                      @if (city.getError('required')) {
-                        <span class="invalid-feedback">Este campo es requerido</span>
-                      }
-
-                      @if (city.getError('maxlength')) {
-                        <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
-                      }
-                    </fieldset>
-
-                    <fieldset class="mb-3">
-                      <label for="numDepartment" class="form-label">Numero Departamento (Opcional)</label>
-                      <input type="text" class="form-control" id="numDepartment" formControlName="numDepartment" [ngClass]="{
-                        'is-invalid': numDepartment.invalid && (numDepartment.dirty || numDepartment.touched)
-                      }">
-
-                      @if (numDepartment.getError('maxlength')) {
-                        <span class="invalid-feedback">Tiene que tener maximo 40 caracteres</span>
-                      }
-                    </fieldset>
-
-                    <fieldset class="mb-3">
-                      <label for="description" class="form-label">Piso / Oficina / Apto / Depto</label>
-                      <textarea class="form-control" id="description" rows="8" formControlName="description" placeholder="Descripción de la ubicación. Ej: departamento, torre, oficina"></textarea>
-                    </fieldset>
-
-                    <fieldset class="mb-3">
-                      <label for="" class="form-label">Región</label>
-                      <select class="form-select" formControlName="region" (change)="changeRegion($event)">
-                        <option selected>Región</option>
-                        @for (region of listRegionsVar; track $index) {
-                          <option [value]="region.idRegion">{{region.name}}</option>
-                        }
-                      </select>
-                    </fieldset>
-                    <fieldset class="mb-3">
-                      <label for="" class="form-label">Provincia</label>
-                      <select class="form-select" formControlName="province" (change)="changeProvince($event)">
-                        <option value="">Provincia</option>
-                        @for (province of listProvincesVar; track $index) {
-                          <option [value]="province.idProvince">{{province.name}}</option>
-                        }
-                      </select>
-                    </fieldset>
-                    <fieldset class="mb-3">
-                      <label for="" class="form-label">Comuna</label>
-                      <select class="form-select" formControlName="commune">
-                        <option value="">Comuna</option>
-                        @for (commune of listCommunesVar; track $index) {
-
-                          <option [value]="commune.idCommune">{{commune.name}}</option>
-                        }
-                      </select>
-                    </fieldset>
-
-                    <button class="form__btn-create btn btn-success" type="submit">Guardar Dirección</button>
-                  </form>
-
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" (change)="selectRetirePerson($event)" value="same-person">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      La misma persona que compra
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" (change)="selectRetirePerson($event)" value="other-person">
+                    <label class="form-check-label" for="flexRadioDefault2">
+                      Otra persona lo recibirá
+                    </label>
+                  </div>
                 </div>
               </div>
+            }
+            <div class="purchase__accordion-right" (click)="toggleDispatchSend()">
+
+              <label for="dispatch-send" class="accordion-right__label" [ngClass]="{
+                'selected': displayDispatchSend
+              }">
+
+                <div class="accordion-right__container">
+                  <input type="radio" class="accordion-left__input-radio" id="dispatch-send" name="type-dispatch">
+                  Despacho a Domicilio
+                  <div class="accordion-left__text">
+
+                  </div>
+                </div>
+              </label>
             </div>
 
-            <div class="accordion-right__person-resive">
+            @if (displayDispatchSend) {
+              <div class="accordion-right__accordion">
 
-              <h2 class="person-resive__subtitle">¿Quien recibirá el producto?</h2>
+                <h5 class="mb-4">Dirección de Despacho</h5>
 
-              <div class="person-resive__container">
+                <div class="accordion-right__container-list">
 
-                <label for="the-same-person" class="person-resive__label">
-                  <input type="radio" name="person-retire" id="the-same-person" class="person-resive__input" (change)="selectRetirePerson($event)" value="same-person">
-                  La misma persona que compra
-                </label>
+                  @for (address of listAddressVar; track $index) {
+                    <article class="container-list__address">
 
-                <label for="another-person-withdraw" class="person-resive__label">
-                  <input type="radio" name="person-retire" id="another-person-withdraw" class="person-resive__input" (change)="selectRetirePerson($event)" value="other-person">
-                  Otra persona lo recibirá
-                </label>
+                      <label [htmlFor]="address.idAddress" class="address__label" (change)="selectedAddress(address)">
+                        <input type="radio" name="select-address" [id]="address.idAddress" class="address__input-radio">
+                        {{address.address.addressName | titlecase}}, {{address.address.commune.name}}
+                      </label>
+                    </article>
+                  }
+                </div>
 
+                <div class="accordion-right__container-btn">
+
+                  <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#createAddressForm" aria-expanded="false" aria-controls="createAddressForm">
+                    Crear Dirección
+                  </button>
+                </div>
+
+                <div class="collapse" id="createAddressForm">
+                  <div class="card card-body">
+                    <div class="accordion-right__form-create-address">
+
+                      <h3 class="accordion-right__title">Crea tu nueva dirección</h3>
+
+                      <div class="accordion-right__map"></div>
+
+                      <form novalidate [formGroup]="formCreateAddress" (ngSubmit)="createAddress()" class="accordion-right__form">
+
+                        <fieldset class="mb-3">
+                          <label for="nameAddress" class="form-label">Nombre de la Dirección</label>
+                          <input type="text" class="form-control" id="nameAddress" formControlName="name" [ngClass]="{
+                            'is-invalid': name.invalid && (name.dirty || name.touched)
+                          }">
+
+                          @if (name.getError('required')) {
+                            <span class="invalid-feedback">Este campo es requerido</span>
+                          }
+
+                          @if (name.getError('maxlength')) {
+                            <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                          }
+                        </fieldset>
+                        <fieldset class="mb-3">
+                          <label for="addressName" class="form-label">Calle y Numero</label>
+                          <input type="text" class="form-control" id="addressName" formControlName="addressName" [ngClass]="{
+                            'is-invalid': addressName.invalid && (addressName.dirty || addressName.touched)
+                          }">
+
+                          @if (addressName.getError('required')) {
+                            <span class="invalid-feedback">Este campo es requerido</span>
+                          }
+
+                          @if (addressName.getError('maxlength')) {
+                            <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                          }
+                        </fieldset>
+
+                        <fieldset class="mb-3">
+                          <label for="city" class="form-label">Ciudad</label>
+                          <input type="text" class="form-control" id="city" formControlName="city" [ngClass]="{
+                            'is-invalid': city.invalid && (city.dirty || city.touched)
+                          }">
+
+                          @if (city.getError('required')) {
+                            <span class="invalid-feedback">Este campo es requerido</span>
+                          }
+
+                          @if (city.getError('maxlength')) {
+                            <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                          }
+                        </fieldset>
+
+                        <fieldset class="mb-3">
+                          <label for="numDepartment" class="form-label">Numero Departamento (Opcional)</label>
+                          <input type="text" class="form-control" id="numDepartment" formControlName="numDepartment" [ngClass]="{
+                            'is-invalid': numDepartment.invalid && (numDepartment.dirty || numDepartment.touched)
+                          }">
+
+                          @if (numDepartment.getError('maxlength')) {
+                            <span class="invalid-feedback">Tiene que tener maximo 40 caracteres</span>
+                          }
+                        </fieldset>
+
+                        <fieldset class="mb-3">
+                          <label for="description" class="form-label">Piso / Oficina / Apto / Depto</label>
+                          <textarea class="form-control" id="description" rows="8" formControlName="description" placeholder="Descripción de la ubicación. Ej: departamento, torre, oficina"></textarea>
+                        </fieldset>
+
+                        <fieldset class="mb-3">
+                          <label for="" class="form-label">Región</label>
+                          <select class="form-select" formControlName="region" (change)="changeRegion($event)">
+                            <option selected>Región</option>
+                            @for (region of listRegionsVar; track $index) {
+                              <option [value]="region.idRegion">{{region.name}}</option>
+                            }
+                          </select>
+                        </fieldset>
+                        <fieldset class="mb-3">
+                          <label for="" class="form-label">Provincia</label>
+                          <select class="form-select" formControlName="province" (change)="changeProvince($event)">
+                            <option value="">Provincia</option>
+                            @for (province of listProvincesVar; track $index) {
+                              <option [value]="province.idProvince">{{province.name}}</option>
+                            }
+                          </select>
+                        </fieldset>
+                        <fieldset class="mb-3">
+                          <label for="" class="form-label">Comuna</label>
+                          <select class="form-select" formControlName="commune">
+                            <option value="">Comuna</option>
+                            @for (commune of listCommunesVar; track $index) {
+
+                              <option [value]="commune.idCommune">{{commune.name}}</option>
+                            }
+                          </select>
+                        </fieldset>
+
+                        <button class="form__btn-create btn btn-success" type="submit">Guardar Dirección</button>
+                      </form>
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-right__person-resive">
+
+                  <h5 class="my-4">¿Quien recibirá el producto?</h5>
+
+                  <div class="person-resive__container">
+
+                    <div class="form-check mb-2">
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" (change)="selectRetirePerson($event)" value="same-person">
+                      <label class="form-check-label" for="flexRadioDefault1">
+                        La misma persona que compra
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" (change)="selectRetirePerson($event)" value="other-person">
+                      <label class="form-check-label" for="flexRadioDefault2">
+                        Otra persona lo recibirá
+                      </label>
+                    </div>
+                  </div>
+                </div>
               </div>
+            }
+          </div>
+        }
+      </app-progress-step>
+
+      <app-progress-step>
+
+        @if (isSelectPay) {
+
+          <div class="purchase__container-select-pay">
+
+            <h2 class="container-select-pay__title">Selecciona tu metodo de pago</h2>
+
+            <div class="purchase__container-inputs">
+
+              <label for="transbank" class="container-inputs__label" [ngClass]="{
+                'container-inputs__label--selected': true
+              }">
+                <input type="radio" name="select-pay" id="transbank" value="transbank" (change)="selectPayment($event)" class="container-input__radio-input">
+                Transbank
+              </label>
+
+              <label for="paypal" class="container-inputs__label">
+                <input type="radio" name="select-pay" id="paypal" value="paypal" (change)="selectPayment($event)" class="container-input__radio-input">
+                Paypal
+              </label>
             </div>
           </div>
         }
-      </div>
-    }
-
-    @if (isSelectPay) {
-      <div class="purchase__container-select-pay">
-
-        <h2 class="container-select-pay__title">Selecciona tu metodo de pago</h2>
-
-        <div class="purchase__container-inputs">
-
-          <label for="debit-card" class="container-inputs__label" [ngClass]="{
-            'container-inputs__label--selected': true
-          }">
-            <input type="radio" name="select-pay" id="debit-card" (change)="selectPayment($event)" class="container-input__radio-input">
-            Transbank
-          </label>
-
-          <label for="market-payment" class="container-inputs__label">
-
-            <input type="radio" name="select-pay" id="market-payment" (change)="selectPayment($event)" class="container-input__radio-input">
-            Mercado Pago
-          </label>
-        </div>
-      </div>
-    }
+      </app-progress-step>
+    </app-progress>
   </section>
   <section class="purchase__container-cart">
 
@@ -300,7 +288,7 @@
 
       <div class="container-cart__container-btn-cart">
         @if (isSelectPay) {
-          <button class="container-cart__btn-cart" (click)="returnStepPrevius()">Volver al Paso Anterior</button>
+          <button class="btn btn-success" (click)="returnStepPrevius(progress)" progressStepPrev>Volver al Paso Anterior</button>
         }
 
         @if(isSelectAddress) {
@@ -336,7 +324,7 @@
         </div>
         <div class="purchase-info__shipping-cost">
           <h4>Costo de Envio</h4>
-          <span></span>
+          <span>$ {{shippingCost() | number}}</span>
         </div>
         <div class="purchase-info__total-price">
           <h4>Precio Total</h4>
@@ -345,11 +333,11 @@
 
         <div class="purchase-info__container-btn-purchase">
           @if (isSelectPay) {
-            <button class="purchase-info__btn-purchase btn btn-success"(click)="createPay()">Realizar Compra</button>
+            <button class="purchase-info__btn-purchase btn btn-success"(click)="createPay(progress)" progressStepNext>Realizar Compra</button>
           }
 
           @if(isSelectAddress){
-            <button class="purchase-info__btn-purchase btn btn-success" (click)="continuePay()">Continuar con la Compra</button>
+            <button class="purchase-info__btn-purchase btn btn-success" (click)="continuePay(progress)" progressStepNext>Continuar con la Compra</button>
           }
         </div>
 

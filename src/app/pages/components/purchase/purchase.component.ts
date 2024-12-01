@@ -6,20 +6,23 @@ import { Cart, cartJson } from '@pages/interfaces/cart';
 import { AddressService } from '@pages/services/address.service';
 import { Address, addressObject, CreateAddress } from '@pages/interfaces/address';
 import { Commune, Province, Region } from '@pages/interfaces/locates';
-import { CreateVoucher, TransationTransbank, TypeRetirementEnum, Voucher, VoucherConfirm, VoucherObject } from '@pages/interfaces/purchase';
+import { CreateVoucher, TypeRetirementEnum, Voucher, VoucherConfirm, VoucherObject } from '@pages/interfaces/purchase';
 import { RouterLink } from '@angular/router';
-import { CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common';
-import { SessionService } from '@core/services/session.service';
+import { CurrencyPipe, DecimalPipe, NgClass, TitleCasePipe } from '@angular/common';
 import { TransbankService } from '@pages/services/transbank.service';
 import { Branch } from '@admin/interfaces/branch';
 import { PurchaseService } from '@pages/services/purchase.service';
 import { BranchService } from '@admin/services/branch.service';
-import { environment } from '@env/environment.development';
+import { PaypalService } from '@pages/services/paypal.service';
+import Swal from 'sweetalert2';
+import { ProgressComponent } from '@shared/progress/progress.component';
+import { ProgressStepComponent } from '@shared/progress-step/progress-step.component';
+import { ProgressStepDirective } from '@core/directives/progress-step.directive';
 
 @Component({
   selector: 'app-purchase',
   standalone: true,
-  imports: [RouterLink, NgClass, CurrencyPipe, TitleCasePipe, ReactiveFormsModule],
+  imports: [RouterLink, NgClass, CurrencyPipe, TitleCasePipe, ReactiveFormsModule, ProgressComponent, ProgressStepComponent, ProgressStepDirective, DecimalPipe],
   templateUrl: './purchase.component.html',
   styleUrl: './purchase.component.scss'
 })
@@ -29,10 +32,10 @@ export class PurchaseComponent implements OnInit {
   private readonly _cartService = inject(CartService);
   private readonly _builder = inject(FormBuilder);
   private readonly _alertService = inject(AlertService);
-  private readonly _sessionService = inject(SessionService);
   private readonly _transbankService = inject(TransbankService);
   private readonly _purchaseService = inject(PurchaseService);
   private readonly _branchService = inject(BranchService);
+  private readonly _paypalService = inject(PaypalService);
 
   public formCreateAddress: FormGroup = this._builder.group({
 
@@ -64,7 +67,7 @@ export class PurchaseComponent implements OnInit {
   public listCommune = signal<Commune[]>([]);
   public cart = signal<Cart>(cartJson);
 
-  public shippingCost = 0;
+  public shippingCost = signal<number>(0);
 
   public voucher: Voucher = VoucherObject;
   public voucherObject: CreateVoucher = {
@@ -93,6 +96,14 @@ export class PurchaseComponent implements OnInit {
     this._branchService.getAllBranchs().subscribe(response => {
       this.listBranchs.set(response.data);
     });
+  }
+
+  public goNext(progress: ProgressComponent): void {
+    progress.increaseStep();
+  }
+
+  public goPrev(progress: ProgressComponent): void {
+    progress.decreaseStep();
   }
 
   public changeRegion(event: Event):void{
@@ -249,12 +260,13 @@ export class PurchaseComponent implements OnInit {
     this.voucher.address= address;
   }
 
-  public continuePay():void{
+  public continuePay(progress: ProgressComponent):void{
 
     if((this.voucher.address.address.addressName !== "" || this.voucher.idBranch !== 0) && this.voucher.typePerson !== ""){
 
       this.isSelectAddress = false;
       this.isSelectPay = true;
+      progress.increaseStep();
     } else {
 
       this._alertService.error("Error", "Tiene que seleccionar el metodo de retiro del producto");
@@ -262,32 +274,16 @@ export class PurchaseComponent implements OnInit {
 
   }
 
-  private generateUUID(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-    });
-}
-
-  public createPay():void {
+  public createPay(progress: ProgressComponent):void {
 
     if((this.voucher.address.address.addressName !== "" || this.voucher.idBranch !== 0) &&
       this.voucher.typePerson !== "" &&
-      this.voucher.typePay !== ""){
+      this.voucher.typePay === "transbank"){
 
-        let tokenUser = this._sessionService.getSession()?.access;
-        let arrayTokenUser = tokenUser?.split(".");
-        let uuid = this.generateUUID().split("-").join("");
+        progress.increaseStep();
+        this.modalLoading();
 
-        const transation: TransationTransbank = {
-          buyOrder: uuid.substring(1, 25),
-          sessionId: arrayTokenUser![2],
-          amount: this.cart().priceTotal,
-          returnUrl: `${environment.domain}/purchase-confirm`,
-        }
-
-        this._transbankService.createTransationTransbank(transation).subscribe(result => {
+        this._transbankService.createTransationTransbank({ amount: this.cart().priceTotal }).subscribe(response => {
 
           this.voucher.totalPrice = this.cart().priceTotal;
           this.voucher.productsQuantity = this.cart().quantityTotal;
@@ -320,7 +316,7 @@ export class PurchaseComponent implements OnInit {
               address: this.voucher.address,
               typePerson: this.voucher.typePerson,
               typePay: this.voucher.typePay,
-              shippingCost: this.shippingCost,
+              shippingCost: this.shippingCost(),
               typeRetirement: this.voucher.typeRetirement,
               idSale: response.data.idSale,
             }
@@ -330,27 +326,92 @@ export class PurchaseComponent implements OnInit {
 
           let form = document.createElement("form");
           form.method = "POST";
-          form.action = result.data.url;
+          form.action = response.data.url;
           form.hidden = true;
 
           let element = document.createElement("input");
           element.hidden = true;
-          element.value = result.data.token;
+          element.value = response.data.token;
           element.name = 'token_ws';
           form.appendChild(element);
           document.body.appendChild(form);
           form.submit();
         });
 
-      } else {
+      } else if((this.voucher.address.address.addressName !== "" || this.voucher.idBranch !== 0) &&
+      this.voucher.typePerson !== "" &&
+      this.voucher.typePay === "paypal") {
 
+        this.modalLoading();
+        this._paypalService.createPaypal({amount: this.cart().priceTotal}).subscribe(response => {
+
+          this.voucher.totalPrice = this.cart().priceTotal;
+          this.voucher.productsQuantity = this.cart().quantityTotal;
+          this.voucher.discountApplied = this.cart().priceTotalDiscount;
+
+          if(this.voucher.typeRetirement === TypeRetirementEnum.HOME_DELIVERY && this.voucher.address.name !== ""){
+
+            this.voucherObject = {
+              withdrawal: this.voucher.typeRetirement,
+              priceTotal: this.voucher.totalPrice,
+              productsQuantity: this.voucher.productsQuantity,
+              discountApplied: this.voucher.discountApplied
+            }
+
+          } else if(this.voucher.typeRetirement === TypeRetirementEnum.STORE_PICKUP && this.voucher.idBranch !== 0){
+
+            this.voucherObject = {
+              withdrawal: this.voucher.typeRetirement,
+              priceTotal: this.voucher.totalPrice,
+              productsQuantity: this.voucher.productsQuantity,
+              discountApplied: this.voucher.discountApplied,
+              idBranch: this.voucher.idBranch
+            }
+          }
+
+          this._purchaseService.createPurchase(this.voucherObject).subscribe(response => {
+
+            const newVoucherObject: VoucherConfirm = {
+
+              address: this.voucher.address,
+              typePerson: this.voucher.typePerson,
+              typePay: this.voucher.typePay,
+              shippingCost: this.shippingCost(),
+              typeRetirement: this.voucher.typeRetirement,
+              idSale: response.data.idSale,
+            }
+
+            localStorage.setItem("voucher", JSON.stringify(newVoucherObject));
+          });
+
+          window.location.href = response.data.links[1].href;
+        });
+
+      } else {
         this._alertService.error("Error", "Tiene que seleccionar un metodo de pago");
+
       }
   }
 
-  public returnStepPrevius():void {
+  private modalLoading():void {
+    Swal.fire({
+      title: "Procesando Pago",
+      html: "Esto puede tomar algunos segundos o minutos",
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    }).then((result) => {
+      if (result.dismiss === Swal.DismissReason.timer) {
+        console.log("I was closed by the timer");
+      }
+    });
+  }
+
+  public returnStepPrevius(progress: ProgressComponent):void {
 
     this.isSelectAddress = true;
     this.isSelectPay = false;
+    progress.decreaseStep();
   }
 }

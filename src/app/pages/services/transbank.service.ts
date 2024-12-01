@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { ResponseConfirmTransbank, ResponseTransbank, TransationTransbank } from '../interfaces/purchase';
 import { Observable } from 'rxjs';
+import { ResponseConfirmTransbank, ResponseTransbank, TransationTransbank } from '@pages/interfaces/transbank';
 
 @Injectable({
   providedIn: 'root'
