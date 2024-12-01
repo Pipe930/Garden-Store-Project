@@ -14,5 +14,9 @@ export const envShema = Joi.object({
     DATABASE_PORT: Joi.number().required().default(5432),
     DATABASE_NAME: Joi.string().required(),
     DATABASE_USER: Joi.string().required(),
-    DATABASE_PASSWORD: Joi.string().required()
+    DATABASE_PASSWORD: Joi.string().required(),
+    S3_AWS_URL: Joi.string().required(),
+    PAYPAL_CLIENT_ID: Joi.string().required(),
+    PAYPAL_SECRET_KEY: Joi.string().required(),
+    PAYPAL_URL_API: Joi.string().required(),
 })

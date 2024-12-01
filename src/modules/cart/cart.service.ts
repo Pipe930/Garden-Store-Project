@@ -6,6 +6,7 @@ import { ResponseData } from 'src/core/interfaces/response-data.interface';
 import { AddItemCartDto } from './dto/add-item-cart.dto';
 import { SubstractItemCartDto } from './dto/substract-item-cart.dto';
 import { Category } from '../categories/models/category.model';
+import { ImagesProduct } from '../products/models/image.model';
 
 @Injectable()
 export class CartService {
@@ -28,7 +29,11 @@ export class CartService {
                                 {
                                     model: Category,
                                     attributes: ["name"]
-                                }
+                                },
+                                {
+                                    model: ImagesProduct,
+                                    attributes: ['urlImage', 'type']
+                                },
                             ]
                         }
                     ]

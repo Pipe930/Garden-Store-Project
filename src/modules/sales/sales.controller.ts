@@ -9,6 +9,7 @@ import { ResourcesEnum } from 'src/core/enums/resourses.enum';
 import { ActionsEnum } from 'src/core/enums/actions.enum';
 import { Response } from 'express';
 import { GeneratePDFDto } from './dto/generatePDF.dto';
+import { CommitPaypalDto, CreatePaypalDto } from './dto/create-paypal';
 
 @Controller('sales')
 export class SalesController {
@@ -63,13 +64,25 @@ export class SalesController {
 
   @Post('transbank/create')
   @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.CREATE] }])
-  createTransbank(@Body() createTransbankDto: CreateTransbankDto) {
-    return this.salesService.createTransbankTransaction(createTransbankDto);
+  createTransbank(@Body() createTransbankDto: CreateTransbankDto, @Req() request: RequestJwt) {
+    return this.salesService.createTransbankTransaction(createTransbankDto, request);
   }
 
   @Get('transbank/commit/:token')
   @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.CREATE] }])
   commitTransbank(@Param('token') token: string) {
     return this.salesService.commitTransbankTransaction(token);
+  }
+
+  @Post('paypal/create')
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.CREATE] }])
+  createPaypal(@Body() createPaypal: CreatePaypalDto) {
+    return this.salesService.createPaypalTransaction(createPaypal);
+  }
+
+  @Post('paypal/commit')
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.CREATE] }])
+  commitPaypal(@Body() commitPaypalDto: CommitPaypalDto) {
+    return this.salesService.commitPaypalTransaction(commitPaypalDto);
   }
 }

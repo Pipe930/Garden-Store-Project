@@ -8,6 +8,9 @@ export const AppConfigEnvironment = () => ({
     tbkApiKeySecret: process.env.TBK_API_KEY_SECRET,
     tbkApiKeyId: process.env.TBK_API_KEY_ID,
     s3AwsUrl: process.env.S3_AWS_URL,
+    paypalClientId: process.env.PAYPAL_CLIENT_ID,
+    paypalSecretKey: process.env.PAYPAL_SECRET_KEY,
+    paypalUrlApi: process.env.PAYPAL_URL_API,
     database: {
 
         dialect: process.env.DATABASE_DIALECT as any,

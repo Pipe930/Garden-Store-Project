@@ -21,6 +21,9 @@ import { MethodPaymentEnum } from 'src/core/enums/statusPurchase.enum';
 import { PrinterService } from 'src/printer/printer.service';
 import { buildReport } from './documents/build.report';
 import { GeneratePDFDto } from './dto/generatePDF.dto';
+import { ResponseConvertPrice } from 'src/core/interfaces/response-convert';
+import { CommitPaypalDto, CreatePaypalDto } from './dto/create-paypal';
+import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
 
 @Injectable()
 export class SalesService {
@@ -272,21 +275,24 @@ export class SalesService {
     }
   }
 
-  async createTransbankTransaction(createTransbankDto: CreateTransbankDto): Promise<ResponseData> {
+  async createTransbankTransaction(createTransbankDto: CreateTransbankDto, request: RequestJwt): Promise<ResponseData> {
 
-    const { buyOrder, sessionId, amount, returnUrl } = createTransbankDto;
+    const { amount } = createTransbankDto;
+
+    const token = request.headers.authorization.split(' ')[1].split(".");
+    const uuid = randomUUID().split("-").join("");
 
     try {
       const responseTransbank = await this.httpService.axiosRef.post('https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions', {
-        buy_order: buyOrder,
-        session_id: sessionId,
+        buy_order: uuid.substring(1, 25),
+        session_id: token[2],
         amount,
-        return_url: returnUrl
+        return_url: `${this.configService.get<string>('domainUrl')}/purchase-confirm`
       }, {
         headers: this.headerRequestTransbank()
       });
 
-      if(responseTransbank.status === 200) return {
+      return {
         statusCode: HttpStatus.CREATED,
         message: 'Transaccion creada con exito',
         data: responseTransbank.data
@@ -304,7 +310,7 @@ export class SalesService {
         headers: this.headerRequestTransbank()
       });
 
-      if(responseTransbank.status === 200) return {
+      return {
         statusCode: HttpStatus.OK,
         message: 'Transaccion confirmada con exito',
         data: responseTransbank.data
@@ -312,6 +318,94 @@ export class SalesService {
     } catch (error) {
       throw new BadRequestException('No se pudo confirmar la transaccion');
     }
+  }
+
+  async createPaypalTransaction(createPaypalDto: CreatePaypalDto): Promise<ResponseData> {
+
+    try {
+
+      const responseDolar = await this.httpService.axiosRef.get('https://cl.dolarapi.com/v1/cotizaciones/usd');
+
+      const convertPrice: ResponseConvertPrice = responseDolar.data;
+      const dolarConvert = createPaypalDto.amount / convertPrice.venta;
+
+      const jsonPaypal = { 
+        intent: "CAPTURE", 
+        purchase_units: [ 
+          { 
+            reference_id: randomUUID(), 
+            amount: { 
+              currency_code: "USD", 
+              value: Number.parseFloat(dolarConvert.toFixed(2)).toString(), 
+            },
+            description: "Venta de productos",
+          } 
+        ],
+        application_context: {
+          brand_name: "Garden Store",
+          landing_page: "LOGIN",
+          user_action: "PAY_NOW",
+          shipping_preference: "NO_SHIPPING",
+          return_url: `${this.configService.get<string>('domainUrl')}/purchase-confirm`,
+          cancel_url: `${this.configService.get<string>('domainUrl')}/purhase`
+        }
+      }
+
+
+      const reponsePaypal = await this.httpService.axiosRef.post(`${this.configService.get<string>('paypalUrlApi')}/v2/checkout/orders`, jsonPaypal, {
+        headers: {
+          Authorization: `Bearer ${await this.createTokenPaypal()}`,
+        }
+      });
+
+      return {
+        statusCode: HttpStatus.CREATED,
+        message: 'Transaccion de paypal creada con exito',
+        data: reponsePaypal.data
+      }
+    } catch (error) {
+      throw new InternalServerErrorException('No se pudo crear la transaccion de paypal');
+    }
+  }
+
+  async commitPaypalTransaction(commitPaypal: CommitPaypalDto): Promise<ResponseData>{
+
+    const { token } = commitPaypal;
+
+    try {
+      const responsePaypal = await this.httpService.axiosRef.post(`${this.configService.get<string>('paypalUrlApi')}/v2/checkout/orders/${token}/capture`, {}, {
+        auth: {
+          username: this.configService.get<string>('paypalClientId'),
+          password: this.configService.get<string>('paypalSecretKey')
+        }
+      });
+  
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Transaccion de paypal confirmada con exito',
+        data: responsePaypal.data
+      }
+    } catch (error) {
+      throw new InternalServerErrorException('No se pudo confirmar la transaccion de paypal');
+    }
+  }
+
+  private async createTokenPaypal(): Promise<string> {
+
+    const params = new URLSearchParams();
+    params.append('grant_type', 'client_credentials');
+
+    const tokenAccess = await this.httpService.axiosRef.post(`${this.configService.get<string>('paypalUrlApi')}/v1/oauth2/token`, params, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      auth: {
+        username: this.configService.get<string>('paypalClientId'),
+        password: this.configService.get<string>('paypalSecretKey')
+      }
+    });
+
+    return tokenAccess.data["access_token"];
   }
 
   private numberPaymentMethod(methodPayment: string): number {

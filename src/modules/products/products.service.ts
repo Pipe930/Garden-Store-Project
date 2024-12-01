@@ -69,6 +69,7 @@ export class ProductsService {
     const offset = (page - 1) * limit;
     const products = await Product.findAll<Product>({
       include: this.includeConfigProduct(),
+      attributes: { exclude: ['idCategory', 'idOffer'] },
       where: { published: true, idOffer: { [Op.is]: null } },
       limit,
       offset
@@ -98,6 +99,7 @@ export class ProductsService {
     const offset = (page - 1) * limit;
     const products = await Product.findAll<Product>({
       include: this.includeConfigProduct(),
+      attributes: { exclude: ['idCategory', 'idOffer'] },
       limit,
       offset
     });
@@ -120,6 +122,7 @@ export class ProductsService {
 
     const product = await Product.findOne<Product>({
       where: { idProduct: id },
+      attributes: { exclude: ['idCategory', 'idOffer'] },
       include: this.includeConfigProduct()
     });
 
@@ -136,6 +139,7 @@ export class ProductsService {
 
     const product = await Product.findOne<Product>(
       { where: { slug, published: true  },
+      attributes: { exclude: ['idCategory', 'idOffer'] },
       include: this.includeConfigProduct(),
     }
     );
@@ -156,7 +160,7 @@ export class ProductsService {
       include: this.includeConfigProduct()
     });
 
-    if(products.length === 0) throw new NotFoundException("No se encontraron productos en esta categoria");
+    if(products.length === 0) return { message: "No se han encontrado productos con esa categoria", statusCode: HttpStatus.NO_CONTENT };
 
     return {
       statusCode: HttpStatus.OK,
@@ -184,7 +188,7 @@ export class ProductsService {
       include: this.includeConfigProduct()
     });
 
-    if(products.length === 0) throw new NotFoundException("No se encontraron productos con ese titulo");
+    if(products.length === 0) return { message: "No se han encontrado productos", statusCode: HttpStatus.NO_CONTENT };
 
     return {
       statusCode: HttpStatus.OK,
