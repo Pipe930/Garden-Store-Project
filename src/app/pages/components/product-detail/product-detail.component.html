@@ -1,108 +1,123 @@
 @let productVar = product();
 @let quantityVar = quantity();
+@let productListVar = productList();
+@let urlImageVar = urlImage();
 
 <div class="container-detail">
   <div class="container__product">
 
-    <div class="product__primary-info">
-      <div class="product__images">
-        <div class="images__primary-image">
-          <img [src]="urlImage()" alt="imagen del producto" height="500">
-        </div>
-        <div class="images__other-images">
-          <ul>
-            <li>
-              <a href=""></a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="product__description-product">
-        <h2 class="description-product__title">{{productVar.title | titlecase}}</h2>
-        <div class="description-product__stock">
-          <p><strong>ID</strong> {{productVar.idProduct}}</p>
-          <p>Quedan {{productVar.stock}} unidades</p>
-        </div>
-        <hr>
-        <div class="description-product__info">
-          <p>Por {{productVar.brand}}</p>
-
-          <div class="description-product__prices">
-            @if(productVar.offer){
-              <div class="description-product__discount-percentage">
-                <p class="description-product__percentage">{{productVar.offer.discount}}% de Descuento</p>
-              </div>
-            }
-
-            @if(!productVar.offer && productVar.stock >= quantityVar){
-              <p class="prices__price">$ {{productVar.price | number}}</p>
-            } @else {
-              <p class="prices__price"><s>$ {{productVar.price | number}}</s></p>
-            }
-            <p class="prices__text">Precio de Referencia</p>
-
-            @if(productVar.offer){
-              <p class="prices__price">$ {{productVar.priceDiscount | number}}</p>
-              <p class="prices__text">Precio de Descuento</p>
-            }
+    @defer (when productVar.idProduct !== 0) {
+      <div class="product__primary-info">
+        <div class="product__images">
+          <div class="images__primary-image">
+            <img [src]="urlImageVar" alt="imagen del producto" height="500">
           </div>
-          @if (productVar.stock < quantityVar) {
-            <p class="prices__aviable">No Disponible</p>
-          }
-          <div class="description-product__cart">
-            <div class="description-product__container-add-cart">
-              <button class="description-product__btn-add btn btn-success" (click)="sumQuantity()">
-                +
-              </button>
-              <p class="description-product__quantity">{{quantityVar}}</p>
-              <button class="description-product__btn-substract btn btn-success" (click)="subQuantity()">
-                -
-              </button>
+          <div class="images__other-images">
+            <ul>
+              <li>
+                <a href=""></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="product__description-product">
+          <h2 class="description-product__title">{{productVar.title | titlecase}}</h2>
+          <div class="description-product__stock">
+            <p><strong>ID</strong> {{productVar.idProduct}}</p>
+            <p>Quedan {{productVar.stock}} unidades</p>
+          </div>
+          <hr>
+          <div class="description-product__info">
+            <p>Por {{productVar.brand}}</p>
+            <app-rating-starts [rating]="productVar.rating" [reviewsCount]="productVar.reviewsCount"></app-rating-starts>
+            <div class="description-product__prices">
+              @if(productVar.offer){
+                <div class="description-product__discount-percentage">
+                  <p class="description-product__percentage">{{productVar.offer.discount}}% de Descuento</p>
+                </div>
+              }
+
+              @if(!productVar.offer && productVar.stock >= quantityVar){
+                <p class="prices__price">$ {{productVar.price | number}}</p>
+              } @else {
+                <p class="prices__price"><s>$ {{productVar.price | number}}</s></p>
+              }
+              <p class="prices__text">Precio de Referencia</p>
+
+              @if(productVar.offer){
+                <p class="prices__price">$ {{productVar.priceDiscount | number}}</p>
+                <p class="prices__text">Precio de Descuento</p>
+              }
             </div>
-            <button class="description-product__btn-add-cart btn btn-success" (click)="addCart(productVar.idProduct)" [disabled]="productVar.stock < quantityVar">Añadir al Carrito <i class='bx bxs-cart-add bx-sm'></i></button>
-          </div>
-        </div>
-        <div class="description-product__description">
-          <div class="description-product__tab">
-            <button class="description-product__tablinks">Descripción</button>
-            <button class="description-product__tablinks">Despacho</button>
-            <button class="description-product__tablinks">Cambios y Devoluciones</button>
-          </div>
-          <div class="description-product__content">
-            <p>{{productVar.description}}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="product__slider">
-      <h3 class="slider__title bg-success text-white py-3 text-center">Productos Relacionados</h3>
-      <div class="slider__slider-wrapper">
-        <swiper-container #swiper pagination="false" effect="coverflow" grab-cursor="false" slides-per-group="4" slides-per-view="4" speed="1200">
-          @for (productCategory of productList(); track $index) {
-            @if(productCategory.idProduct !== productVar.idProduct){
-              <swiper-slide>
-                <app-card (eventProduct)="eventProductGet($event)" [product]="productCategory" [reload]="true" class="slider-wrapper__card-item"></app-card>
-              </swiper-slide>
+            @if (productVar.stock < quantityVar) {
+              <p class="prices__aviable">No Disponible</p>
             }
-          }
-        </swiper-container>
-        <div class="slider__container-btns">
-          <button (click)="prevSwiper()" class="slider__btn-next btn btn-dark">
-            <i class='bx bx-chevron-left bx-md'></i>
-          </button>
-          <button (click)="nextSwiper()" class="slider__btn-prev btn btn-dark">
-            <i class='bx bx-chevron-right bx-md'></i>
-          </button>
+            <div class="description-product__cart">
+              <div class="description-product__container-add-cart">
+                <button class="description-product__btn-add btn btn-success" (click)="sumQuantity()">
+                  +
+                </button>
+                <p class="description-product__quantity">{{quantityVar}}</p>
+                <button class="description-product__btn-substract btn btn-success" (click)="subQuantity()">
+                  -
+                </button>
+              </div>
+              <button class="description-product__btn-add-cart btn btn-success" (click)="addCart(productVar.idProduct)" [disabled]="productVar.stock < quantityVar">Añadir al Carrito <i class='bx bxs-cart-add bx-sm'></i></button>
+            </div>
+          </div>
+          <div class="description-product__description">
+            <div class="description-product__tab">
+              <button class="description-product__tablinks">Descripción</button>
+              <button class="description-product__tablinks">Despacho</button>
+              <button class="description-product__tablinks">Cambios y Devoluciones</button>
+            </div>
+            <div class="description-product__content">
+              <p>{{productVar.description}}</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="container-fluid">
-      @if (productVar.idProduct !== 0) {
-        <app-review [idProduct]="productVar.idProduct"></app-review>
-      }
-    </div>
+      <div class="product__slider">
+        <h3 class="slider__title bg-success text-white py-3 text-center">Productos Relacionados</h3>
+        <div class="slider__slider-wrapper">
+          <swiper-container #swiper pagination="false" effect="coverflow" grab-cursor="false" slides-per-group="4" slides-per-view="4" speed="1200">
+            @for (productCategory of productListVar; track $index) {
+              @if(productCategory.idProduct !== productVar.idProduct){
+                <swiper-slide>
+                  <app-card (eventProduct)="eventProductGet($event)" [product]="productCategory" [reload]="true" class="slider-wrapper__card-item"></app-card>
+                </swiper-slide>
+              }
+            }
+          </swiper-container>
+          <div class="slider__container-btns">
+            <button (click)="prevSwiper()" class="slider__btn-next btn btn-dark">
+              <i class='bx bx-chevron-left bx-md'></i>
+            </button>
+            <button (click)="nextSwiper()" class="slider__btn-prev btn btn-dark">
+              <i class='bx bx-chevron-right bx-md'></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        @if (productVar.idProduct !== 0) {
+          <app-review [idProduct]="productVar.idProduct"></app-review>
+        }
+      </div>
+    } @placeholder {
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="text-center">
+          <!-- Spinner -->
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <!-- Texto opcional -->
+          <p class="mt-3 text-muted">Cargando...</p>
+        </div>
+      </div>
+    }
   </div>
 </div>

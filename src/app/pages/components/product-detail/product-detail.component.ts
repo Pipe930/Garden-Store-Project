@@ -10,12 +10,14 @@ import { CartService } from '@pages/services/cart.service';
 import { environment } from '@env/environment.development';
 import { CardComponent } from '@shared/card/card.component';
 import { ReviewComponent } from '@shared/review/review.component';
+import { RatingStartsComponent } from '@shared/rating-starts/rating-starts.component';
+
 register();
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CardComponent, DecimalPipe, ReviewComponent, TitleCasePipe],
+  imports: [CardComponent, DecimalPipe, ReviewComponent, TitleCasePipe, RatingStartsComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],

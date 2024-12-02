@@ -1,0 +1,21 @@
+@let filledStarsVar = filledStars();
+@let emptyStarsVar = emptyStars();
+@let hasHalfStarVar = hasHalfStar();
+@let reviewsCountVar = reviewsCount();
+
+<div class="stars-container">
+
+  @for (star of filledStarsVar; track $index) {
+    <i class='bx bxs-star fa-star'></i>
+  }
+
+  @if(hasHalfStarVar){
+    <i class='bx bxs-star-half fa-star-half-o'></i>
+  }
+
+  @for (star of emptyStarsVar; track $index) {
+    <i class='bx bx-star fa-star-o'></i>
+  }
+
+  <span class="reviews-text">{{ reviewsCountVar }} reseñas</span>
+</div>

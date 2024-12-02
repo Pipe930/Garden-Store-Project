@@ -62,8 +62,8 @@ export class ProductsService {
     return this._http.get<ResponseProduct>(`${this.urlApiProducts}/product/detail/${slug}`);
   }
 
-  public getProductsFilterCategory(id_category: number):Observable<ResponseProducts>{
-    return this._http.get<ResponseProducts>(`${this.urlApiProducts}/category/${id_category}`);
+  public getProductsFilterCategory(idCategory: number):Observable<ResponseProducts>{
+    return this._http.get<ResponseProducts>(`${this.urlApiProducts}/category/${idCategory}`);
   }
 
   public getAllProductsOffer():Observable<ResponseProducts>{
