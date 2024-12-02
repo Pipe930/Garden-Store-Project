@@ -1,5 +1,5 @@
-import { ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto';
+import { ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { Review } from './models/review.model';
 import { ResponseData } from 'src/core/interfaces/response-data.interface';
@@ -13,8 +13,6 @@ export class ReviewsService {
     const { title, content, rating, idProduct } = createReviewDto;
 
     const productFind = await Product.findByPk(idProduct);
-    
-    if(!productFind) throw new NotFoundException("Producto no encontrado");
 
     const reviewFind = await Review.findOne({
       where: {
@@ -22,7 +20,8 @@ export class ReviewsService {
         idProduct
       }
     });
-
+    
+    if(!productFind) throw new NotFoundException("Producto no encontrado");
     if(reviewFind) throw new ConflictException("Este usuario ya ha realizado una reseña de este producto");
 
     try {
@@ -33,6 +32,15 @@ export class ReviewsService {
         idUser,
         idProduct
       });
+
+      if(productFind.reviewsCount === 0){
+        productFind.rating = rating;
+      } else {
+        productFind.rating = (productFind.rating + rating) / 2;
+      }
+      productFind.reviewsCount = productFind.reviewsCount + 1;
+
+      await productFind.save();
     } catch (error) {
       throw new InternalServerErrorException("Error al crear la reseña");
     }
@@ -92,6 +100,12 @@ export class ReviewsService {
 
     if(!reviewFind) throw new NotFoundException("Reseña no encontrada");
 
+    const product = await Product.findByPk(reviewFind.idProduct);
+
+    product.rating = (product.rating - reviewFind.rating) / 2;
+    product.reviewsCount = product.reviewsCount - 1;
+
+    await product.save();
     await reviewFind.destroy();
 
     return {
