@@ -1,0 +1,7 @@
+{
+  "name": "Garden-Store-App",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
