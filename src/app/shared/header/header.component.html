@@ -1,0 +1,14 @@
+@let titleVar = title();
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="backButton()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{titleVar}}</ion-title>
+  </ion-toolbar>
+
+  @if(isSearchBar()) {
+    <ion-searchbar animated="true" placeholder="Buscar" color="medium"></ion-searchbar>
+  }
+</ion-header>

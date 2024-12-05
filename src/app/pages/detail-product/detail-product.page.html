@@ -1,0 +1,106 @@
+@let productVar = product();
+
+<app-header backButton="/list-products" [title]="'Producto'"></app-header>
+
+<ion-content>
+  <ion-card class="product-card">
+    <ion-img [src]="urlImageProduct()" alt="{{ productVar.title }}" />
+    <ion-card-header>
+      <ion-card-title>{{ productVar.title | titlecase }}</ion-card-title>
+      <ion-card-subtitle>${{ productVar.price | number}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ productVar.description }}</p>
+      <p><strong>Cantidad disponible:</strong> {{ productVar.stock }}</p>
+
+      <!-- Controles de cantidad -->
+      <div class="quantity-controls">
+        <ion-button fill="outline" (click)="decreaseQuantity()">
+          <ion-icon name="remove"></ion-icon>
+        </ion-button>
+        <span>{{ quantity() }}</span>
+        <ion-button fill="outline" (click)="increaseQuantity()">
+          <ion-icon name="add"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" color="success" (click)="addToCart()">
+    Añadir al Carrito
+  </ion-button>
+
+  <div class="related-products">
+    <h3>Productos Relacionados</h3>
+    <ion-grid>
+      <ion-row>
+        @for (related of relatedProducts(); track $index) {
+
+          @if(related.idProduct !== productVar.idProduct){
+
+            <ion-col size="6">
+              <ion-card (click)="viewProduct(related.idProduct)">
+                <ion-img [src]="urlImage() + getImageProduct(related.images)" alt="{{ related.title }}" />
+                <ion-card-header>
+                  <ion-card-title>{{ related.title | titlecase }}</ion-card-title>
+                  <ion-card-subtitle>${{ related.price | number }}</ion-card-subtitle>
+                </ion-card-header>
+              </ion-card>
+            </ion-col>
+          }
+        }
+      </ion-row>
+    </ion-grid>
+  </div>
+
+
+  <div class="reviews-section">
+    <h3>Reseñas</h3>
+
+    <!-- Calificación promedio -->
+    <div class="average-rating">
+      <h4>Calificación promedio</h4>
+      <div>
+        @for (star of averageStars; track $index) {
+          <ion-icon name="star"></ion-icon>
+        }
+        <span>{{ averageRating() }} / 5</span>
+      </div>
+    </div>
+
+    <!-- Listado de reseñas -->
+    <ion-list>
+      @for (review of reviews; track $index) {
+        <ion-item>
+          <ion-label>
+            <h4>{{ review.user }}</h4>
+            <div>
+              @for (star of generateStars(review.rating); track $index) {
+                <ion-icon name="star"></ion-icon>
+              }
+            </div>
+            <p>{{ review.comment }}</p>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+
+    <!-- Formulario para nueva reseña -->
+    <form>
+      <ion-item>
+        <ion-input placeholder="Tu nombre" name="user"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-select placeholder="Calificación" name="rating">
+          @for (rating of [1, 2, 3, 4, 5]; track $index) {
+            <ion-select-option>{{ rating }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-textarea placeholder="Escribe tu reseña" name="comment"></ion-textarea>
+      </ion-item>
+      <ion-button expand="block" type="submit">Enviar Reseña</ion-button>
+    </form>
+  </div>
+</ion-content>

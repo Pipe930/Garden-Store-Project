@@ -1,0 +1,96 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Iniciar Sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="login-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="card-title">Iniciar Sesión</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+
+          <!-- Email Input -->
+          <div class="container-input">
+            <ion-input label="Correo Electrónico" label-placement="floating" fill="solid" placeholder="Ingrese un Correo" type="email" formControlName="email"></ion-input>
+
+            @if (email.invalid && (email.dirty || email.touched)) {
+
+              @if (email.getError('required')) {
+                <ion-note color="danger">
+                  Este campo es requerido
+                </ion-note>
+              }
+
+              @if (email.getError('email')) {
+                <ion-note color="danger">
+                  Tiene que ingresar un correo valido
+                </ion-note>
+              }
+
+              @if (email.getError('maxlength')) {
+                <ion-note color="danger">
+                  Tiene que ser maximo de 255 caracteres
+                </ion-note>
+              }
+            }
+          </div>
+
+          <!-- Password Input -->
+          <div class="container-input">
+            <ion-input label="Contraseña" label-placement="floating" fill="solid" maxlength="50" type="password" formControlName="password">
+              <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+            </ion-input>
+
+            @if (password.invalid && (password.dirty || password.touched)) {
+
+              @if (password.getError('required')) {
+                <ion-note color="danger">
+                  Este campo es requerido
+                </ion-note>
+              }
+
+              @if (password.getError('minlength')) {
+                <ion-note color="danger">
+                  Tiene que ser minimo de 8 caracteres
+                </ion-note>
+              }
+
+              @if (password.getError('maxlength')) {
+
+                <ion-note color="danger">
+                  Tiene que ser maximo de 50 caracteres
+                </ion-note>
+              }
+            }
+          </div>
+
+          <!-- Login Button -->
+          <ion-button expand="block" type="submit" [disabled]="loginForm.invalid">
+            Iniciar Sesión
+          </ion-button>
+          <ion-button expand="block" fill="outline" type="button" [routerLink]="['/register']">
+            Registrarse
+          </ion-button>
+        </form>
+
+        <!-- Additional Links -->
+        <div class="additional-links">
+          <ion-text>
+            <a>
+              ¿Olvidaste tu contraseña?.
+            </a>
+          </ion-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+

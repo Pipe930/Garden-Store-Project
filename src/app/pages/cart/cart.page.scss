@@ -1,0 +1,14 @@
+ion-thumbnail img {
+  border-radius: 8px;
+  object-fit: cover;
+}
+ion-item {
+  --inner-padding-start: 0;
+}
+ion-footer {
+  background-color: #f4f4f4;
+  padding: 16px;
+}
+ion-button {
+  margin: 0 4px;
+}

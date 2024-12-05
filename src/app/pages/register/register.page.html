@@ -1,0 +1,187 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registrarse</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="login-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="card-title">Registrarse</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form [formGroup]="createUserForm" (ngSubmit)="register()">
+
+          <!-- Email Input -->
+          <div class="container-input">
+            <ion-input label="Nombre" label-placement="floating" fill="solid" type="text" formControlName="firstName"></ion-input>
+
+            @if (firstName.invalid && (firstName.dirty || firstName.touched)) {
+
+              @if (firstName.getError('required')) {
+                <ion-note color="danger">
+                  Este campo es requerido
+                </ion-note>
+              }
+
+              @if (firstName.getError('minlength')) {
+                <ion-note color="danger">
+                  Tiene que ser minimo de 3 caracteres
+                </ion-note>
+              }
+
+              @if (firstName.getError('maxlength')) {
+                <ion-note color="danger">
+                  Tiene que ser maximo de 20 caracteres
+                </ion-note>
+              }
+            }
+          </div>
+
+          <div class="container-input">
+            <ion-input label="Apellido" label-placement="floating" fill="solid" type="text" formControlName="lastName"></ion-input>
+
+            @if (lastName.invalid && (lastName.dirty || lastName.touched)) {
+
+              @if (lastName.getError('required')) {
+                <ion-note color="danger">
+                  Este campo es requerido
+                </ion-note>
+              }
+
+              @if (lastName.getError('minlength')) {
+                <ion-note color="danger">
+                  Tiene que ser minimo de 3 caracteres
+                </ion-note>
+              }
+
+              @if (lastName.getError('maxlength')) {
+                <ion-note color="danger">
+                  Tiene que ser maximo de 20 caracteres
+                </ion-note>
+              }
+            }
+          </div>
+
+          <div class="container-input">
+            <ion-input label="Correo Electrónico" label-placement="floating" fill="solid" placeholder="Ingrese un Correo" type="email" formControlName="email"></ion-input>
+
+
+            @if (email.invalid && (email.dirty || email.touched)) {
+
+              @if (lastName.getError('required')) {
+                <ion-note color="danger">
+                  Este campo es requerido
+                </ion-note>
+              }
+
+              @if (email.getError('email')) {
+                <ion-note color="danger">
+                  Tiene que ingresar un correo valido
+                </ion-note>
+              }
+
+              @if (email.getError('maxlength')) {
+                <ion-note color="danger">
+                  Tiene que ser maximo de 255 caracteres
+                </ion-note>
+              }
+            }
+          </div>
+
+          <div class="container-input">
+            <ion-input label="Telefono" label-placement="floating" fill="solid" type="text" formControlName="phone"></ion-input>
+
+            @if (phone.invalid && (phone.dirty || phone.touched)) {
+
+              @if (phone.getError('required')) {
+                <ion-note color="danger">
+                  Este campo es requerido
+                </ion-note>
+              }
+
+              @if (phone.getError('pattern')) {
+                <ion-note color="danger">
+                  Tiene que ingresar un numero de telefono valido
+                </ion-note>
+              }
+            }
+          </div>
+
+          <!-- Password Input -->
+          <div class="container-input">
+            <ion-input label="Contraseña" label-placement="floating" fill="solid" maxlength="50" type="password" formControlName="password">
+              <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+            </ion-input>
+
+            @if (password.invalid && (password.dirty || password.touched)) {
+
+              @if (password.getError('required')) {
+                <ion-note color="danger">
+                  Este campo es requerido
+                </ion-note>
+              }
+
+              @if (password.getError('minlength')) {
+                <ion-note color="danger">
+                  Tiene que ser minimo de 8 caracteres
+                </ion-note>
+              }
+
+              @if (password.getError('maxlength')) {
+                <ion-note color="danger">
+                  Tiene que ser maximo de 50 caracteres
+                </ion-note>
+              }
+            }
+          </div>
+
+          <div class="container-input">
+            <ion-input label="Confirmar Contraseña" label-placement="floating" fill="solid" maxlength="50" type="password" formControlName="rePassword">
+              <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+            </ion-input>
+            @if (rePassword.invalid && (rePassword.dirty || rePassword.touched)) {
+
+              @if (rePassword.getError('required')) {
+                <ion-note color="danger">
+                  Este campo es requerido
+                </ion-note>
+              }
+
+              @if (rePassword.getError('minlength')) {
+                <ion-note color="danger">
+                  Tiene que ser minimo de 8 caracteres
+                </ion-note>
+              }
+
+              @if (rePassword.getError('maxlength')) {
+                <ion-note color="danger">
+                  Tiene que ser maximo de 50 caracteres
+                </ion-note>
+              }
+            }
+          </div>
+
+          <!-- Login Button -->
+          <ion-button expand="block" type="submit" [disabled]="createUserForm.invalid">
+            Registrarse
+          </ion-button>
+        </form>
+
+        <!-- Additional Links -->
+        <div class="additional-links">
+          <ion-text>
+            <a [routerLink]="['/login']">
+              Ya tengo cuenta.
+            </a>
+          </ion-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

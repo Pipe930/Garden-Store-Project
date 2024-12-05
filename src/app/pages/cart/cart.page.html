@@ -1,0 +1,63 @@
+@let cartVar = cart();
+
+<app-header backButton="/home" title="Carrito"></app-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-title>Carrito</ion-title>
+      </ion-col>
+      <ion-col>
+        <ion-title>Cantidad {{cartVar.quantityTotal}}</ion-title>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-list>
+
+    @for (product of cartVar.items; track $index) {
+      <ion-item>
+        <ion-thumbnail slot="start">
+          <ion-img [src]="urlImage() + getImageProduct(product.product.images)" alt="Imagen del producto" />
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ product.product.title }}</h2>
+          <p>{{ product.product.category.name }}</p>
+          <ion-row>
+            <ion-col>
+              <ion-button size="small" color="danger" (click)="substractProduct(product.product.idProduct)">
+                <ion-icon name="remove-outline"></ion-icon>
+              </ion-button>
+              {{ product.quantity }}
+              <ion-button size="small" color="success" (click)="addProduct(product.product.idProduct)">
+                <ion-icon name="add-outline"></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col>
+              <p><strong>${{ product.priceUnit | number }}</strong></p>
+            </ion-col>
+          </ion-row>
+        </ion-label>
+      </ion-item>
+    }
+  </ion-list>
+
+  <!-- Total -->
+  <ion-toolbar>
+    <ion-title>Precio Total: ${{ cartVar.priceTotal | number }}</ion-title>
+    <ion-buttons slot="end">
+      <!-- <ion-button expand="block" (click)="checkout()">Pagar</ion-button> -->
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block">Pagar</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" (click)="clearCart()" color="danger">Vaciar Carrito</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+

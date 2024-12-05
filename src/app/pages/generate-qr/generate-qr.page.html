@@ -1,0 +1,34 @@
+<app-header backButton="/list-purchases-user" title="Codigo QR"></app-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-card class="qr-card">
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">Escanea tu Código QR</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <div class="qr-container">
+        <qrcode
+          [qrdata]="generateUrl()"
+          [width]="256"
+          [errorCorrectionLevel]="'M'"
+        ></qrcode>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="qr-card">
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">Información del QR</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <ion-text>Este codigo QR sera solicitado al momento de entrega de tu producto o pedido.</ion-text>
+      <br>
+      <ion-text>Esto con el objetivo de registrar de que el producto o pedido fue entregado con exito</ion-text>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

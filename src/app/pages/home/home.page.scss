@@ -1,0 +1,59 @@
+ion-menu-button {
+  color: var(--ion-color-primary);
+}
+
+.carousel {
+  height: 230px;
+
+  ion-slide img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.section {
+  padding: 1rem;
+
+  h2 {
+    font-size: 1.5rem;
+    color: #e8f5e9;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  &.about-us {
+    text-align: center;
+    background: #205222;
+    padding: 2rem;
+    border-radius: 10px;
+    margin: 4rem 1rem;
+  }
+
+  &.featured-products ion-card {
+    text-align: center;
+
+    img {
+      height: 120px;
+      object-fit: cover;
+    }
+
+    h3 {
+      font-size: 1rem;
+      margin: 0.5rem 0;
+    }
+
+    p {
+      color: #388e3c;
+      font-weight: bold;
+    }
+  }
+
+  &.services ion-item {
+    margin-bottom: 1rem;
+
+    ion-icon {
+      color: #388e3c;
+    }
+  }
+}
+

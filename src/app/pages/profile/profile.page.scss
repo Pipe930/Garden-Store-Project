@@ -1,0 +1,68 @@
+.container-btns{
+
+  padding: 2rem 1rem;
+}
+
+.profile-header {
+  text-align: center;
+  margin-top: 20px;
+}
+
+ion-avatar {
+  margin: auto;
+  width: 100px;
+  height: 100px;
+  border: 2px solid #3880ff;
+  border-radius: 50%;
+}
+
+.profile-header h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0 5px;
+}
+
+.profile-header p {
+  font-size: 14px;
+  color: gray;
+}
+
+ion-grid {
+  margin: 20px 0;
+}
+
+ion-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  text-align: center;
+}
+
+ion-modal#example-modal {
+  --width: fit-content;
+  --min-width: 250px;
+  --height: fit-content;
+  --border-radius: 6px;
+  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#example-modal h1 {
+  margin: 20px 20px 10px 20px;
+}
+
+ion-modal#example-modal ion-icon {
+  margin-right: 6px;
+
+  width: 48px;
+  height: 48px;
+
+  padding: 4px 0;
+
+  color: #aaaaaa;
+}
+
+ion-modal#example-modal .wrapper {
+  margin-bottom: 10px;
+}

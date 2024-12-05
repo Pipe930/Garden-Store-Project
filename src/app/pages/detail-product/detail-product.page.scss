@@ -1,0 +1,65 @@
+.product-card {
+  max-width: 400px;
+  margin: 20px auto;
+  text-align: center;
+
+  ion-card-title {
+    font-size: 1.5em;
+    margin: 10px 0;
+  }
+
+  ion-card-subtitle {
+    color: var(--ion-color-medium);
+    font-size: 1.2em;
+  }
+
+  p {
+    margin: 10px 0;
+    line-height: 1.5;
+  }
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+
+  span {
+    font-size: 1.2em;
+    margin: 0 15px;
+  }
+
+  ion-button {
+    --border-radius: 50%;
+    padding: 10px;
+  }
+}
+
+.related-products {
+  margin-top: 30px;
+  padding: 0 20px;
+
+  h3 {
+    margin-bottom: 10px;
+    font-size: 1.4em;
+    text-align: center;
+  }
+
+  ion-card {
+    cursor: pointer;
+    text-align: center;
+    img {
+      height: 120px;
+      object-fit: cover;
+    }
+    ion-card-title {
+      font-size: 1em;
+      margin-top: 5px;
+    }
+    ion-card-subtitle {
+      font-size: 0.9em;
+      color: var(--ion-color-medium);
+    }
+  }
+}

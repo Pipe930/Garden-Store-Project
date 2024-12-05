@@ -1,0 +1,113 @@
+@let profileVar = profile();
+
+<app-header backButton="/home" [title]="'Perfil de Usuario'"></app-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Información básica del usuario -->
+  <div class="profile-header">
+    <ion-avatar>
+      <ion-img [src]="user.avatar" alt="Avatar del usuario" />
+    </ion-avatar>
+    <h2>{{ profileVar.firstName }} {{ profileVar.lastName }}</h2>
+    <p>{{ profileVar.email }}</p>
+  </div>
+
+  <!-- Información adicional -->
+  <ion-list lines="none">
+    <ion-item>
+      <ion-icon slot="start" name="call-outline"></ion-icon>
+      <ion-label>Teléfono</ion-label>
+      <ion-text>{{ profileVar.phone }}</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-icon slot="start" name="location-outline"></ion-icon>
+      <ion-label>Dirección</ion-label>
+      <ion-text>{{ user.address }}</ion-text>
+    </ion-item>
+  </ion-list>
+
+  <!-- Botones de navegación -->
+  <div class="container-btns">
+    <ion-button expand="block" [routerLink]="['/list-purchases-user']">
+      <ion-icon name="bag-outline" slot="icon-only"></ion-icon>
+      Compras
+    </ion-button>
+    <ion-button expand="block" (click)="navigateTo('addresses')">
+      <ion-icon name="location-outline" slot="icon-only"></ion-icon>
+      Direcciones
+    </ion-button>
+    <ion-button expand="block" (click)="navigateTo('orders')">
+      <ion-icon name="cube-outline" slot="icon-only"></ion-icon>
+      Pedidos
+    </ion-button>
+  </div>
+
+  <!-- Acciones -->
+  <ion-list>
+    <ion-item button id="open-modal">
+      <ion-icon slot="start" name="person-outline"></ion-icon>
+      <ion-label>Editar Perfil</ion-label>
+    </ion-item>
+    <ion-item button (click)="changePassword()">
+      <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+      <ion-label>Cambiar Contraseña</ion-label>
+    </ion-item>
+    <ion-item button color="danger" (click)="logout()">
+      <ion-icon slot="start" name="log-out-outline"></ion-icon>
+      <ion-label>Cerrar Sesión</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Cancelar</ion-button>
+          </ion-buttons>
+          <ion-title>Editar Datos</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="editProfile()" [strong]="true">Confirmar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+
+        <form novalidate [formGroup]="updateProfile" (ngSubmit)="editProfile()">
+          <ion-item>
+            <ion-input
+              label="Nombre"
+              labelPlacement="stacked"
+              type="text"
+              formControlName="firstName"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input
+              label="Apellido"
+              labelPlacement="stacked"
+              type="text"
+              formControlName="lastName"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input
+              label="Correo"
+              labelPlacement="stacked"
+              type="email"
+              formControlName="email"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input
+              label="Telefono"
+              labelPlacement="stacked"
+              type="text"
+              formControlName="phone"
+            ></ion-input>
+          </ion-item>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

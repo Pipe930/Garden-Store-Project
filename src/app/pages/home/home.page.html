@@ -1,0 +1,67 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title color="success"><img src="https://pnghq.com/wp-content/uploads/planta-png-free-png-images-download-32454.png" height="40" width="40">Garden Store</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <swiper-container [slidesPerView]="1" [pagination]="true" class="carousel">
+    <swiper-slide>
+      <img src="https://blog.homedepot.com.mx/wp-content/uploads/2019/10/Portada_Principiantes_01-1024x576.jpg" alt="Imagen de Jardinería">
+    </swiper-slide>
+    <swiper-slide>
+      <img src="assets/images/garden2.jpg" alt="Plantas">
+    </swiper-slide>
+    <swiper-slide>
+      <img src="assets/images/garden3.jpg" alt="Decoración Exterior">
+    </swiper-slide>
+  </swiper-container>
+
+  <!-- Sección Somos Garden Store -->
+  <section class="section about-us">
+    <h2>Somos Garden Store</h2>
+    <p>
+      En Garden Store somos apasionados por la naturaleza. Ofrecemos una amplia gama de productos y servicios para
+      embellecer tu hogar y jardín.
+    </p>
+  </section>
+
+  <!-- Sección Productos Destacados -->
+  <section class="section featured-products">
+    <h2>Productos Destacados</h2>
+    <ion-grid>
+      <ion-row>
+        @for (product of featuredProducts; track $index) {
+          <ion-col size="6">
+            <ion-card>
+              <img [src]="product.image" alt="{{ product.name }}">
+              <ion-card-content>
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.price }}</p>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        }
+      </ion-row>
+    </ion-grid>
+  </section>
+
+  <!-- Sección Servicios -->
+  <section class="section services">
+    <h2>Nuestros Servicios</h2>
+    <ion-list>
+      @for (service of services; track $index) {
+        <ion-item>
+          <ion-icon slot="start" [name]="service.icon"></ion-icon>
+          <ion-label>
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.description }}</p>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  </section>
+</ion-content>

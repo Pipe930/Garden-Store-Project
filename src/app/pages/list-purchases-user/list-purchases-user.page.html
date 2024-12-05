@@ -1,0 +1,55 @@
+@let listlistPurchasesVar = listPurchases();
+
+<app-header backButton="/profile" title="Mis Compras"></app-header>
+
+<ion-content [fullscreen]="true">
+
+  @for (purchase of listlistPurchasesVar; track $index) {
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Compra #{{ purchase.idSale }}</ion-card-title>
+        <ion-card-subtitle>Fecha Compra: {{ purchase.createdAt | date: 'dd/MM/yyyy' }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>Estado:</strong> <span [ngClass]="getStatusClass(purchase.statusPayment)"> {{ purchase.statusPayment }}</span></p>
+        <p><strong>Total productos:</strong> {{ purchase.productsQuantity }}</p>
+        <p><strong>Total pagado:</strong> ${{ purchase.priceTotal | number }}</p>
+
+        <ion-list>
+          @for (product of purchase.saleProducts; track $index) {
+            <ion-item>
+              <ion-label>
+                <h3>{{ product.product.title | titlecase }}</h3>
+                <p>{{ product.quantity }} x {{ product.product.price | number }}</p>
+              </ion-label>
+              <ion-note slot="end" color="primary">
+                ${{ product.quantity * product.product.price | number }}
+              </ion-note>
+            </ion-item>
+          }
+        </ion-list>
+
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" shape="round" color="primary">
+              Ver Boleta
+            </ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="block" shape="round" color="success" [routerLink]="['/generate-qr', purchase.idSale]">
+              QR
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  }
+
+  @if (listlistPurchasesVar.length === 0) {
+    <div class="no-data">
+      <ion-icon name="cart-outline" size="large"></ion-icon>
+      <p>No tienes compras registradas.</p>
+    </div>
+  }
+</ion-content>

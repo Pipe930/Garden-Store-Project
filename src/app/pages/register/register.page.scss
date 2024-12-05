@@ -1,0 +1,45 @@
+
+.container-input{
+
+  margin: 10px 0;
+}
+
+.card-title{
+
+  text-align: center;
+  font-size: 20px;
+  font-weight: 900;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+ion-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.invalid {
+  border: 1px solid var(--ion-color-danger);
+}
+
+.additional-links {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.additional-links a {
+  color: var(--ion-color-primary);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.additional-links a:hover {
+  text-decoration: underline;
+}
