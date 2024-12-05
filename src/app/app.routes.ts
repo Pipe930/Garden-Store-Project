@@ -47,4 +47,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/profile/profile.page').then( m => m.ProfilePage),
     canActivate: [authGuard]
   },
+  {
+    path: 'list-products-offer',
+    loadComponent: () => import('./pages/list-products-offer/list-products-offer.page').then( m => m.ListProductsOfferPage)
+  },
+  {
+    path: 'scan-qr',
+    loadComponent: () => import('./pages/scan-qr/scan-qr.page').then( m => m.ScanQrPage)
+  },
 ];

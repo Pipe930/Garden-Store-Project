@@ -1,4 +1,6 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { TitleCasePipe } from '@angular/common';
+import { HttpStatusCode } from '@angular/common/http';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, signal } from '@angular/core';
 import {
   IonContent,
   IonHeader,
@@ -6,10 +8,19 @@ import {
   IonToolbar,
   IonButtons,
   IonMenuButton,
+  IonImg,
+  IonCard,
+  IonRow,
+  IonGrid,
+  IonCol,
+  IonCardContent,
 
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { construct, helpCircle, leaf } from 'ionicons/icons';
+import { Images, Product } from 'src/app/core/interfaces/product';
+import { ProductService } from 'src/app/core/services/product.service';
+import { environment } from 'src/environments/environment';
 import { register } from 'swiper/element/bundle';
 
 register();
@@ -25,11 +36,23 @@ register();
     IonButtons,
     IonMenuButton,
     IonTitle,
-    IonContent
+    IonContent,
+    IonImg,
+    IonCard,
+    IonRow,
+    IonGrid,
+    IonCol,
+    IonCardContent, TitleCasePipe
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomePage implements OnInit {
+
+  private readonly productsService = inject(ProductService);
+
+  public listFeaturedProducts = signal<Product[]>([]);
+  public urlImage = signal<string>(environment.apiImages);
+
   public featuredProducts = [
     {
       name: 'Maceta Decorativa',
@@ -80,6 +103,17 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
+
+    this.productsService.getFeaturedProducts().subscribe(response => {
+      if(response.statusCode === HttpStatusCode.Ok) this.listFeaturedProducts.set(response.data);
+    });
+  }
+
+  public getImageProduct(images: Images[]): string {
+
+    if(images.length !== 0)
+      return images.filter((image) => image.type === 'cover')[0].urlImage
+    else return "";
   }
 
 }

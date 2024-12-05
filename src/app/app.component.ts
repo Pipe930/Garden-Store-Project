@@ -76,11 +76,11 @@ export class AppComponent {
 
   public appPages = [
     { title: 'Productos', url: '/list-products', icon: 'folder' },
-    { title: 'Ofertas', url: '/ofertas', icon: 'cash' },
+    { title: 'Ofertas', url: '/list-products-offer', icon: 'cash' },
     { title: 'Login', url: '/login', icon: 'enter' },
     { title: 'Carrito', url: '/cart', icon: 'cart' },
     { title: 'Perfil', url: '/profile', icon: 'person' },
-    { title: 'QR', url: '/escaner-qr', icon: 'qr-code' }
+    { title: 'QR', url: '/scan-qr', icon: 'qr-code' }
   ];
   public listCategories = signal<Category[]>([]);
   constructor() {

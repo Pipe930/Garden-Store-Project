@@ -12,3 +12,18 @@ ion-footer {
 ion-button {
   margin: 0 4px;
 }
+.no-data {
+  text-align: center;
+  margin-top: 20%;
+  color: #888;
+
+  ion-icon {
+    color: #cccccc;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 18px;
+    color: #666;
+  }
+}

@@ -38,4 +38,8 @@ export class ProductService {
     return this.http.get<ResponseListProducts>(`${this.apiUrl}/category/${idCategory}`);
   }
 
+  public getFeaturedProducts(): Observable<ResponseListProducts> {
+    return this.http.get<ResponseListProducts>(`${this.apiUrl}?limit=4`);
+  }
+
 }

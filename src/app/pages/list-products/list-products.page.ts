@@ -86,7 +86,6 @@ export class ListProductsPage implements OnInit {
     if(images.length !== 0)
       return images.filter((image) => image.type === 'cover')[0].urlImage
     else return "";
-
   }
 
   public searchProduct(event: Event): void {

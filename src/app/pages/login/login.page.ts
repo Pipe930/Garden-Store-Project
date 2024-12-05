@@ -16,11 +16,13 @@ import {
   IonNote,
   IonInputPasswordToggle,
   IonText,
-  IonBackButton
+  IonBackButton,
+  AlertController
 } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { catchError, EMPTY } from 'rxjs';
+import { HttpStatusCode } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -53,6 +55,7 @@ export class LoginPage {
   private readonly builder = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly toastController = inject(ToastController);
+  private readonly alertController = inject(AlertController);
   private readonly authService = inject(AuthService);
 
   public loginForm: FormGroup = this.builder.group({
@@ -70,12 +73,17 @@ export class LoginPage {
     this.authService.login(this.loginForm.value).pipe(
       catchError((error) => {
 
+        if(error.status === HttpStatusCode.Unauthorized){
+          this.presentAlert("Ocurrio un error", error.error.message);
+          return EMPTY;
+        };
+
         this.showToast('Error al iniciar sesión', 'danger');
         throw EMPTY;
       })
     ).subscribe(async (response) => {
 
-      if(response.statusCode === 200){
+      if(response.statusCode === HttpStatusCode.Ok){
         await this.showToast('Inicio de sesión exitoso', 'primary');
         this.loginForm.reset();
         this.router.navigate(['/home']);
@@ -85,6 +93,16 @@ export class LoginPage {
 
   recoverPassword() {
     console.log('Redirecting to password recovery...');
+  }
+
+  private async presentAlert(title: string, message: string) {
+    const alert = await this.alertController.create({
+      header: title,
+      message,
+      buttons: ['Aceptar'],
+    });
+
+    await alert.present();
   }
 
   private async showToast(message: string, color: string) {
@@ -104,7 +122,4 @@ export class LoginPage {
   get password() {
     return this.loginForm.controls["password"];
   }
-
-
-
 }

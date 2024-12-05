@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { HttpClient, HttpStatusCode } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Login, LoginResponse, RefreshTokenResponse } from '../interfaces/login';
 import { Registro } from '../interfaces/register';
-import { Profile, ResponseProfile } from '../interfaces/profile';
+import { Profile, profileJson, ResponseProfile } from '../interfaces/profile';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,10 @@ import { Profile, ResponseProfile } from '../interfaces/profile';
 export class AuthService {
 
   private readonly urlApi = `${environment.api}/auth`;
+  private readonly http = inject(HttpClient);
 
-  constructor(private readonly http: HttpClient) {}
+  private userProfile = new BehaviorSubject<Profile>(profileJson);
+  public userProfile$ = this.userProfile.asObservable();
 
   public login(loginForm: Login): Observable<LoginResponse>{
     return this.http.post<LoginResponse>(`${this.urlApi}/login`, loginForm).pipe(
@@ -28,8 +30,10 @@ export class AuthService {
     );;
   }
 
-  public profile(): Observable<ResponseProfile>{
-    return this.http.get<ResponseProfile>(`${this.urlApi}/profile`);
+  public profile(): void{
+    this.http.get<ResponseProfile>(`${this.urlApi}/profile`).subscribe(response => {
+      if(response.statusCode === HttpStatusCode.Ok) this.userProfile.next(response.data);
+    });
   }
 
   public updateProfile(updateProfile: Profile): Observable<any>{

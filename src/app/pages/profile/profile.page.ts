@@ -99,13 +99,14 @@ export class ProfilePage implements OnInit {
 
   ngOnInit(): void {
 
-    this.authService.profile().subscribe(response => {
-      this.profile.set(response.data);
+    this.authService.profile();
+    this.authService.userProfile$.subscribe(profile => {
+      this.profile.set(profile);
 
-      this.updateProfile.get('firstName')?.setValue(response.data.firstName);
-      this.updateProfile.get('lastName')?.setValue(response.data.lastName);
-      this.updateProfile.get('email')?.setValue(response.data.email);
-      this.updateProfile.get('phone')?.setValue(response.data.phone);
+      this.updateProfile.get('firstName')?.setValue(profile.firstName);
+      this.updateProfile.get('lastName')?.setValue(profile.lastName);
+      this.updateProfile.get('email')?.setValue(profile.email);
+      this.updateProfile.get('phone')?.setValue(profile.phone);
     });
   }
 
@@ -115,6 +116,7 @@ export class ProfilePage implements OnInit {
 
       this.showToast('Perfil actualizado correctamente');
       this.modal().dismiss(this.name, 'confirm');
+      this.authService.profile();
     });
   }
 
