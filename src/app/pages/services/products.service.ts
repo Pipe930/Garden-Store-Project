@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, Subject } from 'rxjs';
 import { Product, ResponseProduct, ResponseProducts } from '../interfaces/product';
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
 import { environment } from '@env/environment.development';
@@ -11,17 +11,21 @@ import { ResponseCategories } from '@pages/interfaces/category';
 export class ProductsService {
 
   private readonly _http = inject(HttpClient);
-  private products = new BehaviorSubject<Product[]>([]);
-  public products$ = this.products.asObservable();
   public nextPage = false;
   public prevPage = false;
   private urlApiProducts = `${environment.api}/products`;
   private urlApiCategories = `${environment.api}/categories`;
 
+  private products = new BehaviorSubject<Product[]>([]);
+  public products$ = this.products.asObservable();
+  private isLoading = new Subject<boolean>();
+  public $isLoading = this.isLoading.asObservable();
+
   public getAllProducts():void {
     this._http.get<ResponseProducts>(this.urlApiProducts).subscribe(result => {
       this.products.next(result.data);
       this.validPage(result.totalPages, result.currentPage);
+      this.isLoading.next(true);
     });
   }
 

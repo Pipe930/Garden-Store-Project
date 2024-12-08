@@ -283,7 +283,7 @@ export class PurchaseComponent implements OnInit {
         progress.increaseStep();
         this.modalLoading();
 
-        this._transbankService.createTransationTransbank({ amount: this.cart().priceTotal }).subscribe(response => {
+        this._transbankService.createTransationTransbank({ amount: this.cart().priceTotal }).subscribe(responseTransbank => {
 
           this.voucher.totalPrice = this.cart().priceTotal;
           this.voucher.productsQuantity = this.cart().quantityTotal;
@@ -322,20 +322,21 @@ export class PurchaseComponent implements OnInit {
             }
 
             localStorage.setItem("voucher", JSON.stringify(newVoucherObject));
+
+            let form = document.createElement("form");
+            form.method = "POST";
+            form.action = responseTransbank.data.url;
+            form.hidden = true;
+
+            let element = document.createElement("input");
+            element.hidden = true;
+            element.value = responseTransbank.data.token;
+            element.name = 'token_ws';
+            form.appendChild(element);
+            document.body.appendChild(form);
+            form.submit();
           });
 
-          let form = document.createElement("form");
-          form.method = "POST";
-          form.action = response.data.url;
-          form.hidden = true;
-
-          let element = document.createElement("input");
-          element.hidden = true;
-          element.value = response.data.token;
-          element.name = 'token_ws';
-          form.appendChild(element);
-          document.body.appendChild(form);
-          form.submit();
         });
 
       } else if((this.voucher.address.address.addressName !== "" || this.voucher.idBranch !== 0) &&
@@ -343,7 +344,7 @@ export class PurchaseComponent implements OnInit {
       this.voucher.typePay === "paypal") {
 
         this.modalLoading();
-        this._paypalService.createPaypal({amount: this.cart().priceTotal}).subscribe(response => {
+        this._paypalService.createPaypal({amount: this.cart().priceTotal}).subscribe(responsePaypal => {
 
           this.voucher.totalPrice = this.cart().priceTotal;
           this.voucher.productsQuantity = this.cart().quantityTotal;
@@ -382,9 +383,10 @@ export class PurchaseComponent implements OnInit {
             }
 
             localStorage.setItem("voucher", JSON.stringify(newVoucherObject));
+
+            window.location.href = responsePaypal.data.links[1].href;
           });
 
-          window.location.href = response.data.links[1].href;
         });
 
       } else {

@@ -55,7 +55,7 @@ export interface Voucher {
 
   address: Address;
   typePerson: string;
-  typeRetirement: string;
+  typeRetirement: TypeRetirementEnum;
   typePay: string;
   idBranch: number;
   totalPrice: number;
@@ -68,7 +68,7 @@ export interface VoucherConfirm {
   address: Address;
   typePerson: string;
   typePay: string;
-  typeRetirement: string;
+  typeRetirement: TypeRetirementEnum;
   shippingCost: number;
   idSale: number;
 }
@@ -115,7 +115,7 @@ export const VoucherObject: Voucher = {
     idUser: 0
   },
   typePerson: "",
-  typeRetirement: "",
+  typeRetirement: TypeRetirementEnum.STORE_PICKUP,
   typePay: "",
   idBranch: 0,
   productsQuantity: 0,

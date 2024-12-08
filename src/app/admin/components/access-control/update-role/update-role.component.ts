@@ -40,14 +40,14 @@ export class UpdateRoleComponent implements OnInit {
 
       this.updateFormRole.get("name")?.setValue(response.data.name);
       this.updateFormRole.updateValueAndValidity();
+      this._accessControlService.getAllPermissions().subscribe(response => {
+
+        this.listPermissions.set(response.data.filter(
+          permission => !this.selectedPermissions().some(selected => selected.idPermission === permission.idPermission)
+        ));
+      });
     });
 
-    this._accessControlService.getAllPermissions().subscribe(response => {
-
-      this.listPermissions.set(response.data.filter(
-        permission => !this.selectedPermissions().some(selected => selected.idPermission === permission.idPermission)
-      ));
-    });
 
   }
 

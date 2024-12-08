@@ -29,6 +29,11 @@ export class ListPostsComponent implements OnInit {
   public listPosts = signal<Post[]>([]);
 
   ngOnInit(): void {
+
+    this._postService.$isLoading.subscribe((result) => {
+      this.isLoading.set(result);
+    });
+
     this.validSession.set(this._sessionService.validSession());
 
     this._postService.getAllTags().subscribe((response) => {
@@ -38,7 +43,6 @@ export class ListPostsComponent implements OnInit {
     this._postService.getAllPosts();
     this._postService.listPosts$.subscribe((response) => {
       this.listPosts.set(response);
-      this.isLoading.set(true);
       this._postService.currentPage.asObservable().subscribe((page) => {
         this.currentPage.set(page);
       });

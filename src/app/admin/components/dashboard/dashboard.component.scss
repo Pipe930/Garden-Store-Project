@@ -1,0 +1,23 @@
+@import '../../../../themes/variables.scss';
+
+#card1{
+  border-left: 4px solid $color-primary-600;
+}
+
+#card2{
+  border-left: 4px solid $color-success-600;
+}
+
+#card3{
+  border-left: 4px solid $color-secondary;
+}
+
+#card4{
+  border-left: 4px solid $color-warning;
+}
+
+.text-title{
+
+  font-size: 12px;
+  font-weight: 900;
+}

@@ -12,7 +12,7 @@
     </div>
   </div>
   <picture>
-    <img [ngSrc]="urlImageVar" width="400" height="300" class="card-img-top product__image" [ngClass]="{'product__image--opacity': productVar.stock === 0}" alt="imagen de producto" priority>
+    <img [ngSrc]="urlImageVar" width="400" height="300" class="card-img-top product__image rounded" [ngClass]="{'product__image--opacity': productVar.stock === 0}" alt="imagen de producto" priority>
     @if (productVar.stock === 0) {
 
       <div class="product__container-sold-out">

@@ -399,6 +399,33 @@ export class AccountComponent {
     return this.createFormAddress.controls["commune"];
   }
 
+
+
+  get updateName(){
+    return this.updateFormAddress.controls["name"];
+  }
+
+  get updateAddressName(){
+    return this.updateFormAddress.controls["addressName"];
+  }
+
+  get updateCity(){
+    return this.updateFormAddress.controls["city"];
+  }
+
+  get updateFormRegion(){
+    return this.updateFormAddress.controls["region"];
+  }
+
+  get updateFormProvince(){
+    return this.updateFormAddress.controls["province"];
+  }
+
+  get updateFormCommune(){
+    return this.updateFormAddress.controls["commune"];
+  }
+
+
   get currentPassword(){
     return this.changePasswordForm.controls["currentPassword"];
   }

@@ -28,25 +28,13 @@
           .header__search{
 
             width: 300px;
-            border: none;
-            height: 2.4rem;
             padding: 0 1rem;
-            background-color: $color-dark-100;
-            color: $color-dark;
-            box-shadow: none;
-            outline: 0;
             transition: box-shadow .3s ease-in;
-
-            &:focus{
-              box-shadow: 0 0 8px $color-dark-300;
-            }
           }
 
           .header__btn-search{
 
             padding: 0 .6rem;
-            background-color: $color-primary-400;
-            color: $color-light;
 
 
             .header__icon{
@@ -176,33 +164,7 @@
         margin-left: 20px;
 
         .header__user-avatar{
-
-          position: relative;
-
-          .header__img-avatar{
-
-            margin-bottom: -4px;
-            width: 50px;
-            border-radius: 50%;
-            box-shadow: 0 0 15px $color-dark-300;
-            cursor: pointer;
-          }
-
-          .circle-indicator{
-
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            position: absolute;
-            top: -2px;
-            right: 3px;
-            background-color: $color-primary-400;
-
-            &.pulse {
-
-              animation: pulse-animation 1.2s infinite ease-in-out;
-            }
-          }
+          background: transparent;
         }
       }
     }

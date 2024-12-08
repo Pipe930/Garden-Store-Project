@@ -39,9 +39,8 @@ export class PurchaseConfirmComponent {
 
         if(result.data.status === TypeStatusTransbankEnum.AUTHORIZED){
 
-          this.voucherConfirmObject = JSON.parse(localStorage.getItem("voucher")!);
-
           this.transbankInfo = result.data;
+          this.voucherConfirmObject = JSON.parse(localStorage.getItem("voucher")!) as VoucherConfirm;
 
           if(this.voucherConfirmObject.typeRetirement === TypeRetirementEnum.HOME_DELIVERY){
 

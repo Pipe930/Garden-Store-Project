@@ -26,6 +26,10 @@ export class ListProductsComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this._productsService.$isLoading.subscribe(result => {
+      this.isLoading.set(result);
+    });
+
     this._productsService.getAllCategories().subscribe(result => {
       this.listCategories.set(result.data);
     })
@@ -33,7 +37,6 @@ export class ListProductsComponent implements OnInit {
     this._productsService.getAllProducts();
     this._productsService.products$.subscribe(result => {
       this.listProducts.set(result);
-      this.isLoading.set(true);
     })
   }
 

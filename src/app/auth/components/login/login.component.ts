@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@auth/services/auth.service';
 import { NgClass } from '@angular/common';
 import { AlertService } from '@core/services/alert.service';
-import { catchError, EMPTY, of } from 'rxjs';
+import { catchError, EMPTY } from 'rxjs';
 import { HttpStatusCode } from '@angular/common/http';
 
 @Component({
@@ -102,9 +102,9 @@ export class LoginComponent {
 
       this._authService.getRolesUser().subscribe((response) => {
         sessionStorage.setItem('roles', JSON.stringify(response.data));
+        this._alertService.success("Verificación exitosa", "La verifucación ha sido exitosa");
+        this._router.navigate(['/admin/dashboard']);
       });
-      this._alertService.success("Verificación exitosa", "La verifucación ha sido exitosa");
-      this._router.navigate(['/admin/dashboard']);
     });
   }
 

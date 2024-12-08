@@ -305,27 +305,39 @@
 
                     <fieldset class="address__form-control py-2">
                       <label for="" class="form-label">Nombre Dirección</label>
-                      <input type="text" formControlName="name" class="form-control">
-                      <!-- <div class="form__container-errors" *ngIf="name_address.invalid && (name_address.dirty || name_address.touched)">
-                        <span class="form__errors" *ngIf="name_address.getError('required')">Este campo es requerido</span>
-                        <span class="form__errors" *ngIf="name_address.getError('maxlength')">Tiene que tener maximo 100 caracteres</span>
-                      </div> -->
+                      <input type="text" formControlName="name" class="form-control" [ngClass]="{
+                        'is-invalid': updateName.invalid && (updateName.dirty || updateName.touched)
+                      }">
+                      @if (updateName.getError('required')){
+                        <span class="invalid-feedback">Este campo es requerido</span>
+                      }
+                      @if (updateName.getError('maxlength')){
+                        <span class="invalid-feedback">Tiene que tener maximo 100 caracteres</span>
+                      }
                     </fieldset>
                     <fieldset class="address__form-control py-2">
                       <label for="" class="form-label">Calle y Número</label>
-                      <input type="text" placeholder="Ej: Pepipo 1234" formControlName="addressName" class="form-control">
-                      <!-- <div class="form__container-errors" *ngIf="street_number.invalid && (street_number.dirty || street_number.touched)">
-                        <span class="form__errors" *ngIf="street_number.getError('required')">Este campo es requerido</span>
-                        <span class="form__errors" *ngIf="street_number.getError('maxlength')">Tiene que tener maximo 60 caracteres</span>
-                      </div> -->
+                      <input type="text" placeholder="Ej: Pepipo 1234" formControlName="addressName" class="form-control" [ngClass]="{
+                        'is-invalid': updateAddressName.invalid && (updateAddressName.dirty || updateAddressName.touched)
+                      }">
+                      @if (updateAddressName.getError('required')){
+                        <span class="invalid-feedback">Este campo es requerido</span>
+                      }
+                      @if (updateAddressName.getError('maxlength')){
+                        <span class="invalid-feedback">Tiene que tener maximo 60 caracteres</span>
+                      }
                     </fieldset>
                     <fieldset class="address__form-control py-2">
                       <label for="" class="form-label">Ciudad</label>
-                      <input type="text" placeholder="Ej: Santiago" formControlName="city" class="form-control">
-                      <!-- <div class="form__container-errors" *ngIf="street_number.invalid && (street_number.dirty || street_number.touched)">
-                        <span class="form__errors" *ngIf="street_number.getError('required')">Este campo es requerido</span>
-                        <span class="form__errors" *ngIf="street_number.getError('maxlength')">Tiene que tener maximo 60 caracteres</span>
-                      </div> -->
+                      <input type="text" placeholder="Ej: Santiago" formControlName="city" class="form-control" [ngClass]="{
+                        'is-invalid': updateCity.invalid && (updateCity.dirty || updateCity.touched)
+                      }">
+                      @if (updateCity.getError('required')){
+                        <span class="invalid-feedback">Este campo es requerido</span>
+                      }
+                      @if (updateCity.getError('maxlength')){
+                        <span class="invalid-feedback">Tiene que tener maximo 60 caracteres</span>
+                      }
                     </fieldset>
                     <fieldset class="address__form-control py-2">
                       <label for="" class="form-label">Piso / Oficina / Apto / Depto</label>

@@ -11,10 +11,14 @@ export class PostService {
 
   private readonly _http = inject(HttpClient);
   private readonly urlApi = `${environment.api}/posts`;
+
   private listPosts = new BehaviorSubject<Post[]>([]);
   public listPosts$ = this.listPosts.asObservable();
   private listPostsByUser = new BehaviorSubject<Post[]>([]);
   public listPostsByUser$ = this.listPostsByUser.asObservable();
+
+  private isLoading = new Subject<boolean>();
+  public $isLoading = this.isLoading.asObservable();
 
   public currentPage = new Subject<number>();
   public totalPages = new Subject<number>();
@@ -25,6 +29,7 @@ export class PostService {
       this.listPosts.next(response.data);
       this.totalPages.next(response.totalPages);
       this.currentPage.next(response.currentPage);
+      this.isLoading.next(true);
     });
   }
 
@@ -33,6 +38,7 @@ export class PostService {
       this.listPosts.next(response.data);
       this.totalPages.next(response.totalPages);
       this.currentPage.next(response.currentPage);
+      this.isLoading.next(true);
     });
   }
 
