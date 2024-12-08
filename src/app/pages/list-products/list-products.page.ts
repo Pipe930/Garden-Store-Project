@@ -55,6 +55,7 @@ import {
   ]
 })
 export class ListProductsPage implements OnInit {
+
   private readonly productsService = inject(ProductService);
   private readonly loadingController = inject(LoadingController);
 

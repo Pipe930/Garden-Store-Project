@@ -38,7 +38,7 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path: 'generate-qr',
+    path: 'generate-qr/:id',
     loadComponent: () => import('./pages/generate-qr/generate-qr.page').then( m => m.GenerateQrPage),
     canActivate: [authGuard]
   },
@@ -54,5 +54,9 @@ export const routes: Routes = [
   {
     path: 'scan-qr',
     loadComponent: () => import('./pages/scan-qr/scan-qr.page').then( m => m.ScanQrPage)
+  },
+  {
+    path: 'valid-purchase/:id',
+    loadComponent: () => import('./pages/valid-purchase/valid-purchase.page').then( m => m.ValidPurchasePage)
   },
 ];

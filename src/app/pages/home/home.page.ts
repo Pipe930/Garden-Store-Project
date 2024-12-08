@@ -1,4 +1,4 @@
-import { TitleCasePipe } from '@angular/common';
+import { DecimalPipe, TitleCasePipe } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, signal } from '@angular/core';
 import {
@@ -42,7 +42,9 @@ register();
     IonRow,
     IonGrid,
     IonCol,
-    IonCardContent, TitleCasePipe
+    IonCardContent,
+    TitleCasePipe,
+    DecimalPipe
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

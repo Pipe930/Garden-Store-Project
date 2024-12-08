@@ -44,11 +44,11 @@
 
   <!-- Acciones -->
   <ion-list>
-    <ion-item button id="open-modal">
+    <ion-item button id="modal-change-profile">
       <ion-icon slot="start" name="person-outline"></ion-icon>
       <ion-label>Editar Perfil</ion-label>
     </ion-item>
-    <ion-item button (click)="changePassword()">
+    <ion-item button id="modal-change-password">
       <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
       <ion-label>Cambiar Contraseña</ion-label>
     </ion-item>
@@ -58,12 +58,57 @@
     </ion-item>
   </ion-list>
 
-  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+  <ion-modal #modalChangePassword trigger="modal-change-password" (willDismiss)="onWillDismiss($event)">
     <ng-template>
       <ion-header>
         <ion-toolbar>
           <ion-buttons slot="start">
-            <ion-button (click)="cancel()">Cancelar</ion-button>
+            <ion-button (click)="cancelPassword()">Cancelar</ion-button>
+          </ion-buttons>
+          <ion-title>Cambiar Contraseña</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="changePassword()" [strong]="true">Confirmar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+
+        <form novalidate [formGroup]="changePasswordForm">
+          <ion-item>
+            <ion-input
+              label="Contraseña Actual"
+              labelPlacement="stacked"
+              type="password"
+              formControlName="currentPassword"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input
+              label="Nueva Contraseña"
+              labelPlacement="stacked"
+              type="password"
+              formControlName="newPassword"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input
+              label="Confirmar Nueva Contraseña"
+              labelPlacement="stacked"
+              type="password"
+              formControlName="newConfirmPassword"
+            ></ion-input>
+          </ion-item>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal #modalChangeProfile trigger="modal-change-profile" (willDismiss)="onWillDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancelProfile()">Cancelar</ion-button>
           </ion-buttons>
           <ion-title>Editar Datos</ion-title>
           <ion-buttons slot="end">
@@ -73,7 +118,7 @@
       </ion-header>
       <ion-content class="ion-padding">
 
-        <form novalidate [formGroup]="updateProfile" (ngSubmit)="editProfile()">
+        <form novalidate [formGroup]="updateProfileForm">
           <ion-item>
             <ion-input
               label="Nombre"

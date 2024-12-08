@@ -9,7 +9,7 @@ import {
   lockClosedOutline,
   logOutOutline
 } from 'ionicons/icons';
-import { Profile, profileJson } from 'src/app/core/interfaces/profile';
+import { ChangePassword, Profile, profileJson } from 'src/app/core/interfaces/profile';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { HeaderComponent } from 'src/app/shared/header/header.component';
 import { OverlayEventDetail } from '@ionic/core/components';
@@ -30,8 +30,11 @@ import {
   IonButtons,
   IonToolbar,
   IonInput,
-  IonTitle
+  IonTitle,
+  AlertController
 } from '@ionic/angular/standalone';
+import { catchError, EMPTY } from 'rxjs';
+import { HttpStatusCode } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',
@@ -64,25 +67,31 @@ export class ProfilePage implements OnInit {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   private readonly toastController = inject(ToastController);
+  private readonly alertController = inject(AlertController);
   private readonly builder = inject(FormBuilder);
 
-  public modal = viewChild.required<IonModal>(IonModal);
+  public modalChangeProfile = viewChild.required<IonModal>('modalChangeProfile');
+  public modalChangePassword = viewChild.required<IonModal>('modalChangePassword');
+
   public message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
   public name = "";
 
   public profile = signal<Profile>(profileJson);
-  public updateProfile: FormGroup = this.builder.group({
+  public updateProfileForm: FormGroup = this.builder.group({
     firstName: this.builder.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]),
     lastName: this.builder.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]),
     email: this.builder.control('', [Validators.required, Validators.email, Validators.maxLength(255)]),
     phone: this.builder.control('', [Validators.required, Validators.pattern(/^\+569\d{8}$/)])
+  });
+
+  public changePasswordForm: FormGroup = this.builder.group({
+    currentPassword: this.builder.control('', [Validators.required, Validators.minLength(8), Validators.maxLength(50)]),
+    newPassword: this.builder.control('', [Validators.required, Validators.minLength(8), Validators.maxLength(50)]),
+    newConfirmPassword: this.builder.control('', [Validators.required, Validators.minLength(8), Validators.maxLength(50)])
   })
 
   user = {
     avatar: 'https://i.pravatar.cc/150?img=5',
-    name: 'Juan Pérez',
-    email: 'juan.perez@example.com',
-    phone: '+56 9 1234 5678',
     address: 'Av. Jardín 123, Santiago, Chile',
   };
 
@@ -103,25 +112,36 @@ export class ProfilePage implements OnInit {
     this.authService.userProfile$.subscribe(profile => {
       this.profile.set(profile);
 
-      this.updateProfile.get('firstName')?.setValue(profile.firstName);
-      this.updateProfile.get('lastName')?.setValue(profile.lastName);
-      this.updateProfile.get('email')?.setValue(profile.email);
-      this.updateProfile.get('phone')?.setValue(profile.phone);
+      this.updateProfileForm.get('firstName')?.setValue(profile.firstName);
+      this.updateProfileForm.get('lastName')?.setValue(profile.lastName);
+      this.updateProfileForm.get('email')?.setValue(profile.email);
+      this.updateProfileForm.get('phone')?.setValue(profile.phone);
     });
   }
 
   public editProfile() {
 
-    this.authService.updateProfile(this.updateProfile.value).subscribe(() => {
+    if(this.updateProfileForm.invalid){
+      this.updateProfileForm.markAllAsTouched();
+      return;
+    }
+
+    this.authService.updateProfile(this.updateProfileForm.value).subscribe(() => {
 
       this.showToast('Perfil actualizado correctamente');
-      this.modal().dismiss(this.name, 'confirm');
+      this.modalChangeProfile().dismiss(this.name, 'confirm');
       this.authService.profile();
     });
   }
 
-  public changePassword() {
-    alert('Cambiar contraseña (en construcción)');
+  public async changePassword(): Promise<void> {
+
+    if(this.changePasswordForm.invalid){
+      this.changePasswordForm.markAllAsTouched();
+      return;
+    }
+
+    await this.changePasswordAlert();
   }
 
   public logout() {
@@ -147,12 +167,76 @@ export class ProfilePage implements OnInit {
     await toast.present();
   }
 
+  private async changePasswordAlert() {
+
+    const alert = await this.alertController.create({
+      header: 'Cambiar Contraseña',
+      message: 'Al cambiar tu contraseña se cerrara tu sesión actual, ¿estas seguro?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {},
+        },
+        {
+          text: 'Confirmar',
+          role: 'confirm',
+          handler: () => {
+
+            const changePasswordJson: ChangePassword = {
+              oldPassword: this.changePasswordForm.value.currentPassword,
+              newPassword: this.changePasswordForm.value.newPassword,
+              newRePassword: this.changePasswordForm.value.newConfirmPassword
+            }
+
+            this.authService.changePassword(changePasswordJson).pipe(
+              catchError(async (error) => {
+
+                if(error.error.status = HttpStatusCode.Unauthorized){
+
+                  await this.presentAlert("Ocurrio un error", error.error.message);
+
+                  return EMPTY;
+                }
+                return EMPTY;
+              })
+            ).subscribe(response => {
+
+              if(response.statusCode === HttpStatusCode.Ok){
+                this.authService.logout().subscribe(() => {
+                  this.modalChangePassword().dismiss("", 'confirm');
+                  this.router.navigate(["/home"]);
+                })
+              }
+            })
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async presentAlert(title: string, message: string) {
+    const alert = await this.alertController.create({
+      header: title,
+      message,
+      buttons: ['Aceptar'],
+    });
+
+    await alert.present();
+  }
+
   public navigateTo(page: string) {
     alert(`Navegando a ${page} (en construcción)`);
   }
 
-  public cancel() {
-    this.modal().dismiss(null, 'cancel');
+  public cancelProfile() {
+    this.modalChangeProfile().dismiss(null, 'cancel');
+  }
+
+  public cancelPassword() {
+    this.modalChangePassword().dismiss(null, 'cancel');
   }
 
   public onWillDismiss(event: Event) {

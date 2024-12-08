@@ -40,7 +40,7 @@
               <ion-img [src]="urlImage() + getImageProduct(product.images)" alt="{{ product.title }}" />
               <ion-card-content>
                 <h3>{{ product.title | titlecase }}</h3>
-                <p>{{ product.price }}</p>
+                <p>${{ product.price | number }}</p>
               </ion-card-content>
             </ion-card>
           </ion-col>

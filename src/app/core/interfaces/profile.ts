@@ -19,3 +19,10 @@ export const profileJson: Profile = {
   email: '',
   phone: ''
 }
+
+export interface ChangePassword {
+
+  oldPassword: string;
+  newPassword: string;
+  newRePassword: string;
+}

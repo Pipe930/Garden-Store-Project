@@ -16,7 +16,7 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
 
     catchError((error: HttpErrorResponse) => {
 
-      if(req.url.includes('auth/login')) return next(req);
+      if(req.url.includes('auth/login') || req.url.includes('auth/change-password')) return next(req);
 
       if (error.status === HttpStatusCode.Unauthorized) {
 

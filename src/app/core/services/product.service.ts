@@ -42,4 +42,8 @@ export class ProductService {
     return this.http.get<ResponseListProducts>(`${this.apiUrl}?limit=4`);
   }
 
+  public getProductsOffer(): Observable<ResponseListProducts> {
+    return this.http.get<ResponseListProducts>(`${this.apiUrl}/offer`);
+  }
+
 }

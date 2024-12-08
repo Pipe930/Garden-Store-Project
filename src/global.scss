@@ -35,3 +35,26 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/**
+  * Barcode Scaning
+  * -------------------------------------------
+*/
+
+body.barcode-scanning-active{
+  visibility: hidden;
+  --background: transparent;
+  --ion-background-color: transparent;
+}
+
+.barcode-scanning-modal{
+  visibility: visible;
+}
+
+@media (prefers-color-scheme: dark) {
+  .barcode-scanning-active{
+    visibility: hidden;
+    --background: transparent;
+    --ion-background-color: transparent;
+  }
+}

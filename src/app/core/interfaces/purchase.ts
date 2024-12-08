@@ -39,9 +39,15 @@ export interface Purchase {
   shipping: ShippingType;
 }
 
-export interface PurchaseResponse {
+export interface ListPurchaseResponse {
 
   data: Purchase[];
   message: string;
+  statusCode: number;
+}
+
+export interface PurchaseResonse {
+
+  data: Purchase;
   statusCode: number;
 }

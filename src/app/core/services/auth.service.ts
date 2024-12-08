@@ -4,7 +4,7 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Login, LoginResponse, RefreshTokenResponse } from '../interfaces/login';
 import { Registro } from '../interfaces/register';
-import { Profile, profileJson, ResponseProfile } from '../interfaces/profile';
+import { ChangePassword, Profile, profileJson, ResponseProfile } from '../interfaces/profile';
 
 @Injectable({
   providedIn: 'root'
@@ -52,5 +52,9 @@ export class AuthService {
 
   public logout():Observable<any>{
     return this.http.get(`${this.urlApi}/logout`);
+  }
+
+  public changePassword(changePassword: ChangePassword): Observable<any> {
+    return this.http.post(`${this.urlApi}/change-password`, changePassword);
   }
 }

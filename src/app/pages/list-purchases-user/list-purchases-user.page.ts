@@ -48,7 +48,8 @@ import { HeaderComponent } from 'src/app/shared/header/header.component';
     DecimalPipe,
     NgClass,
     TitleCasePipe,
-    RouterLink]
+    RouterLink
+  ]
 })
 export class ListPurchasesUserPage implements OnInit {
 
