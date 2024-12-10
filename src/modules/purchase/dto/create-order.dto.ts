@@ -1,5 +1,5 @@
 import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, Min } from "class-validator";
-import { ShippingStatusEnum } from "src/core/enums/statusShipping.enum";
+import { OrderStatusEnum } from "src/core/enums/statusOrder.enum";
 
 
 export class CreateOrderDto {
@@ -8,7 +8,7 @@ export class CreateOrderDto {
     @IsNotEmpty()
     readonly idPurchaseOrder: string;
 
-    @IsEnum(ShippingStatusEnum)
+    @IsEnum(OrderStatusEnum)
     readonly status: string;
 
     @IsDate()

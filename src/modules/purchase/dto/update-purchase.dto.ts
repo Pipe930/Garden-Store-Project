@@ -1,9 +1,8 @@
 import { IsEnum } from "class-validator";
-import { ShippingStatusEnum } from "src/core/enums/statusShipping.enum";
-
+import { OrderStatusEnum } from "src/core/enums/statusOrder.enum";
 
 export class UpdatePurchaseDto {
 
-    @IsEnum(ShippingStatusEnum)
+    @IsEnum(OrderStatusEnum)
     readonly status: string;
 }

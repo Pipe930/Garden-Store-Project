@@ -1,20 +1,25 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { WithdrawalEnum } from "src/core/enums/statusOrder.enum";
 import { MethodPaymentEnum } from "src/core/enums/statusPurchase.enum";
 import { StatusSaleEnum } from "src/core/enums/statusSale.enum";
 
-class ShippingDto {
+class CreateOrderDto {
 
-    @IsString()
     @IsNotEmpty()
+    @IsString()
     readonly informationShipping: string;
+
+    @IsEnum(WithdrawalEnum)
+    readonly withdrawal: WithdrawalEnum;
 
     @IsNumber()
     @IsPositive()
-    readonly shippingCost: string;
+    readonly shippingCost: number;
 
     @IsNumber()
-    readonly idAddress: number;
+    @IsOptional()
+    readonly idAddress?: number;
 }
 
 export class UpdateSaleDto {
@@ -25,8 +30,8 @@ export class UpdateSaleDto {
     @IsEnum(MethodPaymentEnum)
     readonly methodPayment: MethodPaymentEnum;
 
-    @IsOptional()
-    @Type(() => ShippingDto)
-    readonly shipping: ShippingDto;
+    @IsNotEmpty()
+    @Type(() => CreateOrderDto)
+    readonly shipping: CreateOrderDto;
 }
 

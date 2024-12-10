@@ -9,10 +9,8 @@ import { ConfigService } from '@nestjs/config';
 import { CreateTransbankDto } from './dto/create-transbank.dto';
 import { Product } from '../products/models/product.model';
 import { UpdateSaleDto } from './dto/update-status-sale.dto';
-import { Shipping } from '../shippings/models/shipping.model';
 import { StatusSaleEnum } from 'src/core/enums/statusSale.enum';
-import { ShippingStatusEnum, WithdrawalEnum } from 'src/core/enums/statusShipping.enum';
-import { ProductsService } from '../products/products.service';
+import { WithdrawalEnum } from 'src/core/enums/statusOrder.enum';
 import { randomUUID } from 'crypto';
 import UAParser from 'ua-parser-js';
 import { DeviceUsedEnum } from 'src/core/enums/deviceUsed.enum';
@@ -24,6 +22,8 @@ import { GeneratePDFDto } from './dto/generatePDF.dto';
 import { ResponseConvertPrice } from 'src/core/interfaces/response-convert';
 import { CommitPaypalDto, CreatePaypalDto } from './dto/create-paypal';
 import { RequestJwt } from 'src/core/interfaces/request-jwt.interface';
+import { Branch } from '../branch/models/branch.model';
+import { Order } from '../orders/models/order.model';
 
 @Injectable()
 export class SalesService {
@@ -31,13 +31,12 @@ export class SalesService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    private readonly productService: ProductsService,
     private readonly printerService: PrinterService
   ) {}
 
   async create(createSaleDto: CreateSaleDto, idUser: number, userAgent: string):Promise<ResponseData> {
 
-    let { priceTotal, productsQuantity, discountApplied, withdrawal, idBranch } = createSaleDto;
+    let { priceTotal, productsQuantity, discountApplied, idBranch } = createSaleDto;
 
     const cartUser = await Cart.findOne({
       where: {
@@ -59,7 +58,6 @@ export class SalesService {
         priceTotal,
         productsQuantity,
         discountApplied,
-        withdrawal,
         deviceUsed: this.getDeviceType(userAgent),
         status: StatusSaleEnum.PENDING,
         idUser,
@@ -124,7 +122,7 @@ export class SalesService {
           attributes: ['quantity']
         },
         {
-          model: Shipping
+          model: Order
         }
       ]
     });
@@ -153,7 +151,7 @@ export class SalesService {
             attributes: ['quantity']
           },
           {
-            model: Shipping
+            model: Order
           },
           {
             model: User,
@@ -211,7 +209,7 @@ export class SalesService {
       device_used_tablet: sale.deviceUsed === DeviceUsedEnum.TABLET ? 1 : 0
     }
     
-    const resultAnalytics = await this.httpService.axiosRef.post('http://127.0.0.1:8000/model/', jsonAnalytics);
+    const resultAnalytics = await this.httpService.axiosRef.post(`${this.configService.get<string>('modelIaUrl')}model/`, jsonAnalytics);
 
     if(resultAnalytics.status !== 200) throw new BadRequestException('Error al analizar la venta');
 
@@ -253,19 +251,33 @@ export class SalesService {
 
     try {      
       
-      if(sale.statusPayment === StatusSaleEnum.PAID && sale.withdrawal === WithdrawalEnum.DELIVERY) {
+      if(sale.statusPayment === StatusSaleEnum.PAID && shipping.withdrawal === WithdrawalEnum.DELIVERY) {
   
-        await Shipping.create({
-          idShippingSale: sale.idSale,
+        await Order.create({
+          idOrderSale: sale.idSale,
           ...shipping,
-          trackingNumber: randomUUID().split('-')[0].toUpperCase()
-        })
+          trackingNumber: this.generateTrackingNumber()
+        });
+      } else if(sale.statusPayment === StatusSaleEnum.PAID && shipping.withdrawal === WithdrawalEnum.IN_STORE) {
+
+        const branch = await Branch.findByPk(sale.idBranch);
+
+        await Order.create({
+          idOrderSale: sale.idSale,
+          informationShipping: "Pedido en entrega en sucursal",
+          idAddress: branch.idAddress,
+          withdrawal: shipping.withdrawal,
+          shippingCost: 0,
+          trackingNumber: this.generateTrackingNumber()
+        });
       }
 
       await sale.save();
 
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException('Error al actualizar el estado de la venta');
+
     }
 
     return {
@@ -390,6 +402,10 @@ export class SalesService {
     }
   }
 
+  private generateTrackingNumber(): string {
+    return randomUUID().split('-')[0].toUpperCase();
+  }
+
   private async createTokenPaypal(): Promise<string> {
 
     const params = new URLSearchParams();
@@ -436,34 +452,6 @@ export class SalesService {
 
   private calculateNetPrice(priceTotal: number): number {
     return priceTotal - priceTotal * 0.19;
-  }
-
-  private async validateStatusSale(status: string, sale: Sale): Promise<void> {
-
-    if(status === ShippingStatusEnum.DELIVERED){
-
-      const products = await SaleProduct.findAll({
-        where: {
-          idSale: sale.idSale
-        }
-      });
-  
-      products.forEach(async productSale => {
-  
-        const product = await Product.findByPk(productSale.idProduct);
-  
-        if(product.stock < productSale.quantity) throw new BadRequestException('No hay stock suficiente para la venta');
-  
-        product.stock -= productSale.quantity;
-        product.sold += productSale.quantity;
-
-        await this.productService.validAvaibilityStatus(product.idProduct);
-        await product.save();
-      });
-  
-      sale.statusOrder = status;
-      await sale.save();
-    }
   }
   
   private getDeviceType(userAgent: string): DeviceUsedEnum {

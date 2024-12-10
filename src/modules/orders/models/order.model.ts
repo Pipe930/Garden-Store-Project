@@ -1,21 +1,22 @@
 import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Sale } from "src/modules/sales/models/sale.model";
 import { Address } from "src/modules/address/models/address.model";
+import { OrderStatusEnum, WithdrawalEnum } from "src/core/enums/statusOrder.enum";
 
 @Table({
-    tableName: 'shippings',
-    modelName: 'Shipping',
+    tableName: 'orders',
+    modelName: 'Order',
     timestamps: true
 })
-export class Shipping extends Model {
+export class Order extends Model {
 
     @ForeignKey(() => Sale)
     @Column({
         primaryKey: true,
         type: DataType.UUID,
-        field: 'id_shipping_sale'
+        field: 'id_order_sale'
     })
-    declare idShippingSale: string;
+    declare idOrderSale: string;
 
     @Column({
         type: DataType.STRING(255),
@@ -40,6 +41,19 @@ export class Shipping extends Model {
         field: 'delivery_date'
     })
     declare deliveryDate: Date;
+
+    @Column({
+        type: DataType.ENUM(...Object.values(OrderStatusEnum)),
+        defaultValue: OrderStatusEnum.PREPARATION,
+        allowNull: false
+    })
+    declare statusOrder: string;
+
+    @Column({
+        type: DataType.ENUM(...Object.values(WithdrawalEnum)),
+        allowNull: false
+    })
+    declare withdrawal: string;
 
     @Column({
         type: DataType.STRING(40),

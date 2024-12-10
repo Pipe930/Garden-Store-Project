@@ -2,12 +2,11 @@ import { randomUUID } from "crypto";
 import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
 import { Product } from "src/modules/products/models/product.model";
 import { User } from "src/modules/users/models/user.model";
-import { Shipping } from "src/modules/shippings/models/shipping.model";
 import { StatusSaleEnum } from "src/core/enums/statusSale.enum";
-import { ShippingStatusEnum, WithdrawalEnum } from "src/core/enums/statusShipping.enum";
 import { Branch } from "src/modules/branch/models/branch.model";
 import { MethodPaymentEnum } from "src/core/enums/statusPurchase.enum";
 import { DeviceUsedEnum } from "src/core/enums/deviceUsed.enum";
+import { Order } from "src/modules/orders/models/order.model";
 
 @Table({
     tableName: 'sales',
@@ -89,19 +88,6 @@ export class Sale extends Model {
     declare productsQuantity: number;
 
     @Column({
-        type: DataType.ENUM(...Object.values(ShippingStatusEnum)),
-        defaultValue: ShippingStatusEnum.PREPARATION,
-        allowNull: false
-    })
-    declare statusOrder: string;
-
-    @Column({
-        type: DataType.ENUM(...Object.values(WithdrawalEnum)),
-        allowNull: false
-    })
-    declare withdrawal: string;
-
-    @Column({
         type: DataType.ENUM(...Object.values(StatusSaleEnum)),
         allowNull: false,
         defaultValue: StatusSaleEnum.PENDING
@@ -127,8 +113,8 @@ export class Sale extends Model {
     @HasMany(() => SaleProduct)
     declare saleProducts: SaleProduct[];
 
-    @HasOne(() => Shipping)
-    declare shipping: Shipping;
+    @HasOne(() => Order)
+    declare order: Order;
 }
 
 @Table({

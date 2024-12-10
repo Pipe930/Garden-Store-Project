@@ -18,7 +18,7 @@ export enum ResourcesEnum {
     BRANCHS = "sucursales",
     OFFERS = "ofertas",
     WARRANTIES = "garantias",
-    SHIPPINGS = "envios",
+    ORDERS = "pedidos",
     ADDRESS = "direcciones",
     ADDRESSUSER = "direcciones-usuario",
     TAGS = "etiquetas"

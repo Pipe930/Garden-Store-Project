@@ -9,7 +9,6 @@ import { Item } from "src/modules/cart/models/item.model";
 import { Commune, Province, Region } from "src/modules/address/models/locates.model";
 import { Address, AddressUser } from "src/modules/address/models/address.model";
 import { Sale, SaleProduct } from "src/modules/sales/models/sale.model";
-import { Shipping } from "src/modules/shippings/models/shipping.model";
 import { ImagesProduct } from "src/modules/products/models/image.model";
 import { Offer } from "src/modules/offers/models/offer.model";
 import { Branch, ProductBranch } from "src/modules/branch/models/branch.model";
@@ -24,6 +23,7 @@ import { Comment } from "src/modules/comments/models/comment.model";
 import { PostTag, Tag } from "src/modules/posts/models/tag.model";
 import { Reaction } from "src/modules/posts/models/reaction.model";
 import { Review } from "src/modules/reviews/models/review.model";
+import { Order } from "src/modules/orders/models/order.model";
 
 export const ArrayModels: Array<any> = [
     User,
@@ -43,7 +43,7 @@ export const ArrayModels: Array<any> = [
     Address,
     AddressUser,
     Sale,
-    Shipping,
+    Order,
     SaleProduct,
     ImagesProduct,
     Offer,
