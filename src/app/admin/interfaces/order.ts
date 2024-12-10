@@ -1,14 +1,16 @@
 import { DataType } from "@core/enums/dataType.enum";
-import { ShippingStatusEnum } from "@core/enums/shippingStatus.enum";
+import { OrderStatusEnum } from "@core/enums/orderStatus.enum";
 import { TableColumns } from "@core/interfaces/table";
 
 export interface Order {
 
-  idShippingSale: string;
+  idOrderSale: string;
   informationShipping: string;
   shippingDate: Date;
   deliveryDate: Date;
   trackingNumber: string;
+  withdrawal: string;
+  statusOrder: string;
   shippingCost: number;
   idAddress: number;
 }
@@ -26,15 +28,17 @@ export interface OrderResponse {
 export interface OrderUpdate {
 
   informationShipping: string;
-  status: ShippingStatusEnum;
-  // trackingNumber: string;
+  status: OrderStatusEnum;
+  trackingNumber: string;
   shippingCost: number;
 }
 
 export const orderJson: Order = {
 
-  idShippingSale: '',
+  idOrderSale: '',
   informationShipping: '',
+  statusOrder: "",
+  withdrawal: "",
   shippingDate: new Date(),
   deliveryDate: new Date(),
   trackingNumber: '',

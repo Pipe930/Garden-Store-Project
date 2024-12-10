@@ -17,15 +17,15 @@
               <div class="cart__container-listproduct">
                 <div class="cart__product-info">
                   <h3>{{product.product.title | titlecase}}</h3>
-                  <h3>{{product.product.category.name}}</h3>
+                  <h5>{{product.product.category.name}}</h5>
                   <p>{{product.product.brand}}</p>
                   <div class="cart__container-btns">
-                    <div class="container-listproduct__quantity">
-                      <button (click)="substractProduct(product.product.idProduct)" class="btn btn-success">-</button>
+                    <div class="container-btns__btns">
+                      <button (click)="substractProduct(product.product.idProduct)" class="btn btn-success cart__btn-substract">-</button>
                       <p class="cart__quantity">{{product.quantity}}</p>
-                      <button (click)="addProduct(product.product.idProduct)" class="btn btn-success">+</button>
+                      <button (click)="addProduct(product.product.idProduct)" class="btn btn-success cart__btn-add">+</button>
                     </div>
-                    <button (click)="removeProduct(product.product.idProduct)" class="cart__btn-remove">
+                    <button (click)="removeProduct(product.product.idProduct)" class="btn btn-danger cart__btn-remove">
                       <i class='bx bx-trash'></i>
                       Eliminar
                     </button>
@@ -52,7 +52,7 @@
               </div>
             }
             <hr>
-            <button (click)="clearCart()" class="cart__btn-clear">Limpiar Carrito</button>
+            <button (click)="clearCart()" class="btn btn-danger cart__btn-clear">Limpiar Carrito</button>
           </div>
           <div class="cart__right">
             <h2 class="cart__title-right">Total</h2>

@@ -6,7 +6,7 @@ import { Cart, cartJson } from '@pages/interfaces/cart';
 import { AddressService } from '@pages/services/address.service';
 import { Address, addressObject, CreateAddress } from '@pages/interfaces/address';
 import { Commune, Province, Region } from '@pages/interfaces/locates';
-import { CreateVoucher, TypeRetirementEnum, Voucher, VoucherConfirm, VoucherObject } from '@pages/interfaces/purchase';
+import { CreateVoucher, TypeRetirementEnum, Voucher, VoucherConfirm, voucherObject } from '@pages/interfaces/purchase';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, DecimalPipe, NgClass, TitleCasePipe } from '@angular/common';
 import { TransbankService } from '@pages/services/transbank.service';
@@ -69,9 +69,8 @@ export class PurchaseComponent implements OnInit {
 
   public shippingCost = signal<number>(0);
 
-  public voucher: Voucher = VoucherObject;
-  public voucherObject: CreateVoucher = {
-    withdrawal: "",
+  public voucher: Voucher = voucherObject;
+  public createVoucherObject: CreateVoucher = {
     priceTotal: 0,
     productsQuantity: 0,
     discountApplied: 0
@@ -214,7 +213,7 @@ export class PurchaseComponent implements OnInit {
     this.resetDataAddress();
   }
 
-  private resetDataAddress(): void{
+  private resetDataAddress(): void {
 
     if(this.voucher.typeRetirement === TypeRetirementEnum.STORE_PICKUP){
       this.displayDispatchSend = false;
@@ -285,43 +284,11 @@ export class PurchaseComponent implements OnInit {
 
         this._transbankService.createTransationTransbank({ amount: this.cart().priceTotal }).subscribe(responseTransbank => {
 
-          this.voucher.totalPrice = this.cart().priceTotal;
-          this.voucher.productsQuantity = this.cart().quantityTotal;
-          this.voucher.discountApplied = this.cart().priceTotalDiscount;
+          this.validRetirement();
 
-          if(this.voucher.typeRetirement === TypeRetirementEnum.HOME_DELIVERY && this.voucher.address.name !== ""){
+          this._purchaseService.createPurchase(this.createVoucherObject).subscribe(response => {
 
-            this.voucherObject = {
-              withdrawal: this.voucher.typeRetirement,
-              priceTotal: this.voucher.totalPrice,
-              productsQuantity: this.voucher.productsQuantity,
-              discountApplied: this.voucher.discountApplied
-            }
-
-          } else if(this.voucher.typeRetirement === TypeRetirementEnum.STORE_PICKUP && this.voucher.idBranch !== 0){
-
-            this.voucherObject = {
-              withdrawal: this.voucher.typeRetirement,
-              priceTotal: this.voucher.totalPrice,
-              productsQuantity: this.voucher.productsQuantity,
-              discountApplied: this.voucher.discountApplied,
-              idBranch: this.voucher.idBranch
-            }
-          }
-
-          this._purchaseService.createPurchase(this.voucherObject).subscribe(response => {
-
-            const newVoucherObject: VoucherConfirm = {
-
-              address: this.voucher.address,
-              typePerson: this.voucher.typePerson,
-              typePay: this.voucher.typePay,
-              shippingCost: this.shippingCost(),
-              typeRetirement: this.voucher.typeRetirement,
-              idSale: response.data.idSale,
-            }
-
-            localStorage.setItem("voucher", JSON.stringify(newVoucherObject));
+            this.voucherLocalStorage(response);
 
             let form = document.createElement("form");
             form.method = "POST";
@@ -346,43 +313,11 @@ export class PurchaseComponent implements OnInit {
         this.modalLoading();
         this._paypalService.createPaypal({amount: this.cart().priceTotal}).subscribe(responsePaypal => {
 
-          this.voucher.totalPrice = this.cart().priceTotal;
-          this.voucher.productsQuantity = this.cart().quantityTotal;
-          this.voucher.discountApplied = this.cart().priceTotalDiscount;
+          this.validRetirement();
 
-          if(this.voucher.typeRetirement === TypeRetirementEnum.HOME_DELIVERY && this.voucher.address.name !== ""){
+          this._purchaseService.createPurchase(this.createVoucherObject).subscribe(response => {
 
-            this.voucherObject = {
-              withdrawal: this.voucher.typeRetirement,
-              priceTotal: this.voucher.totalPrice,
-              productsQuantity: this.voucher.productsQuantity,
-              discountApplied: this.voucher.discountApplied
-            }
-
-          } else if(this.voucher.typeRetirement === TypeRetirementEnum.STORE_PICKUP && this.voucher.idBranch !== 0){
-
-            this.voucherObject = {
-              withdrawal: this.voucher.typeRetirement,
-              priceTotal: this.voucher.totalPrice,
-              productsQuantity: this.voucher.productsQuantity,
-              discountApplied: this.voucher.discountApplied,
-              idBranch: this.voucher.idBranch
-            }
-          }
-
-          this._purchaseService.createPurchase(this.voucherObject).subscribe(response => {
-
-            const newVoucherObject: VoucherConfirm = {
-
-              address: this.voucher.address,
-              typePerson: this.voucher.typePerson,
-              typePay: this.voucher.typePay,
-              shippingCost: this.shippingCost(),
-              typeRetirement: this.voucher.typeRetirement,
-              idSale: response.data.idSale,
-            }
-
-            localStorage.setItem("voucher", JSON.stringify(newVoucherObject));
+            this.voucherLocalStorage(response);
 
             window.location.href = responsePaypal.data.links[1].href;
           });
@@ -393,6 +328,46 @@ export class PurchaseComponent implements OnInit {
         this._alertService.error("Error", "Tiene que seleccionar un metodo de pago");
 
       }
+  }
+
+  private validRetirement(): void {
+
+    this.voucher.totalPrice = this.cart().priceTotal;
+    this.voucher.productsQuantity = this.cart().quantityTotal;
+    this.voucher.discountApplied = this.cart().priceTotalDiscount;
+
+    if(this.voucher.typeRetirement === TypeRetirementEnum.HOME_DELIVERY && this.voucher.address.name !== ""){
+
+      this.createVoucherObject = {
+        priceTotal: this.voucher.totalPrice,
+        productsQuantity: this.voucher.productsQuantity,
+        discountApplied: this.voucher.discountApplied
+      }
+
+    } else if(this.voucher.typeRetirement === TypeRetirementEnum.STORE_PICKUP && this.voucher.idBranch !== 0){
+
+      this.createVoucherObject = {
+        priceTotal: this.voucher.totalPrice,
+        productsQuantity: this.voucher.productsQuantity,
+        discountApplied: this.voucher.discountApplied,
+        idBranch: this.voucher.idBranch
+      }
+    }
+  }
+
+  private voucherLocalStorage(response: any): void {
+
+    const newVoucherObject: VoucherConfirm = {
+
+      address: this.voucher.address,
+      typePerson: this.voucher.typePerson,
+      typePay: this.voucher.typePay,
+      shippingCost: this.shippingCost(),
+      typeRetirement: this.voucher.typeRetirement,
+      idSale: response.data.idSale,
+    }
+
+    localStorage.setItem("voucher", JSON.stringify(newVoucherObject));
   }
 
   private modalLoading():void {

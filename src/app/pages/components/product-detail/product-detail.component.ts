@@ -11,6 +11,7 @@ import { environment } from '@env/environment.development';
 import { CardComponent } from '@shared/card/card.component';
 import { ReviewComponent } from '@shared/review/review.component';
 import { RatingStartsComponent } from '@shared/rating-starts/rating-starts.component';
+import { catchError, EMPTY } from 'rxjs';
 
 register();
 
@@ -67,7 +68,7 @@ export class ProductDetailComponent implements OnInit {
 
   public sumQuantity():void {
 
-    if (this.product().stock >= this.quantity()) {
+    if (this.product().stock > this.quantity()) {
       this.quantity.update(value => value + 1);
     }
   }
@@ -85,7 +86,7 @@ export class ProductDetailComponent implements OnInit {
     this.loadImages(productGet);
   }
 
-  public addCart(id_product: number):void{
+  public addCart(idProduct: number):void {
 
     if(!this._sessionService.validSession()){
 
@@ -99,18 +100,21 @@ export class ProductDetailComponent implements OnInit {
       return;
     }
 
-    const jsonProduct = {
-      idProduct: id_product,
-      quantity: this.quantity()
-    }
-
-    this._cartService.addProductCart(jsonProduct).subscribe(result => {
+    this._cartService.addProductCart(
+      {
+        idProduct,
+        quantity: this.quantity()
+      }
+    ).pipe(
+      catchError(() => {
+        this._alertService.error("Error", "No se agrego el producto al carrito");
+        return EMPTY;
+      })
+    ).subscribe(() => {
 
       this._alertService.toastSuccess("El producto se agrego al carrito");
       this._router.navigate(["/cart"]);
-    }, () => {
-      this._alertService.error("Error", "No se agrego el producto al carrito");
-    })
+    });
 
   }
 

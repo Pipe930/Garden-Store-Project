@@ -1,5 +1,6 @@
 import { DataType } from "@core/enums/dataType.enum";
 import { TableColumns } from "@core/interfaces/table";
+import { Order } from "./order";
 
 export interface SaleResponse {
 
@@ -35,11 +36,10 @@ export interface Sale {
   priceTotal: number;
   productsQuantity: number;
   discountApplied: number;
-  withdrawal: string;
   deviceUsed: string;
-  statusOrder: string;
   statusPayment: string;
   methodPayment: string;
+  order: Order;
   createdAt: Date;
   updatedAt: Date;
   user: UserType;
@@ -60,9 +60,7 @@ export const saleJson: Sale = {
   priceTotal: 0,
   productsQuantity: 0,
   discountApplied: 0,
-  withdrawal: "",
   deviceUsed: "",
-  statusOrder: "",
   statusPayment: "",
   methodPayment: "",
   createdAt: new Date(),
@@ -72,6 +70,17 @@ export const saleJson: Sale = {
     lastName: "",
     email: "",
     phone: ""
+  },
+  order: {
+    deliveryDate: new Date(),
+    idAddress: 0,
+    idOrderSale: "",
+    informationShipping: "",
+    shippingCost: 0,
+    trackingNumber: "",
+    shippingDate: new Date(),
+    statusOrder: "",
+    withdrawal: ""
   },
   saleProducts: []
 }

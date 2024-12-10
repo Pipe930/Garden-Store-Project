@@ -17,9 +17,9 @@ export class RatingStartsComponent implements OnInit {
   public hasHalfStar = signal<boolean>(false);
 
   ngOnInit(): void {
+
     const fullStars = Math.floor(this.rating());
 
-    console.log(fullStars)
     this.hasHalfStar.set(this.rating() % 1 !== 0);
     const totalStars = 5;
 

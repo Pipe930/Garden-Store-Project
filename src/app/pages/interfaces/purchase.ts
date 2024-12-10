@@ -73,23 +73,23 @@ export interface VoucherConfirm {
   idSale: number;
 }
 
-export interface Shipping {
+export interface Order {
 
   informationShipping: string;
   shippingCost: number;
-  idAddress: number;
+  withdrawal: TypeRetirementEnum;
+  idAddress?: number;
 }
 
 export interface UpdateVoucher {
 
   status: string;
   methodPayment: string;
-  shipping?: Shipping;
+  shipping?: Order;
 }
 
 export interface CreateVoucher {
 
-  withdrawal: string;
   productsQuantity: number;
   priceTotal: number;
   discountApplied: number;
@@ -97,7 +97,7 @@ export interface CreateVoucher {
 }
 
 
-export const VoucherObject: Voucher = {
+export const voucherObject: Voucher = {
   address: {
     address: {
       idAddress: 0,

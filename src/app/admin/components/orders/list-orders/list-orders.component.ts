@@ -29,7 +29,7 @@ export class ListOrdersComponent implements OnInit {
   }
 
   public editOrder(order: Order): void {
-    this._router.navigate(['admin/orders/detail', order.idShippingSale]);
+    this._router.navigate(['admin/orders/detail', order.idOrderSale]);
   }
 
 }

@@ -5,7 +5,7 @@ import { NgClass } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ShippingStatusEnum } from '@core/enums/shippingStatus.enum';
+import { OrderStatusEnum } from '@core/enums/orderStatus.enum';
 import { AlertService } from '@core/services/alert.service';
 import { catchError, EMPTY } from 'rxjs';
 
@@ -27,7 +27,7 @@ export class DetailOrderComponent implements OnInit {
 
   public order = signal<Order>(orderJson);
   public idShipping = this._activatedRoute.snapshot.params["id"];
-  public listStatusShipping = signal<ShippingStatusEnum[]>(Object.values(ShippingStatusEnum));
+  public listStatusShipping = signal<OrderStatusEnum[]>(Object.values(OrderStatusEnum));
 
   public updateShippingForm: FormGroup = this._builder.group({
     informationShipping: this._builder.control('', [Validators.required, Validators.maxLength(255)]),
@@ -56,17 +56,17 @@ export class DetailOrderComponent implements OnInit {
       }
 
 
-      this._saleService.getSale(response.data.idShippingSale).subscribe((response) => {
-        this.updateShippingForm.get('status')?.setValue(response.data.statusOrder);
+      this._saleService.getSale(response.data.idOrderSale).subscribe((response) => {
+        this.updateShippingForm.get('status')?.setValue(response.data.order.statusOrder);
         this.updateShippingForm.updateValueAndValidity();
       });
       this.updateShippingForm.get('informationShipping')?.setValue(response.data.informationShipping);
       this.updateShippingForm.get('trackingNumber')?.setValue(response.data.trackingNumber);
       this.updateShippingForm.get('shippingCost')?.setValue(response.data.shippingCost);
       this.updateShippingForm.get('idAddress')?.setValue(response.data.idAddress);
-      this.updateShippingForm.updateValueAndValidity();
       this.updateShippingForm.get('shippingDate')?.disable();
       this.updateShippingForm.get('deliveryDate')?.disable();
+      this.updateShippingForm.updateValueAndValidity();
     });
   }
 
@@ -81,7 +81,7 @@ export class DetailOrderComponent implements OnInit {
 
       informationShipping: this.updateShippingForm.value.informationShipping,
       status: this.updateShippingForm.value.status,
-      // trackingNumber: this.updateShippingForm.value.trackingNumber,
+      trackingNumber: this.updateShippingForm.value.trackingNumber,
       shippingCost: this.updateShippingForm.value.shippingCost
     }
 

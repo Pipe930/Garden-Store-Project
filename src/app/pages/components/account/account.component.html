@@ -191,7 +191,7 @@
             <fieldset class="form__control">
               <label for="re_new_password" class="form__text form-label">Confirmar Contraseña</label>
               <input type="password" id="re_new_password" class="form-control" formControlName="reNewPassword" [ngClass]="{
-                'is-invalid': reNewPassword.invalid && (reNewPassword.dirty || reNewPassword.touched)
+                'is-invalid': reNewPassword.invalid && (reNewPassword.dirty || reNewPassword.touched) || changePasswordForm.hasError('passordsDontMatch')
               }">
               @if (reNewPassword.getError('required')){
                 <span class="invalid-feedback">Este campo es requerido</span>
@@ -201,6 +201,9 @@
               }
               @if (reNewPassword.getError('maxlength')){
                 <span class="invalid-feedback">Tiene que tener maximo 50 caracteres</span>
+              }
+              @if(changePasswordForm.hasError('passordsDontMatch')) {
+                <span class="invalid-feedback">Las contraseñas no coinciden</span>
               }
             </fieldset>
             <button class="btn btn-success" type="submit">Cambiar Contraseña</button>

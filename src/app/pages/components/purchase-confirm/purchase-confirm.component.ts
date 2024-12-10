@@ -32,8 +32,6 @@ export class PurchaseConfirmComponent {
 
     const queryParams = this._activatedRoute.snapshot.queryParamMap;
 
-    console.log(queryParams.has("token"));
-
     if(queryParams.has("token_ws")){
       this._transbankService.confirmTransationTransbank(queryParams.get("token_ws")!).subscribe(result => {
 
@@ -50,6 +48,7 @@ export class PurchaseConfirmComponent {
               methodPayment: this.typeCard(),
               shipping: {
                 informationShipping: "Envio para cliente a domicilio",
+                withdrawal: this.voucherConfirmObject.typeRetirement,
                 shippingCost: 0,
                 idAddress: this.voucherConfirmObject.address.idAddress
               }
@@ -59,6 +58,11 @@ export class PurchaseConfirmComponent {
             this.updateSale = {
               status: StatusPurchaseEnum.PAID,
               methodPayment: this.typeCard(),
+              shipping: {
+                withdrawal: this.voucherConfirmObject.typeRetirement,
+                informationShipping: "Pedido de entrega del cliente en sucursal",
+                shippingCost: 0
+              }
             }
           }
 
@@ -87,6 +91,7 @@ export class PurchaseConfirmComponent {
             status: StatusPurchaseEnum.PAID,
             methodPayment: MethodPaymentEnum.PAYPAL,
             shipping: {
+              withdrawal: this.voucherConfirmObject.typeRetirement,
               informationShipping: "Envio para cliente a domicilio",
               shippingCost: 0,
               idAddress: this.voucherConfirmObject.address.idAddress
@@ -97,6 +102,11 @@ export class PurchaseConfirmComponent {
           this.updateSale = {
             status: StatusPurchaseEnum.PAID,
             methodPayment: MethodPaymentEnum.PAYPAL,
+            shipping: {
+              withdrawal: this.voucherConfirmObject.typeRetirement,
+              informationShipping: "Pedido de entrega del cliente en sucursal",
+              shippingCost: 0
+            }
           }
         }
 

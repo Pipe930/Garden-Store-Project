@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 export class OrderService {
 
   private readonly _http = inject(HttpClient);
-  private readonly urlApi = `${environment.api}/shippings`;
+  private readonly urlApi = `${environment.api}/orders`;
 
   public getAllOrders(): Observable<ListOrderResponse> {
     return this._http.get<ListOrderResponse>(this.urlApi);
