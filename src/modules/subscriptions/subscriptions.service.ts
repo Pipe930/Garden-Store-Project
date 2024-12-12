@@ -53,6 +53,7 @@ export class SubscriptionsService {
 
     subscription.monthsPage += 1;
     subscription.mount += mount;
+    subscription.status = SubscriptionStatus.ACTIVE;
 
     await subscription.save();
 

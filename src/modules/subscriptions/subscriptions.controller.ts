@@ -19,19 +19,19 @@ export class SubscriptionsController {
   }
 
   @Get('subscription')
-  @UseGuards(AuthGuard)
+  @Auth([{ resource: ResourcesEnum.SUBSCRIPTIONS, action: [ActionsEnum.READ] }])
   findOne(@Req() request: RequestJwt) {
     return this.subscriptionsService.findOne(request.user.idUser);
   }
 
   @Put('subscription/renovate')
-  @UseGuards(AuthGuard)
+  @Auth([{ resource: ResourcesEnum.SUBSCRIPTIONS, action: [ActionsEnum.UPDATE] }])
   update(@Req() request: RequestJwt, @Body() updateSubscriptionDto: UpdateSubscriptionDto) {
     return this.subscriptionsService.update(request.user.idUser, updateSubscriptionDto);
   }
 
   @Delete('subscription/remove')
-  @UseGuards(AuthGuard)
+  @Auth([{ resource: ResourcesEnum.SUBSCRIPTIONS, action: [ActionsEnum.DELETE] }])
   remove(@Req() request: RequestJwt) {
     return this.subscriptionsService.remove(request.user.idUser);
   }
