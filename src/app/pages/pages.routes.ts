@@ -14,6 +14,7 @@ import { UpdatePostUserComponent } from './components/update-post-user/update-po
 import { ListProductsOfferComponent } from './components/list-products-offer/list-products-offer.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { authGuard } from '@core/guards/auth.guard';
+import { SubscriptionComponent } from './components/subscription/subscription.component';
 
 export const routesPages: Routes = [
 
@@ -69,6 +70,10 @@ export const routesPages: Routes = [
       {
         path: "contact",
         component: ContactComponent
+      },
+      {
+        path: "subscriptions",
+        component: SubscriptionComponent
       },
       {
         path: "manage-posts",

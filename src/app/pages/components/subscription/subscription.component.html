@@ -1,0 +1,62 @@
+<div class="container-main">
+
+  <div class="container__container-main">
+    <h2 class="container__title">Garden Plus</h2>
+
+    <div class="container__subscribition-container">
+      <h4 class="container__subtitle">Suscribite por</h4>
+      <h3 class="cotnainer__price">$ {{subscriptionMount() | number}}/mes</h3>
+    </div>
+    <p class="container__text">Suscribete a nosotros y obtiene varios beneficios en toda nuestras compras que realices en nuestro sitio web:</p>
+    <ul class="container__list">
+
+      <li class="container__item">
+        Envios Gratis
+      </li>
+      <li class="container__item">
+        5% de descuento en tu boleta total
+      </li>
+      <li class="container__item">
+        Atención al cliente prioritaria
+      </li>
+    </ul>
+
+    @if(subcription().status === "inactivo"){
+      <div class="container__payment-methods">
+
+        <h4 class="payment-methods__title">Medios de Pago</h4>
+
+        <div class="payment-methods__container">
+
+          <div class="payment-methods__container-type">
+
+            <span class="payment-methods__type"><i class='bx bxs-credit-card'></i> Tarjeta de Credito y Debito</span>
+          </div>
+          <div class="payment-methods__container-type">
+            <span class="payment-methods__type"><i class='bx bxs-wallet'></i> Mercado Pago</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="contianer__container-btn">
+
+        <button class="container__btn-subscribe" (click)="createSubcription()">Suscribete a <b>Garden Plus</b></button>
+        <p class="container__text">Puedes cancelar tu suscripción cuando quieras.</p>
+      </div>
+    }
+
+    @if(subcription().status === "activo"){
+      <div class="container__container-subcription">
+
+        <h4>¡Ya estas Suscrito!</h4>
+        <p class="container__text">Ya estas suscrito a nuestro sitio, muchas gracias por apoyarnos y confiar en nosotros.</p>
+        <p class="container__text">Si quieres cancelar tu suscripción, puedes hacerlo haciendo click en el boton de abajo.</p>
+      </div>
+
+      <div class="contianer__container-btn">
+
+        <button class="container__btn-desubscribe" (click)="cancelSubcription()">Cancelar Suscripción</button>
+      </div>
+    }
+  </div>
+</div>s
