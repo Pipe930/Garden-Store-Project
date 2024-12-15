@@ -59,4 +59,8 @@ export const routes: Routes = [
     path: 'valid-purchase/:id',
     loadComponent: () => import('./pages/valid-purchase/valid-purchase.page').then( m => m.ValidPurchasePage)
   },
+  {
+    path: 'forgot-password',
+    loadComponent: () => import('./pages/forgot-password/forgot-password.page').then( m => m.ForgotPasswordPage)
+  },
 ];

@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Login, LoginResponse, RefreshTokenResponse } from '../interfaces/login';
 import { Registro } from '../interfaces/register';
 import { ChangePassword, Profile, profileJson, ResponseProfile } from '../interfaces/profile';
+import { ForgotPasswordForm } from '../interfaces/forgot-password';
 
 @Injectable({
   providedIn: 'root'
@@ -56,5 +57,9 @@ export class AuthService {
 
   public changePassword(changePassword: ChangePassword): Observable<any> {
     return this.http.post(`${this.urlApi}/change-password`, changePassword);
+  }
+
+  public forgotPassword(forgotPassword: ForgotPasswordForm): Observable<any> {
+    return this.http.post(`${this.urlApi}/forgot-password`, forgotPassword);
   }
 }
