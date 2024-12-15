@@ -12,11 +12,11 @@ export class ValidatorService {
     return valid ? null : { invalidEmail: { valid: false } };
   }
 
-  public comparePasswords(passwordKey: string, re_password: string) {
+  public comparePasswords(passwordKey: string, rePassword: string) {
 
     return (group: FormGroup): {[key: string]: any} => {
       const password = group.controls[passwordKey];
-      const confirmPassword = group.controls[re_password];
+      const confirmPassword = group.controls[rePassword];
 
       if (password.value !== confirmPassword.value) {
         return { passordsDontMatch: true };

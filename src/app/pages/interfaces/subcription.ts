@@ -22,7 +22,7 @@ export const subcriptionObject: Subcription = {
 
   idSubcription: 0,
   created: "",
-  status: "",
+  status: "inactivo",
   mount: 0,
   user: ""
 }

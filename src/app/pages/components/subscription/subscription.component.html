@@ -1,7 +1,7 @@
 <div class="container-main">
 
   <div class="container__container-main">
-    <h2 class="container__title">Garden Plus</h2>
+    <h3 class="container__title">Garden Plus</h3>
 
     <div class="container__subscribition-container">
       <h4 class="container__subtitle">Suscribite por</h4>
@@ -21,26 +21,26 @@
       </li>
     </ul>
 
-    @if(subcription().status === "inactivo"){
-      <div class="container__payment-methods">
+    <div class="container__payment-methods">
 
-        <h4 class="payment-methods__title">Medios de Pago</h4>
+      <h4 class="payment-methods__title">Medios de Pago</h4>
 
-        <div class="payment-methods__container">
+      <div class="payment-methods__container">
 
-          <div class="payment-methods__container-type">
+        <div class="payment-methods__container-type">
 
-            <span class="payment-methods__type"><i class='bx bxs-credit-card'></i> Tarjeta de Credito y Debito</span>
-          </div>
-          <div class="payment-methods__container-type">
-            <span class="payment-methods__type"><i class='bx bxs-wallet'></i> Mercado Pago</span>
-          </div>
+          <span class="payment-methods__type"><i class='bx bxs-credit-card'></i> Tarjeta de Credito y Debito</span>
+        </div>
+        <div class="payment-methods__container-type">
+          <span class="payment-methods__type"><i class='bx bxl-paypal'></i> Paypal</span>
         </div>
       </div>
+    </div>
+    @if(subcription().status === "inactivo"){
 
       <div class="contianer__container-btn">
 
-        <button class="container__btn-subscribe" (click)="createSubcription()">Suscribete a <b>Garden Plus</b></button>
+        <button class="container__btn-subscribe btn btn-primary" (click)="createSubcription()">Suscribete a <b>Garden Plus</b></button>
         <p class="container__text">Puedes cancelar tu suscripción cuando quieras.</p>
       </div>
     }
@@ -55,7 +55,7 @@
 
       <div class="contianer__container-btn">
 
-        <button class="container__btn-desubscribe" (click)="cancelSubcription()">Cancelar Suscripción</button>
+        <button class="container__btn-desubscribe btn btn-danger" (click)="cancelSubcription()">Cancelar Suscripción</button>
       </div>
     }
   </div>

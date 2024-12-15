@@ -36,11 +36,11 @@ export class AccountComponent {
   private readonly _purchaseService = inject(PurchaseService);
 
   public changePasswordForm: FormGroup = this._builder.group({
-    currentPassword: this._builder.control("", [Validators.required, Validators.minLength(8), Validators.maxLength(50)]),
+    oldPassword: this._builder.control("", [Validators.required, Validators.minLength(8), Validators.maxLength(50)]),
     newPassword: this._builder.control("", [Validators.required, Validators.minLength(8), Validators.maxLength(50)]),
-    reNewPassword: this._builder.control("", [Validators.required, Validators.minLength(8), Validators.maxLength(50)])
+    newRePassword: this._builder.control("", [Validators.required, Validators.minLength(8), Validators.maxLength(50)])
   }, {
-    validators: this._validatorService.comparePasswords("newPassword", "reNewPassword")
+    validators: this._validatorService.comparePasswords("newPassword", "newRePassword")
   });
 
   public deleteAccountForm: FormGroup = this._builder.group({
@@ -388,6 +388,7 @@ export class AccountComponent {
           this._authService.logout().subscribe(() => {
             this._alertService.success("Cambio Contraseña", "Se cambio la contraseña correctamente");
             this._router.navigate(['/']);
+            sessionStorage.clear();
           });
         });
 
@@ -424,8 +425,6 @@ export class AccountComponent {
     return this.createFormAddress.controls["commune"];
   }
 
-
-
   get updateName(){
     return this.updateFormAddress.controls["name"];
   }
@@ -450,17 +449,16 @@ export class AccountComponent {
     return this.updateFormAddress.controls["commune"];
   }
 
-
-  get currentPassword(){
-    return this.changePasswordForm.controls["currentPassword"];
+  get oldPassword(){
+    return this.changePasswordForm.controls["oldPassword"];
   }
 
   get newPassword(){
     return this.changePasswordForm.controls["newPassword"];
   }
 
-  get reNewPassword(){
-    return this.changePasswordForm.controls["reNewPassword"];
+  get newRePassword(){
+    return this.changePasswordForm.controls["newRePassword"];
   }
 
   get firstName(){

@@ -24,11 +24,12 @@
 
     .container__title{
 
-      background-color: $color-success;
+      background-color: $color-success-600;
       display: inline;
       padding: 10px 20px;
       border-radius: 5px;
       color: $color-light;
+      font-weight: 900;
     }
 
     .container__subscribition-container{
@@ -71,30 +72,15 @@
       .container__btn-subscribe{
 
         margin-top: 1rem;
-        background-color: $color-primary-400;
-        color: $color-light;
-        padding: .8rem 1.6rem;
+        padding: .6rem 1.2rem;
         transition: background 300ms ease-in-out;
-
-        &:hover{
-
-          background-color: $color-primary;
-        }
       }
 
       .container__btn-desubscribe{
 
         margin-top: 1.6rem;
-        background-color: $color-danger;
-        color: $color-light;
         padding: .8rem 0;
-        border-radius: 5px;
         transition: background 300ms ease-in-out;
-
-        &:hover{
-
-          background-color: $color-danger-600;
-        }
       }
 
       .container__text{

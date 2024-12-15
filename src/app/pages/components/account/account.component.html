@@ -158,17 +158,17 @@
           <form action="" class="profile__form" [formGroup]="changePasswordForm" (ngSubmit)="changePassword()">
             <fieldset class="form__control">
               <label for="current_password" class="form__text form-label">Contraseña Actual</label>
-              <input type="password" id="current_password" class="form-control" formControlName="currentPassword" [ngClass]="{
-                'is-invalid': currentPassword.invalid && (currentPassword.dirty || currentPassword.touched)
+              <input type="password" id="current_password" class="form-control" formControlName="oldPassword" [ngClass]="{
+                'is-invalid': oldPassword.invalid && (oldPassword.dirty || oldPassword.touched)
               }">
 
-              @if (currentPassword.getError('required')){
+              @if (oldPassword.getError('required')){
                 <span class="invalid-feedback">Este campo es requerido</span>
               }
-              @if (currentPassword.getError('minlength')){
+              @if (oldPassword.getError('minlength')){
                 <span class="invalid-feedback">Tiene que tener minimo 8 caracteres</span>
               }
-              @if (currentPassword.getError('maxlength')){
+              @if (oldPassword.getError('maxlength')){
                 <span class="invalid-feedback">Tiene que tener maximo 50 caracteres</span>
               }
             </fieldset>
@@ -190,16 +190,16 @@
             </fieldset>
             <fieldset class="form__control">
               <label for="re_new_password" class="form__text form-label">Confirmar Contraseña</label>
-              <input type="password" id="re_new_password" class="form-control" formControlName="reNewPassword" [ngClass]="{
-                'is-invalid': reNewPassword.invalid && (reNewPassword.dirty || reNewPassword.touched) || changePasswordForm.hasError('passordsDontMatch')
+              <input type="password" id="re_new_password" class="form-control" formControlName="newRePassword" [ngClass]="{
+                'is-invalid': newRePassword.invalid && (newRePassword.dirty || newRePassword.touched) || changePasswordForm.hasError('passordsDontMatch')
               }">
-              @if (reNewPassword.getError('required')){
+              @if (newRePassword.getError('required')){
                 <span class="invalid-feedback">Este campo es requerido</span>
               }
-              @if (reNewPassword.getError('minlength')){
+              @if (newRePassword.getError('minlength')){
                 <span class="invalid-feedback">Tiene que tener minimo 8 caracteres</span>
               }
-              @if (reNewPassword.getError('maxlength')){
+              @if (newRePassword.getError('maxlength')){
                 <span class="invalid-feedback">Tiene que tener maximo 50 caracteres</span>
               }
               @if(changePasswordForm.hasError('passordsDontMatch')) {

@@ -25,7 +25,7 @@ export class ProfileService {
   }
 
   public changePassword(changePasswordForm: ChangePasswordForm): Observable<any>{
-    return this._http.put(`${this.urlApi}/change-password`, changePasswordForm);
+    return this._http.post(`${this.urlApi}/change-password`, changePasswordForm);
   }
 
   public deleteAccount(password: string): Observable<any>{
