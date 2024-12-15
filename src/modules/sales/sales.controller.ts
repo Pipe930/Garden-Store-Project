@@ -62,6 +62,12 @@ export class SalesController {
     return this.salesService.updateStatusSale(idSale, updateSateDto);
   }
 
+  @Get('validDelivered/:idSale')
+  @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.READ] }])
+  validSaleDelivered(@Param('idSale', ParseUUIDPipe) idSale: string){
+    return this.salesService.validSaleDelivered(idSale);
+  }
+
   @Post('transbank/create')
   @Auth([{ resource: ResourcesEnum.SALES, action: [ActionsEnum.CREATE] }])
   createTransbank(@Body() createTransbankDto: CreateTransbankDto, @Req() request: RequestJwt) {

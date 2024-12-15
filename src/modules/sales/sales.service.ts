@@ -10,7 +10,7 @@ import { CreateTransbankDto } from './dto/create-transbank.dto';
 import { Product } from '../products/models/product.model';
 import { UpdateSaleDto } from './dto/update-status-sale.dto';
 import { StatusSaleEnum } from 'src/core/enums/statusSale.enum';
-import { WithdrawalEnum } from 'src/core/enums/statusOrder.enum';
+import { OrderStatusEnum, WithdrawalEnum } from 'src/core/enums/statusOrder.enum';
 import { randomUUID } from 'crypto';
 import UAParser from 'ua-parser-js';
 import { DeviceUsedEnum } from 'src/core/enums/deviceUsed.enum';
@@ -284,6 +284,32 @@ export class SalesService {
 
       statusCode: HttpStatus.OK,
       message: 'Estado de la venta actualizado con exito'
+    }
+  }
+
+  async validSaleDelivered(idSale: string): Promise<ResponseData>{
+
+    const sale = await Sale.findByPk(idSale);
+
+    if(!sale) throw new NotFoundException("No se a encontro ninguna compra");
+    if(sale.statusPayment === StatusSaleEnum.PENDING || sale.statusPayment === StatusSaleEnum.CANCELED) throw new BadRequestException("Esta compra no se encuentra pagada");
+
+    const order = await Order.findByPk(idSale);
+
+    if(order.statusOrder === OrderStatusEnum.DELIVERED) throw new BadRequestException("Este pedido ya ah sido entregado");
+
+    try {      
+      order.statusOrder = OrderStatusEnum.DELIVERED;
+      order.deliveryDate = new Date();
+  
+      await order.save();
+    } catch (error){
+      throw new InternalServerErrorException("No se puedo validar la entrega del pedido");
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: "El pedido a sido validado con exito"
     }
   }
 
