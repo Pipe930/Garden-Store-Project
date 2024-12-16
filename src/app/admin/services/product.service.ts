@@ -17,6 +17,10 @@ export class ProductService {
     return this._http.get<ProductsResponse>(`${this._baseUrl}/admin`);
   }
 
+  public getAllProductsAnalytics():Observable<ProductsResponse>{
+    return this._http.get<ProductsResponse>(`${this._baseUrl}/admin?limit=7`);
+  }
+
   public createProduct(product: CreateProductForm):Observable<ProductResponse>{
     return this._http.post<ProductResponse>(this._baseUrl, product);
   }
